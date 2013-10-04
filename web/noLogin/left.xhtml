@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head>
+        <title>left</title>        
+    </h:head>
+    <h:body>
+        <!-- hello -->
+        <ui:composition>
+           
+            <h:form> 
+                <c:if test="#{checkLogin.logined}">
+                    
+                    <div class ="command">
+                        <c:forEach var="resList" items="#{topMenu.resWithChildrenList}">
+                            <h1 class="title" ><h:outputLabel  value ="#{resList.parent.name}"/></h1>
+                            <ul>
+                                <c:forEach var="resChild" items="#{resList.childrenResourceList}">
+                                    <li><h:link outcome="#{resChild.refas}" value="#{resChild.name}" /></li>
+                                </c:forEach>
+                              </ul>
+                        </c:forEach>
+                       
+                      </div>
+                </c:if>
+                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

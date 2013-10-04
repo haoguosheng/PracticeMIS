@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form  style="alignment-adjust: middle">
+                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                    <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="#{msgs.selcteCity}"/>
+                        <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.selcteCity}" />
+                            <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                            <f:ajax render="enterprise" event="change"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="#{msgs.selectEnt}"/>
+                        <h:selectOneMenu  value="#{studentSelectEnt.enterpriseid}" id="enterprise" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
+                            <f:selectItems value="#{enterpriseInfo.enterMap}"/>
+                            <f:ajax render="enterDetail" event="change"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid> 
+                    
+                    
+                    <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
+                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn" 
+                                 >
+                        <h:column>
+                            <f:facet name="header">#{msgs.enterName}</f:facet>
+                            <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.payment}</f:facet>
+                            <h:outputLabel value=" #{ep.payment}" id="payment"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.require}</f:facet>
+                            <h:outputLabel value="#{ep.requirement}" id="requirement"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.stuNum}</f:facet>
+                            <h:outputLabel value="#{ep.studnum}" id="studnum"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.position}</f:facet>
+                            <h:outputLabel value="#{ep.position.name}" id="position"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.other}</f:facet>
+                            <h:outputLabel value="#{ep.other}" id="other"/>
+                        </h:column>
+                    </h:dataTable> 
+
+                    <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" id="myselect" />
+                    
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
