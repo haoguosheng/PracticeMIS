@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form enctype="multipart/form-data">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.selectSchool}"/>
+                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}">
+                            <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                        </h:selectOneMenu>
+                        <c:set var="schoolId" value="#{nameofUnitBean.schoolId}"/>
+                        <h:outputLabel value="#{msgs.selectClass}"/>
+                        <h:selectOneMenu value="#{nameofUnitBean.classId}" >
+                            <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
+                        </h:selectOneMenu>
+                        <c:set var="classId" value="#{nameofUnitBean.classId}"/>
+                        <h:inputFile value="#{userinfoBean.excelFile}"/>
+                        <h:commandButton value="#{msgs.import}" action="#{userinfoBean.importStudent(classId,schoolId)}"/>
+                </h:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</body>
+</html>

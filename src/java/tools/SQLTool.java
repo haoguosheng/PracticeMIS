@@ -4,6 +4,7 @@
  */
 package tools;
 
+import entities.Stuentrel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
  *
  * @author Administrator
  */
-public class SQLTool<T> {
+public class SQLTool<T> implements java.io.Serializable{
 
     public List<T> getBeanListHandlerRunner(String sql, T t) {
         List<T> paperClassificationList = null;

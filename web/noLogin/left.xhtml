@@ -16,14 +16,15 @@
                 <c:if test="#{checkLogin.logined}">
                     
                     <div class ="command">
-                        <c:forEach var="resList" items="#{topMenu.listResList}">
+                        <c:forEach var="resList" items="#{topMenu.resWithChildrenList}">
                             <h1 class="title" ><h:outputLabel  value ="#{resList.parent.name}"/></h1>
                             <ul>
-                                <c:forEach var="resChild" items="#{resList.resourceList}">
+                                <c:forEach var="resChild" items="#{resList.childrenResourceList}">
                                     <li><h:link outcome="#{resChild.refas}" value="#{resChild.name}" /></li>
                                 </c:forEach>
                               </ul>
                         </c:forEach>
+                       
                       </div>
                 </c:if>
                 

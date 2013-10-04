@@ -41,7 +41,7 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public synchronized String addEnterprise() {
         User user = new ForCallBean().getUser();
-        if (epDao.getBeanListHandlerRunner("select * from Enterprise where name='" + this.enterName + "'",enterprise).size() > 0) {//已经存在这个公司了
+        if (epDao.getBeanListHandlerRunner("select * from Enterprise where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
             this.enterprise.setUserno(new ForCallBean().getUser().getUno());
@@ -106,8 +106,8 @@ public class EnterpriseInfo implements java.io.Serializable {
      */
     public List<Enterprise> getEp() {
         if (isNull) {
-            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise order by cityid", new Enterprise());
-        } else if (!isNull ) {
+            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise());
+        } else if (!isNull) {
             this.ep = epDao.getBeanListHandlerRunner("select * from enterprise where locate('" + this.searchName + "',name)>0", enterprise);
         }
         return this.ep;
@@ -155,8 +155,9 @@ public class EnterpriseInfo implements java.io.Serializable {
     public void setPositionId(int positionId) {
         this.positionId = positionId;
     }
- public void savaEnter(int id, String enName, int cid) {
-        this.epDao.executUpdate("update enterprise set name='"+enName+"', cityid="+cid+" where id="+id);
+
+    public void savaEnter(int id, String enName, int cid) {
+        this.epDao.executUpdate("update enterprise set name='" + enName + "', cityid=" + cid + " where id=" + id);
 //        Iterator<Enterprise> it=this.ep.iterator();
 //        while(it.hasNext()){
 //            Enterprise temCity=it.next();
@@ -169,20 +170,21 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.ep = null;
     }
 
-    public void deleteNeed(int id) {
+    public String deleteNeed(int id) {
         try {
-            this.esDao.executUpdate("delete from enterstudent where id=" + id );
+            this.esDao.executUpdate("delete from enterstudent where id=" + id);
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } catch (Exception e) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除失败"));
         }
+        return null;
     }
 
     public void deleteRow(Enterprise en) {
         try {
-            this.epDao.executUpdate("delete from enterprise where id="+en.getId());
+            this.epDao.executUpdate("delete from enterprise where id=" + en.getId());
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } catch (Exception e) {
@@ -204,9 +206,9 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public void saveNeed(int id, String payment, String requirment, int num, String other, int positionId) {
-        this.esDao.executUpdate("update enterstudent set payment='"+ payment+"', Requirement='"+requirment
-                +"',Other='"+other+"',Studnum="+num+", positionid="+positionId
-                +" where id=" + id);
+        this.esDao.executUpdate("update enterstudent set payment='" + payment + "', Requirement='" + requirment
+                + "',Other='" + other + "',Studnum=" + num + ", positionid=" + positionId
+                + " where id=" + id);
     }
 
     /**
@@ -249,7 +251,8 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.searchName = searchName;
         this.entCityList = null;
     }
-public String search() {
+
+    public String search() {
         paginator = null;
         isNull = false;
         this.entCityList = null;
@@ -278,6 +281,7 @@ public String search() {
         this.ep = null;
         return paginator;
     }
+
     /**
      * @param paginator the paginator to set
      */

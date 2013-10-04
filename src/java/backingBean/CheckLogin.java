@@ -111,7 +111,7 @@ public class CheckLogin implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(true);
         session.invalidate();
-        return "/noLogin/main?faces-redirect=true";
+        return "/login/login?faces-redirect=true";
     }
 
     /**

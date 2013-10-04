@@ -35,7 +35,7 @@ public class AuthFilter implements Filter {
             HttpSession session = ((HttpServletRequest) request).getSession(true);
             HttpServletResponse response1 = (HttpServletResponse) response;
             if (null == session.getAttribute("myUser")) {
-                response1.sendRedirect("/UserLogRegRole-war/faces/login/login.xhtml");
+                response1.sendRedirect("/PracticeMIS/faces/login/login.xhtml");
             }
             chain.doFilter(request, response);
         } catch (Throwable t) {

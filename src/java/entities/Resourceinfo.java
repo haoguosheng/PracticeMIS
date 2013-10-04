@@ -22,7 +22,6 @@ public class Resourceinfo implements Serializable {
     private String comment;
     private String recommendrole;
     private Integer menuorder;
-    private Integer canbeseenbyall;
     private Resourceinfo parResourceinfo;
     private List<Resourceinfo> childResourceinfo;
     private SQLTool<Resourceinfo> resDao = new SQLTool<Resourceinfo>();
@@ -82,14 +81,6 @@ public class Resourceinfo implements Serializable {
         this.menuorder = menuorder;
     }
 
-    public Integer getCanbeseenbyall() {
-        return canbeseenbyall;
-    }
-
-    public void setCanbeseenbyall(Integer canbeseenbyall) {
-        this.canbeseenbyall = canbeseenbyall;
-    }
-
     public int getParentid() {
         return parentid;
     }
@@ -102,7 +93,7 @@ public class Resourceinfo implements Serializable {
      * @return the parResourceinfo
      */
     public Resourceinfo getParResourceinfo() {
-        if(parResourceinfo == null){
+        if (parResourceinfo == null) {
             parResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo where id=" + parentid, new Resourceinfo()).get(0);
         }
         return parResourceinfo;
@@ -119,7 +110,7 @@ public class Resourceinfo implements Serializable {
      * @return the childResourceinfo
      */
     public List<Resourceinfo> getChildResourceinfo() {
-        if(childResourceinfo == null){
+        if (childResourceinfo == null) {
             childResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo where parentid=" + id, new Resourceinfo());
         }
         return childResourceinfo;
@@ -130,5 +121,18 @@ public class Resourceinfo implements Serializable {
      */
     public void setChildResourceinfo(List<Resourceinfo> childResourceinfo) {
         this.childResourceinfo = childResourceinfo;
+    }
+
+    @Override
+    public Resourceinfo clone() {
+        Resourceinfo resource = new Resourceinfo();
+        resource.setComment(comment);
+        resource.setId(id);
+        resource.setName(name);
+        resource.setParentid(parentid);
+        resource.setRecommendrole(recommendrole);
+        resource.setRefas(refas);
+        resource.setMenuorder(menuorder);
+        return resource;
     }
 }

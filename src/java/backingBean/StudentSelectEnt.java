@@ -7,6 +7,7 @@ package backingBean;
 import entities.Enterprise;
 import entities.Stuentrel;
 import entities.User;
+import java.util.LinkedList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,9 +36,9 @@ public class StudentSelectEnt implements java.io.Serializable {
 
     public String deleteSelectedEnterprise(String enterId) {
         User sessionuser = getUser();
-        List<Stuentrel> liststu = seDao.getBeanListHandlerRunner("select * from stuentrel" + sessionuser.getSchoolId() + " where userid='" + this.getUser().getUno() + "' and enterid=" + enterId, stuEntRel);
+        List<Stuentrel> liststu = seDao.getBeanListHandlerRunner("select * from stuentrel" + sessionuser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and enterid=" + enterId, stuEntRel);
         if (liststu.size() > 0) {
-            seDao.executUpdate("delete from stuentel" + sessionuser.getSchoolId() + " where id=" + liststu.get(0).getId());
+            seDao.executUpdate("delete from stuentrel" + sessionuser.getSchoolId() + " where id=" + liststu.get(0).getId());
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除成功"));
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除失败"));
@@ -57,11 +58,17 @@ public class StudentSelectEnt implements java.io.Serializable {
 
     public List<Stuentrel> getEnter4SameStu() {
         this.enter4SameStu = this.seDao.getBeanListHandlerRunner("select * from stuentrel" + this.getUser().getSchoolId() + "  where stuno='" + this.getUser().getUno() + "'", stuEntRel);
+        for(Stuentrel s:enter4SameStu){
+                s.setSchoolId(this.getUser().getSchoolId());
+            }
         return enter4SameStu;
     }
 
     public List<Stuentrel> getStuForSameEnt(String enterId) {
         stuForSameEnt = this.seDao.getBeanListHandlerRunner("select * from Stuentrel" + this.getUser().getSchoolId() + " where ENTERID=" + enterId + " and stuno!='" + this.getUser().getUno() + "'", new Stuentrel());
+        for(Stuentrel s:stuForSameEnt){
+                s.setSchoolId(this.getUser().getSchoolId());
+            }
         return stuForSameEnt;
     }
 

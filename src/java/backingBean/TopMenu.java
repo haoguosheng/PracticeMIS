@@ -8,8 +8,8 @@ import entities.Resourceinfo;
 import entities.Roleinfo;
 import entities.User;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,7 +17,6 @@ import tools.ForCallBean;
 import tools.SQLTool;
 
 /**
- * 
  *
  * @author myPC
  */
@@ -25,47 +24,40 @@ import tools.SQLTool;
 @ManagedBean
 public class TopMenu implements Serializable {
 
-    private SQLTool<Resourceinfo> resDao = new SQLTool<Resourceinfo>();
     private SQLTool<Roleinfo> roleDao = new SQLTool<Roleinfo>();
-    private ArrayList<ResourceWithChildren> listResList;
-    private List<Resourceinfo> freeResList;
-    Resourceinfo resource=new Resourceinfo();
+    private LinkedList<ResourceWithChildren> resWithChildrenList;
+    Resourceinfo resource = new Resourceinfo();
 
     /**
      * @return the listResList
      */
-    public ArrayList<ResourceWithChildren> getListResList() {
-        if (null == this.listResList) {
+    public LinkedList<ResourceWithChildren> getResWithChildrenList() {
+        if (null == this.resWithChildrenList) {
             this.calcuListResList();
         }
-        return this.listResList;
+        return this.resWithChildrenList;
     }
 
-    private ArrayList<ResourceWithChildren> calcuListResList() {
+    private void calcuListResList() {
         User user = new ForCallBean().getUser();
-        String resourceIds = roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + user.getRoleid()).get(0);
-        List<Resourceinfo> rootNames = resDao.getBeanListHandlerRunner("select * from resourceinfo where parentid is null order by MENUORDER", resource);//把双亲拿来
-        ArrayList<ResourceWithChildren> tem = new ArrayList<ResourceWithChildren>();
-        Iterator it = rootNames.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            ResourceWithChildren rwc = new ResourceWithChildren();
-            rwc.setParent((Resourceinfo) (it.next()));
-            rwc.setResourceList(resDao.getBeanListHandlerRunner("select * from resourceinfo where id in(" + resourceIds + ") and parentid=" + rwc.getParent().getId() + " and canBeSeenbyAll!=1 order by MENUORDER",resource));
-            tem.add(rwc);
-            i++;
-        }
-        this.listResList = tem;
-        return listResList;
-    }
+        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + user.getRoleid()).get(0) + ",";
+        LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
+        LinkedList<ResourceWithChildren> readyResource = new ForCallBean().getListResList();
+        for (int i = 0; i < readyResource.size(); i++) {
+            ResourceWithChildren preparedRe = readyResource.get(i).clone();
+            if (resourceIds.contains(","+String.valueOf(preparedRe.getParent().getId())+",")) {
+                result.add(preparedRe);
+                List<Resourceinfo> childrenRes = preparedRe.getChildrenResourceList();
+                Iterator<Resourceinfo> itChild = childrenRes.iterator();
+                while (itChild.hasNext()) {
+                    Resourceinfo tem = itChild.next();
+                    if (!resourceIds.contains(String.valueOf(tem.getId()))) {
+                        childrenRes.remove(tem);
+                    }
+                }
 
-    /**
-     * @return the freeResList
-     */
-    public List<Resourceinfo> getFreeResList() {
-        if (null == freeResList) {
-            freeResList = resDao.getBeanListHandlerRunner("select * from resourceinfo where canBeSeenbyAll=1", resource);
+            }
         }
-        return freeResList;
+        this.resWithChildrenList = result;
     }
 }
