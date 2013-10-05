@@ -33,7 +33,7 @@
                 <h:outputLabel/>
                 <h:outputLabel for="#{cc.clientId}:validatorCode" value="#{msgs.validateCode}"/>
                 <h:inputText value="#{checkLogin.rand}" required="true"  requiredMessage="#{msgs.inputValCode}" id="validatorCode" immediate="true" />
-                <img src="/UserLogRegRole-war/resources/image.jsp" />
+                <img src="../../resources/image.jsp" />
                 <h:outputLabel/>
                 <h:commandButton action="#{checkLogin.validateUser}" id="loginButton" value="" class="loginButton"/>
                 <h:outputLabel/>
