@@ -11,6 +11,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -30,7 +31,8 @@ public class NameofUnitBean {
      * @return the classNameMap
      */
     public LinkedHashMap<String, Integer> getClassNameMap() {
-        if (null == classNameMap) {
+        if (schoolId != null) {
+            classNameMap = new LinkedHashMap();
             Iterator<Nameofunit> it = this.getClassList().iterator();
             while (it.hasNext()) {
                 Nameofunit temunit = it.next();
@@ -40,14 +42,11 @@ public class NameofUnitBean {
         return classNameMap;
     }
 
-
     /**
      * @return the classList
      */
     public List<Nameofunit> getClassList() {
-        if (null == classList) {
-            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where id not in(select parentid from nameofunit) order by name", unit);
-        }
+        classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
         return classList;
     }
 
@@ -56,7 +55,7 @@ public class NameofUnitBean {
      */
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
-            schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='"+this.schoolId+"' order by pinyin", unit);
+            schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
         }
         return schoolList;
     }
@@ -71,9 +70,9 @@ public class NameofUnitBean {
     /**
      * @param schoolId the schoolId to set
      */
-    public void setSchoolId(String schoolId) {
-        this.classList=null;
-        this.schoolId = schoolId;
+    public void setSchoolId(String schoolId1) {
+        this.classList = null;
+        this.schoolId = (schoolId1.length()==2)?("0"+schoolId1):schoolId1;
     }
 
     /**
@@ -95,6 +94,7 @@ public class NameofUnitBean {
      */
     public LinkedHashMap<String, Integer> getSchoolMap() {
         if (null == schoolMap) {
+            this.schoolMap = new LinkedHashMap<String, Integer>();
             Iterator<Nameofunit> it = this.getSchoolList().iterator();
             while (it.hasNext()) {
                 Nameofunit temunit = it.next();
@@ -103,5 +103,4 @@ public class NameofUnitBean {
         }
         return schoolMap;
     }
-
 }

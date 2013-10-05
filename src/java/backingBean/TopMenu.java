@@ -45,17 +45,15 @@ public class TopMenu implements Serializable {
         LinkedList<ResourceWithChildren> readyResource = new ForCallBean().getListResList();
         for (int i = 0; i < readyResource.size(); i++) {
             ResourceWithChildren preparedRe = readyResource.get(i).clone();
-            if (resourceIds.contains(","+String.valueOf(preparedRe.getParent().getId())+",")) {
+            if (resourceIds.contains("," + String.valueOf(preparedRe.getParent().getId()) + ",")) {
                 result.add(preparedRe);
                 List<Resourceinfo> childrenRes = preparedRe.getChildrenResourceList();
-                Iterator<Resourceinfo> itChild = childrenRes.iterator();
-                while (itChild.hasNext()) {
-                    Resourceinfo tem = itChild.next();
+                for (int j = 0; j < childrenRes.size(); j++) {
+                    Resourceinfo tem =  childrenRes.get(j);
                     if (!resourceIds.contains(String.valueOf(tem.getId()))) {
                         childrenRes.remove(tem);
                     }
                 }
-
             }
         }
         this.resWithChildrenList = result;

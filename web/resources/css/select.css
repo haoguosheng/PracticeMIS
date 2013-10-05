@@ -1,0 +1,37 @@
+/* 
+    Document   : select
+    Created on : 2013-10-4, 10:55:55
+    Author     : Administrator
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.select {
+    width:600px;
+    border:1px solid #ccc;
+    background-color:#FFF;
+    margin:0px auto;
+    padding:10px;
+}
+.select  td {
+     line-height:40px;
+   height:40px;
+}
+.select h1 {
+      border-bottom:1px solid #ccc;
+        height:40px;
+        line-height:40px;
+        text-indent: 40px;
+}
+.select table {
+    width:100%;
+}
+.select .submit {
+    background:url(../../resources/images/ico_tijiao.gif) no-repeat left top;
+    width:84px;
+    height:36px;
+    border:none;
+    margin:0px auto;
+    display:block;
+    cursor:pointer;
+}

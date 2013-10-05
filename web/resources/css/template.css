@@ -3,19 +3,18 @@
 	padding:0px;
 	font-size:13px;
 }
-body {
-        background-color:#fff;
-    
-}
 ul {
 	list-style:none;
+}
+
+body {
+   background-color:#F0F6FA;
 }
 #template_main {
 	width:auto;
 	border:1px solid #ccc;
+        
 }
-
-
 table {
 	border-collapse: collapse;
 }
@@ -26,6 +25,7 @@ table {
 	width:auto;
 	min-height:400px;
 	padding:50px;
+        background-color:#F0F6FA;
 }
 
 #top {
@@ -66,8 +66,6 @@ table {
 	text-decoration:underline;
 }
 
-.companyInfo td {
-	border:1px solid #588FC7;
-	height:25px;
-	line-height:25px;
+.classOfTable {
+    background-color:#F7E99D;
 }

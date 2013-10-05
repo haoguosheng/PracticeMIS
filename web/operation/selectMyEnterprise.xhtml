@@ -10,7 +10,8 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
-                <h:form  style="alignment-adjust: middle">
+               <div class ="select">
+                <h:form>
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
                     <h:panelGrid columns="2">
@@ -29,10 +30,7 @@
                     </h:panelGrid> 
                     
                     
-                    <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
-                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn" 
-                                 >
+                    <h:dataTable id="enterDetail" class="enterDetail"  value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep" >
                         <h:column>
                             <f:facet name="header">#{msgs.enterName}</f:facet>
                             <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
@@ -59,9 +57,10 @@
                         </h:column>
                     </h:dataTable> 
 
-                    <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" id="myselect" />
+                    <h:commandButton  value="" action="#{studentSelectEnt.userAddEnter()}" id="myselect" class="submit" />
                     
                 </h:form>
+               </div>
             </ui:define>
         </ui:composition>
     </body>

@@ -4,14 +4,15 @@
  */
 package tools;
 
-import entities.Stuentrel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -20,6 +21,8 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
  *
  * @author Administrator
  */
+@ManagedBean
+@SessionScoped
 public class SQLTool<T> implements java.io.Serializable{
 
     public List<T> getBeanListHandlerRunner(String sql, T t) {
@@ -29,7 +32,7 @@ public class SQLTool<T> implements java.io.Serializable{
         try {
             paperClassificationList = run.query(sql, rp);
         } catch (SQLException ex) {
-            Logger.getLogger(t.getClass().getName()).log(Level.SEVERE, null, ex);
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功或数据库未启动！"));
         }
         return paperClassificationList;
     }
@@ -40,7 +43,7 @@ public class SQLTool<T> implements java.io.Serializable{
         try {
             result = run.update(sql);
         } catch (SQLException ex) {
-            System.out.println("Fail to update!");
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("更新失败！"));
         }
         return result;
     }
@@ -66,6 +69,7 @@ public class SQLTool<T> implements java.io.Serializable{
                 ls.add(myTem[i].toString());
             }
         } catch (SQLException ex) {
+             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功！"));
         }
         return ls;
     }

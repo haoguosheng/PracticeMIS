@@ -10,4 +10,5 @@ package tools;
  */
 public class StaticFields {
     public static final int canseeAll=0;
+    public static final String universityId="000";
 }

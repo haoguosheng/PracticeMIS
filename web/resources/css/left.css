@@ -1,8 +1,3 @@
-* {
-	margin:0px;
-	padding:0px;
-	font-size:13px;	
- }
 #left  a {
 	color:#333;
 	height:35px;
@@ -13,13 +8,12 @@
 }
 #left a:hover {
 	font-weight:bold;
-	border-bottom:1px solid #ccc;
-	background-color:#FFFCE0;
+	background-color:#F7E99D;
 }
 
 
 #left {
-	background:#FFF;
+	background:#F0F6FA;
 	min-height:500px;
 }
 
@@ -41,12 +35,13 @@
 }
 
 #left .command .title2 {
-		background: #5AA1DB url(../../resources/images/left_bg_min.gif) no-repeat 8% 48%;
+		background: #F0F6FA url(../../resources/images/left_bg_min.gif) no-repeat 8% 48%;
 }
 
 
 #left .command ul {
 	display:none;
+        background: #fff;
 }
 
 
