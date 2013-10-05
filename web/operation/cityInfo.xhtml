@@ -18,7 +18,7 @@
                         <!--<f:ajax  execute="searchcity"/>-->
                     </h:commandButton>
                     <h:inputText value="#{cityBackingBean.newCityName}" id="newCity"/>
-                    <h:commandButton value="#{msgs.addNewCity}"  action="#{cityBackingBean.add(cityBackingBean.newCityName)}">
+                    <h:commandButton value="#{msgs.addNewCity}"  action="#{cityBackingBean.add()}">
 <!--                        <f:ajax  execute="newCity"/>-->
                     </h:commandButton>
                     <h:commandButton value="显示全部" action="#{cityBackingBean.searchAll()}"/>
