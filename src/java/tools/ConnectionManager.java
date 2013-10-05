@@ -8,10 +8,10 @@ import java.sql.Statement;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 
 import javax.naming.NameNotFoundException;
+import javax.sql.DataSource;
 
 /**
  * 用于管理数据库链接，采用连接池技术
@@ -30,8 +30,7 @@ public class ConnectionManager {
         if (conn == null) {
             try {
                 Context ctx = new InitialContext();
-                dataSource = (DataSource) ctx
-                        .lookup("java:comp/env/jdbc/Enterprise");//这里要注意JNDI名称的大小写问题
+                dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/Enterprise");//这里要注意JNDI名称的大小写问题
                 conn = dataSource.getConnection();
             } catch (NameNotFoundException nfe) {
                 nfe.printStackTrace();

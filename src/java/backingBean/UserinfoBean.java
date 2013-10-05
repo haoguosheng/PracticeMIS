@@ -37,19 +37,24 @@ public class UserinfoBean implements Serializable {
     private String userno;
     private int cityId;
     private LinkedHashMap<String, String> studentMap;
-    private User user;
+    private User myUser;
     private Part excelFile;
 
     public LinkedHashMap<String, String> getStudentMap() {
         List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
-        Iterator<User> it = usrList.iterator();
-        studentMap = new LinkedHashMap<String, String>();
-        while (it.hasNext()) {
-            User tem = it.next();
-            tem.setSchoolId(user.getSchoolId());
-            studentMap.put(tem.getName(), tem.getUno());
+        if (null != usrList && usrList.size() > 0) {
+            Iterator<User> it = usrList.iterator();
+            studentMap = new LinkedHashMap<String, String>();
+            while (it.hasNext()) {
+                User tem = it.next();
+                tem.setSchoolId(myUser.getSchoolId());
+                studentMap.put(tem.getName(), tem.getUno());
+            }
+            return studentMap;
+        } else {
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("没有学生！"));
+            return null;
         }
-        return studentMap;
     }
 
     public String submit() {
@@ -59,10 +64,10 @@ public class UserinfoBean implements Serializable {
     }
 
     public User getUser() {
-        if (null == user) {
-            this.user = new ForCallBean().getUser();
+        if (null == myUser) {
+            this.myUser = new ForCallBean().getUser();
         }
-        return user;
+        return myUser;
     }
 
     public String getUserno() {
@@ -95,7 +100,8 @@ public class UserinfoBean implements Serializable {
         this.excelFile = excelFile;
     }
 
-    public String importStudent(String classId, String schoolId) {
+    public String importStudent(String schoolId) {
+        System.out.println("hello wirldsfdsafdasfd");
         try {
             InputStream ins = excelFile.getInputStream();
             Workbook book = Workbook.getWorkbook(ins);
@@ -112,7 +118,7 @@ public class UserinfoBean implements Serializable {
                 String EMAIL = "'" + sheet.getCell(i, 3).getContents() + "',";
                 String PHONE = "'" + sheet.getCell(i, 4).getContents() + "',";
                 String ROLEID = "2,";
-                String NAMEOFUNITID = schoolId;
+                String NAMEOFUNITID =  sheet.getCell(i, 5).getContents();//ClassId
                 sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
                 try {
                     this.userDao.executUpdate(sqlString);

@@ -27,7 +27,7 @@ public class StudentSelectEnt implements java.io.Serializable {
 
     private SQLTool<Stuentrel> seDao = new SQLTool<Stuentrel>();
     private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
-    private User user;
+    private User myUser;
     private List<Stuentrel> stuForSameEnt, enter4SameStu;//选择同一企业的学生和同一学生选择的不同企业
     private int selectedEnt = 1;//学生选择的企业数目不能超过该值
     private int enterpriseid;
@@ -50,10 +50,10 @@ public class StudentSelectEnt implements java.io.Serializable {
         if (null == (new ForCallBean().getReason()) || (new ForCallBean().getReason().intValue() == 1)) {
             new ForCallBean().setReason(0);
         }
-        if (null == this.user) {
-            this.user = new ForCallBean().getUser();
+        if (null == this.myUser) {
+            this.myUser = new ForCallBean().getUser();
         }
-        return user;
+        return myUser;
     }
 
     public List<Stuentrel> getEnter4SameStu() {

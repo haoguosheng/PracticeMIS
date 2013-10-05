@@ -28,7 +28,7 @@ import tools.UserAnalysis;
 @SessionScoped
 public class CheckLogin implements Serializable {
 
-    private User user;
+    private User myUser;
     private Properties messagesPro = null;
     private String username, password, welcomeMess;
     private String rand;
@@ -46,7 +46,7 @@ public class CheckLogin implements Serializable {
                 result = false;
             } else {
                 if (userList.size() > 0) {
-                    this.user = userList.get(0);
+                    this.myUser = userList.get(0);
                     result = true;
                 } else {
                     result = false;
@@ -61,7 +61,7 @@ public class CheckLogin implements Serializable {
                 String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
                 List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
                 if (userList.size() > 0) {
-                    this.user = userList.get(0);
+                    this.myUser = userList.get(0);
                     result = true;
                 } else {
                     result = false;
@@ -114,7 +114,7 @@ public class CheckLogin implements Serializable {
     }
 
     public String logout() {
-        this.user = null;
+        this.myUser = null;
         this.username = null;
         this.logined = false;
         this.password = null;
@@ -223,6 +223,6 @@ public class CheckLogin implements Serializable {
      * @return the user
      */
     public User getUser() {
-        return user;
+        return myUser;
     }
 }

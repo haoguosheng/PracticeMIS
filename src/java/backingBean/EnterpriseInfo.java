@@ -40,7 +40,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     private RepeatPaginator paginator;
 
     public synchronized String addEnterprise() {
-        User user = new ForCallBean().getUser();
+        User myUser = new ForCallBean().getUser();
         if (epDao.getBeanListHandlerRunner("select * from Enterprise where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
@@ -50,7 +50,7 @@ public class EnterpriseInfo implements java.io.Serializable {
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
             this.entStu.setPositionid(this.positionId);
             this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise").get(0)));
-            esDao.executUpdate("insert into enterstudent" + user.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
+            esDao.executUpdate("insert into enterstudent" + myUser.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
                     + this.entStu.getEnterid() + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();

@@ -31,7 +31,7 @@ public class ForCallBean implements java.io.Serializable {
     FacesContext context = FacesContext.getCurrentInstance();
     HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
     HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-    private User user;
+    private User myUser;
     private SQLTool<Resourceinfo> resDao = new SQLTool<Resourceinfo>();
     private LinkedList<ResourceWithChildren> listResList;
     Resourceinfo resource = new Resourceinfo();
@@ -69,9 +69,9 @@ public class ForCallBean implements java.io.Serializable {
     }
 
     public User getUser() {
-        if (null == user) {
-            user = (User) session.getAttribute("myUser");
-            if (null == user) {
+        if (null == myUser) {
+            myUser = (User) session.getAttribute("myUser");
+            if (null == myUser) {
                 try {
                     response.sendRedirect("login.xhtml");
                 } catch (IOException ex) {
@@ -79,7 +79,7 @@ public class ForCallBean implements java.io.Serializable {
                 }
             }
         }
-        return user;
+        return myUser;
     }
 
     public Integer getReason() {
