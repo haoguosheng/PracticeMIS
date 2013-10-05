@@ -10,33 +10,44 @@
         <f:loadBundle var="msgs" basename="messages"/>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <section style="border:solid  blue" >
+                    上传学生的信息前:
+                    <ul>
+                        <li>请确保所选择的Excel文件是Excel97-2003版之间的，而不是更高的版本。如果是高版本，请转换为低版本;</li>
+                        <li>请确保Excel的从第一行到最后一行，所有单元格都是"文本"类型，且满足下面的顺序(共6列):<br/>
+                        学号|登录密码|姓名|邮箱|电话号码|班级编号
+                        </li>
+                        <li>其中，班级编号可以从下面的表中看到。如果下面表中没有，则需要添加该班级。</li>
+                    </ul><br/>
+                </section>
                 <h:form enctype="multipart/form-data">
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" >
                         <h:outputLabel value="#{msgs.selectSchool}"/>
                         <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true">
                             <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                             <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                            <f:ajax render="@all"/>
                         </h:selectOneMenu>
-                        <h:dataTable value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " >
-                             <h:column> 
-                            <f:facet name="header">#{msgs.cityName}</f:facet>
-                            <h:inputText value="#{ci.name}"/>  
-                        </h:column>    
-                        <h:column>
-                            <f:facet name="header">#{msgs.alter}</f:facet>
-                            <h:commandButton value="#{msgs.alter}" action="#{cityBackingBean.save(ci.id,ci.name)}"/>
-                        </h:column> 
-                        <h:column>
-                            <f:facet name="header">#{msgs.delete}</f:facet>
-                            <h:commandButton value="#{msgs.delete}" action="#{cityBackingBean.deleteRow(ci)}"/>
-                        </h:column>
-                        </h:dataTable>
-                        <c:set var="schoolId" value="#{nameofUnitBean.schoolId}"/>
-                        <h:inputFile value="#{userinfoBean.excelFile}" required="true"/>
-                        <h:commandButton value="#{msgs.myimport}" action="#{userinfoBean.importStudent}"/>
                     </h:panelGrid>
+                    <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
+                    <h:inputFile value="#{userinfoBean.excelFile}"/>
+                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="submit" />
+                    <h:dataTable id="classInclude" value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum" >
+                            <h:column> 
+                                <f:facet name="header">#{msgs.myclassName}</f:facet>
+                                <h:outputLabel value="#{classUnit.name}"/>  
+                            </h:column>    
+                            <h:column>
+                                <f:facet name="header">#{msgs.myclassCode}</f:facet>
+                                <h:outputLabel value="#{classUnit.id}" />
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{msgs.inputUserName}</f:facet>
+                                <h:outputLabel value="#{classUnit.teacher.name}"/>
+                            </h:column>
+                        </h:dataTable>
                 </h:form>
             </ui:define>
         </ui:composition>

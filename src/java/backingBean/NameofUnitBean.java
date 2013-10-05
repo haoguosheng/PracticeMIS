@@ -45,17 +45,15 @@ public class NameofUnitBean implements java.io.Serializable {
 
     }
 
-    /**
-     * @return the classList
-     */
     public List<Nameofunit> getClassList() {
-        classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
+        if (null != schoolId) {
+            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
+        } else {
+            classList = null;
+        }
         return classList;
     }
 
-    /**
-     * @return the schoolList
-     */
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
             schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
@@ -74,8 +72,8 @@ public class NameofUnitBean implements java.io.Serializable {
      * @param schoolId the schoolId to set
      */
     public void setSchoolId(String schoolId1) {
+        this.classList = null;
         if (null != schoolId1) {
-            this.classList = null;
             this.schoolId = (schoolId1.length() == 2) ? ("0" + schoolId1) : schoolId1;
         }
     }
