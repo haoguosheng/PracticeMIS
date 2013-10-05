@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import tools.ForCallBean;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -56,7 +57,18 @@ public class NameofUnitBean implements java.io.Serializable {
 
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
-            schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
+            switch (new ForCallBean().getUser().getRoleinfo().getCanseeall()) {
+                case StaticFields.CanSeeAll:
+                     schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
+                    break;
+                case StaticFields.CanSeeOnlySchool:
+                    
+                    break;
+                case StaticFields.CanSeeSelf:
+                    
+                    break;
+            }
+           
         }
         return schoolList;
     }
@@ -67,6 +79,7 @@ public class NameofUnitBean implements java.io.Serializable {
     public String getSchoolId() {
         return schoolId;
     }
+
 
     /**
      * @param schoolId the schoolId to set
