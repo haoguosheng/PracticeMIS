@@ -82,9 +82,9 @@ public class CityBackingBean implements java.io.Serializable{
     }
 
     public void save(int id, String s) {
-        City city = (City) cDao.getBeanListHandlerRunner("select * from city where id=" + id + "", new City());
+        City city = (City) cDao.getBeanListHandlerRunner("select * from city where id=" + id, new City()).get(0);
         city.setName(s);
-        cDao.executUpdate("update city set name='" + s + "', userno='" + new ForCallBean().getUser().getUno() + "'");
+        cDao.executUpdate("update city set name='" + s + "' , userno='" + new ForCallBean().getUser().getUno() + "' where id=" + id);
         this.ci = null;
 //        Iterator<City> it = this.ci.iterator();
 //        while (it.hasNext()) {
@@ -106,11 +106,11 @@ public class CityBackingBean implements java.io.Serializable{
     }
 
     public String deleteRow(City city) {
-        try {
-            cDao.executUpdate("delete from city where id=" + city.getId());
+
+        if (cDao.executUpdate("delete from city where id=" + city.getId()) > 0) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
-        } catch (Exception e) {
+        } else {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("此城市有企业，无法删除"));
         }

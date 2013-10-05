@@ -12,30 +12,27 @@
                     <h:form>
                         <h:panelGrid columns="2" class="oddRows">
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:outputLabel value="#{submitReport.temPraNote.student.name}"/>                     
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.student.name}"/>                     
                             <h:outputLabel value="#{msgs.enterpriseName}:"/>
-                            <h:outputLabel value="#{submitReport.temPraNote.enterprise.name}"/>
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
-                            <h:outputLabel value="#{submitReport.temPraNote.position.name}"/>
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.position.name}"/>
                             <h:outputLabel value="#{msgs.time}:"/>
                             <h:panelGrid columns="6">
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.year+1900}"/>
+                                <h:outputLabel value="#{teachSeeReport.practiceNote.submitdate.year+1900}"/>
                                 <h:outputLabel value="#{msgs.year}"/>
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.month+1}"/>
+                                <h:outputLabel value="#{teachSeeReport.practiceNote.submitdate.month+1}"/>
                                 <h:outputLabel value="#{msgs.month}"/>
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.date}"/>
+                                <h:outputLabel value="#{teachSeeReport.practiceNote.submitdate.date}"/>
                                 <h:outputLabel value="#{msgs.day}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <h:panelGrid columns="1">
                             <h:outputLabel value="#{msgs.practiceContent}:" />
-                            <h:inputTextarea value="#{submitReport.temPraNote.detail}" rows="40" cols="60" readonly="#{submitReport.readflag}" >
+                            <h:inputTextarea value="#{teachSeeReport.practiceNote.detail}" rows="40" cols="60" readonly="true" >
                                 <f:validateLength maximum="2000" minimum="500"/>
                             </h:inputTextarea>
                         </h:panelGrid>
-                        <h:commandButton value="#{msgs.edit}" action="#{submitReport.editSelectReport()}" />
-                        <h:commandButton value="#{msgs.alter}" action="#{submitReport.alterSelectReport()}"/>
-                        <h:commandButton value="#{msgs.delete}" action="#{submitReport.deleteSelectReport()}"/>
                     </h:form>
                 </h:panelGrid>      
             </ui:define>

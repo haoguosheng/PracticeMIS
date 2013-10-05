@@ -8,6 +8,7 @@ import entities.Checkrecords;
 import entities.Practicenote;
 import entities.User;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -47,7 +48,9 @@ public class CheckRecordBean implements Serializable {
         tempc.add(Calendar.YEAR, year - c.get(Calendar.YEAR));
         tempc.add(Calendar.MONTH, month - c.get(Calendar.MONTH));
         tempc.add(Calendar.DAY_OF_MONTH, day - c.get(Calendar.DAY_OF_MONTH));
-        String sql = "select * from checkRecords" + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate=" + tempc.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String s = sdf.format(tempc.getTime());
+        String sql = "select * from checkRecords" + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate='" + s + "'";
         List<Checkrecords> checkList = cDao.getBeanListHandlerRunner(sql, checkrecords);
         if (checkList.size() > 0) {//该生检查记录已经存在了
             this.checkrecords = checkList.get(0);

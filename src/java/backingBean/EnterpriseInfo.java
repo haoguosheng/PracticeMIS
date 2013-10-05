@@ -55,6 +55,9 @@ public class EnterpriseInfo implements java.io.Serializable {
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();
         }
+         this.ep = null;
+        this.entCityList = null;
+        paginator = null;
         return null;
     }
 
@@ -179,18 +182,25 @@ public class EnterpriseInfo implements java.io.Serializable {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除失败"));
         }
+        this.enterprise.setEnterstudentList(null);
         return null;
     }
 
-    public void deleteRow(Enterprise en) {
-        try {
-            this.epDao.executUpdate("delete from enterprise where id=" + en.getId());
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除成功"));
-        } catch (Exception e) {
+    public void deleteRow(Enterprise en) throws Exception {
+//        try {
+           if( this.epDao.executUpdate("delete from enterprise where id=" + en.getId())>0)
+           {
+               FacesContext context = FacesContext.getCurrentInstance();
+               context.addMessage("globalMessages", new FacesMessage("删除成功"));
+           }
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+//        } catch (Exception e) {
+           else{
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("此企业已被选择，无法删除"));
-        }
+           }
+//        }
 
 //        Iterator<EnterpriseCity> it=this.entCityList.iterator();
 //        while(it.hasNext()){
@@ -262,7 +272,7 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public String searchAll() {
         isNull = true;
-        searchName = "请输入要选择城市";
+        searchName = "请输入要选择的单位";
         this.entCityList = null;
         paginator = null;
         this.ep = null;

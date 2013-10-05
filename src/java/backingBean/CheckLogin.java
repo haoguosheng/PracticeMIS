@@ -85,6 +85,7 @@ public class CheckLogin implements Serializable {
                     String schoolName = UserAnalysis.getSchoolName(this.username);
                     this.getUser().setSchoolId(schoolId);
                     session.setAttribute("myUser", this.getUser());
+                    session.setAttribute("userno", this.username);
                     this.welcomeMess = this.getUser().getName() + "," + schoolName + "," + UserAnalysis.getRoleName(this.username);
                     tryTime = 0;
                     this.logined = true;

@@ -30,10 +30,10 @@ public class UserAnalysis {
         } else {
             if (uno.trim().length() == 8) {
                 schoolId = "0" + uno.substring(2, 4);
-            } else if(uno.trim().length() == 9){
+            } else if (uno.trim().length() == 9) {
                 schoolId = uno.substring(2, 5);
-            }else{
-            schoolId=null;
+            } else {
+                schoolId = null;
             }
         }
         return schoolId;
@@ -41,7 +41,7 @@ public class UserAnalysis {
 
     public static String getSchoolName(String uno) {
         String temp;
-  //      System.out.println("SchoolId11============================" + uno);
+        //      System.out.println("SchoolId11============================" + uno);
         if (uno.length() == 6) {
             String sql = "select * from teacherinfo where uno = '" + uno + "'";
             List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);

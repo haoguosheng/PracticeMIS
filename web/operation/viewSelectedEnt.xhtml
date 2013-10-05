@@ -11,11 +11,11 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
-               <div class ="selected">
+                <div class="select">
                 <h:form prependId="false" style="alignment-adjust: middle">
                     <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>        
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
-                    <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter" rowClasses="oddRows,evenRows" headerClass="head">
+                    <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter" rowClasses="oddRows,evenRows">
                         <c:set value="#{selectedEnter.enterprise.id}" var="enterId"/>
                         <h:column>
                             <f:facet name="header"></f:facet>

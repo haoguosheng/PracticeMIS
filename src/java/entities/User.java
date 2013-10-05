@@ -288,7 +288,7 @@ public class User implements Serializable {
      */
     public Nameofunit getNameofunit() {
         if(nameofunit == null){
-           nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit where id=" + nameofunitid, new Nameofunit()).get(0);
+           nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit where id='" + nameofunitid+"'",new Nameofunit()).get(0);
         }
         return nameofunit;
     }
