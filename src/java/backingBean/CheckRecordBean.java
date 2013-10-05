@@ -8,10 +8,15 @@ import entities.Checkrecords;
 import entities.Practicenote;
 import entities.User;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -41,13 +46,16 @@ public class CheckRecordBean implements Serializable {
     private SQLTool<Practicenote> pDao = new SQLTool<Practicenote>();
 
     public String addCheckRecord() {
+//        FacesContext context = FacesContext.getCurrentInstance();
         User user= new ForCallBean().getUser();
         checkrecords.setSchoolId(user.getSchoolId());
         Calendar tempc = Calendar.getInstance();
         tempc.add(Calendar.YEAR, year - c.get(Calendar.YEAR));
         tempc.add(Calendar.MONTH, month - c.get(Calendar.MONTH));
         tempc.add(Calendar.DAY_OF_MONTH, day - c.get(Calendar.DAY_OF_MONTH));
-        String sql = "select * from checkRecords" + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate=" + tempc.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String s = sdf.format(tempc.getTime());
+        String sql = "select * from checkRecords" + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate='" + s + "'";
         List<Checkrecords> checkList = cDao.getBeanListHandlerRunner(sql, checkrecords);
         if (checkList.size() > 0) {//该生检查记录已经存在了
             this.checkrecords = checkList.get(0);
@@ -55,9 +63,18 @@ public class CheckRecordBean implements Serializable {
         } else {
             checkrecords.setStuno(this.studentNo);
             checkrecords.setTeachno(user.getUno());
-            checkrecords.setCheckdate(tempc.getTime());
+//            String strToFormat = context.getExternalContext().getRequestParameterMap().get("submitDate");
+//        deleteRepDate = strToFormat;
+//        alterDate = strToFormat;
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Date requestDate = null;
+//        try {
+//            requestDate = sdf.parse(strToFormat);
+//        } catch (ParseException ex) {
+//            Logger.getLogger(SubmitReport.class.getName()).log(Level.SEVERE, null, ex);
+//        }
             String insert = "insert into checkrecords" + checkrecords.getSchoolId() + "(stuno, teachno, checkdate, checkcontent, recommendation, rank, remark) values('"
-                    + this.studentNo + "', '" + user.getUno() + "', " + tempc.getTime() + ", '" + checkrecords.getCheckcontent() + "', '"
+                    + this.studentNo + "', '" + user.getUno() + "', '" + s + "', '" + checkrecords.getCheckcontent() + "', '"
                     + checkrecords.getRecommendation() + "', '" + checkrecords.getRank() + "', '" + checkrecords.getRemark() + "')";
             cDao.executUpdate(insert);
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));
@@ -149,7 +166,7 @@ public class CheckRecordBean implements Serializable {
             this.studentNo = studentNo;
             String sql1 = "select * from student" + user.getSchoolId() + " where uno='" + studentNo + "'";
             this.StudentUser = userDao.getBeanListHandlerRunner(sql1, new User()).get(0);
-            String sql2 = "select * from practicenote" + user.getSchoolId() + " where uno='" + studentNo + "'";
+            String sql2 = "select * from practicenote" + user.getSchoolId() + " where stuno='" + studentNo + "'";
             this.practiceList = pDao.getBeanListHandlerRunner(sql2, new Practicenote());
         } else {
             this.studentNo = "0";
