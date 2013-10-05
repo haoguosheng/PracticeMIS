@@ -32,6 +32,7 @@ public class Enterprise implements Serializable {
     private SQLTool<Enterstudent> esDao = new SQLTool<Enterstudent>();
     private SQLTool<Practicenote> practDao = new SQLTool<Practicenote>();
     private SQLTool<Stuentrel> selDao = new SQLTool<Stuentrel>();
+    private User myUser;
 
     public Enterprise() {
     }
@@ -205,6 +206,9 @@ public class Enterprise implements Serializable {
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
             stuentrelList = selDao.getBeanListHandlerRunner("select * from stuentrel" + schoolId + " where enterid=" + id, new Stuentrel());
+            for (Stuentrel s : stuentrelList) {
+                s.setSchoolId(schoolId);
+            }
         }
         return stuentrelList;
     }
@@ -228,5 +232,19 @@ public class Enterprise implements Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    /**
+     * @return the myUser
+     */
+    public User getMyUser() {
+        return myUser;
+    }
+
+    /**
+     * @param myUser the myUser to set
+     */
+    public void setMyUser(User myUser) {
+        this.myUser = myUser;
     }
 }

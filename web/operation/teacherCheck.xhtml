@@ -14,7 +14,7 @@
                 <h1><h:outputLabel value="#{msgs.submitTeaReport}"/> </h1>
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form >
-                    <h:panelGrid columns="2" id="myEntireForm">
+                    <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.selectCity}" />
                         <h:selectOneMenu value="#{userinfoBean.cityId}" required="true">
                             <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
@@ -23,7 +23,7 @@
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.selectStudents}"/>
                         <h:selectOneMenu  value="#{checkRecordBean.studentNo}" id="students" required="true">
-                            <f:selectItem  itemValue="0" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
                             <f:selectItems value="#{userinfoBean.studentMap}"/>
                             <f:ajax event="change" render="studentReport" />
                         </h:selectOneMenu>

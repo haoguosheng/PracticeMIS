@@ -7,18 +7,14 @@ package backingBean;
 import entities.User;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
-import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -31,7 +27,7 @@ import tools.SQLTool;
  */
 @ManagedBean
 @SessionScoped
-public class UserinfoBean implements Serializable {
+public class UserinfoBean implements java.io.Serializable {
 
     private SQLTool<User> userDao = new SQLTool<User>();
     private String userno;
@@ -39,6 +35,9 @@ public class UserinfoBean implements Serializable {
     private LinkedHashMap<String, String> studentMap;
     private User myUser;
     private Part excelFile;
+
+    public UserinfoBean() {
+    }
 
     public LinkedHashMap<String, String> getStudentMap() {
         List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
@@ -101,34 +100,38 @@ public class UserinfoBean implements Serializable {
     }
 
     public String importStudent(String schoolId) {
-        System.out.println("hello wirldsfdsafdasfd");
         try {
             InputStream ins = excelFile.getInputStream();
             Workbook book = Workbook.getWorkbook(ins);
             Sheet sheet = book.getSheet(0);
-            int i = 0;
-            while (true) {
-                String sqlString = "INSERT INTO HGS.STUDENT0" + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
-                String uno = "'" + sheet.getCell(i, 0).getContents() + "',";
-                if (uno.trim().length() == 0) {
-                    break;
+            int columnum = sheet.getColumns();//得到列数  
+            int rownum = sheet.getRows();//得到行数
+            if (columnum != 6) {
+                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
+            } else {
+                for (int i = 0; i < rownum; i++) {
+                    String sqlString = "INSERT INTO HGS.STUDENT" + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
+                    String uno = "'" + sheet.getCell(0, i).getContents() + "',";
+                    if (uno.trim().length() == 0) {
+                        break;
+                    }
+                    String password = "'" + sheet.getCell(1, i).getContents() + "',";
+                    String NAME = "'" + sheet.getCell(2, i).getContents() + "',";
+                    String EMAIL = "'" + sheet.getCell(3, i).getContents() + "',";
+                    String PHONE = "'" + sheet.getCell(4, i).getContents() + "',";
+                    String ROLEID = "2,";
+                    String NAMEOFUNITID = "'" + sheet.getCell(5, i).getContents() + "'";//ClassId
+                    sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
+                    try {
+                        this.userDao.executUpdate(sqlString);
+                    } catch (Exception e) {
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了"+i+"行，但仍然导入出错了，请检查excel是否存在问题！"));
+                    }finally{
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了"+i+"行，导入完成！"));
+                        book.close();
+                    }
                 }
-                String password = "'" + sheet.getCell(i, 1).getContents() + "',";
-                String NAME = "'" + sheet.getCell(i, 2).getContents() + "',";
-                String EMAIL = "'" + sheet.getCell(i, 3).getContents() + "',";
-                String PHONE = "'" + sheet.getCell(i, 4).getContents() + "',";
-                String ROLEID = "2,";
-                String NAMEOFUNITID =  sheet.getCell(i, 5).getContents();//ClassId
-                sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
-                try {
-                    this.userDao.executUpdate(sqlString);
-                } catch (Exception e) {
-                    FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
-                }
-                i++;
             }
-            book.close();
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入完成！"));
         } catch (BiffException ex) {
             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
         } catch (IOException ex) {

@@ -5,6 +5,7 @@
 package backingBean;
 
 import entities.Checkrecords;
+import entities.Stuentrel;
 import entities.User;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ public class StatisticalResultBean implements Serializable {
 
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<User> userDao = new SQLTool<User>();
+    private SQLTool<Stuentrel> stuentrelDao = new SQLTool<Stuentrel>();
     private LinkedHashMap<String, String> teacherMap;
     private ArrayList<Checkrecords> checkList;
     private String[] rankString = new String[]{"优秀", "良好", "及格", "不及格"};
     private String teacherNo;
     private User loginUser;
-    private Checkrecords checkRecord=new Checkrecords();
+    private Checkrecords checkRecord = new Checkrecords();
+    private Stuentrel stuentrel = new Stuentrel();
 
     public LinkedHashMap<String, String> getTeacherMap() {
         if (null == teacherMap) {
@@ -46,7 +49,7 @@ public class StatisticalResultBean implements Serializable {
                 }
                 break;
                 case 1: {
-                    teacherMap.put(this.loginUser.getName(),this.loginUser.getUno());
+                    teacherMap.put(this.loginUser.getName(), this.loginUser.getUno());
                 }
                 break;
             }
@@ -66,43 +69,73 @@ public class StatisticalResultBean implements Serializable {
             if (!teacherNo.equals("unRecord")) {
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teacherNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 } else {
                     checkList.clear();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teacherNo = '" + teacherNo + "'",checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 }
-            } else {
+                for (Checkrecords s : checkList) {
+                    s.setSchoolId(this.getLoginUser().getSchoolId());
+                }
+           } 
+            else {
+                if (myUser.getRoleid() == 1)
+                    return null;
+                else{
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from student" + myUser.getSchoolId() + " where roleid = 2 and nameofunitid!=15 and userno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", this.getLoginUser());
-                    for (Iterator<User> it = stuList.iterator(); it.hasNext();) {
-                        User tempuser = it.next();
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", stuentrel);
+                    for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
+                        Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
-                        c.setStuno(tempuser.getUno());
+                        c.setStuno(tempuser.getStuno());
                         checkList.add(c);
                     }
                 } else {
                     checkList.clear();
-                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from student" + myUser.getSchoolId() + " where roleid = 2 and nameofunitid!=15 and userno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", this.getLoginUser());
-                    for (Iterator<User> it = stuList.iterator(); it.hasNext();) {
-                        User tempuser = it.next();
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", stuentrel);
+                    for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
+                        Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
-                        c.setStuno(tempuser.getUno());
+                        c.setStuno(tempuser.getStuno());
                         checkList.add(c);
                     }
                 }
             }
+        }
+            for (Checkrecords s : checkList) {
+                s.setSchoolId(this.getLoginUser().getSchoolId());
+            }
+            return checkList;
+        } else {
+            if (null == checkList) {
+                checkList = new ArrayList<Checkrecords>();
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
+                    Checkrecords Checkrecord = it.next();
+                    checkList.add(Checkrecord);
+                }
+            } else {
+                checkList.clear();
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
+                    Checkrecords Checkrecord = it.next();
+                    checkList.add(Checkrecord);
+                }
+                for (Checkrecords s : checkList) {
+                    s.setSchoolId(this.getLoginUser().getSchoolId());
+                }
+            }
             return checkList;
         }
-        return null;
     }
 
     /**

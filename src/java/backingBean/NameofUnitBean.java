@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import tools.ForCallBean;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -45,20 +46,29 @@ public class NameofUnitBean implements java.io.Serializable {
 
     }
 
-    /**
-     * @return the classList
-     */
     public List<Nameofunit> getClassList() {
-        classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
+        if (null != schoolId) {
+            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
+        } else {
+            classList = null;
+        }
         return classList;
     }
 
-    /**
-     * @return the schoolList
-     */
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
-            schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
+            switch (new ForCallBean().getUser().getRoleinfo().getCanseeall()) {
+                case StaticFields.CanSeeAll:
+                     schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
+                    break;
+                case StaticFields.CanSeeOnlySchool:
+                    
+                    break;
+                case StaticFields.CanSeeSelf:
+                    
+                    break;
+            }
+           
         }
         return schoolList;
     }
@@ -70,12 +80,13 @@ public class NameofUnitBean implements java.io.Serializable {
         return schoolId;
     }
 
+
     /**
      * @param schoolId the schoolId to set
      */
     public void setSchoolId(String schoolId1) {
+        this.classList = null;
         if (null != schoolId1) {
-            this.classList = null;
             this.schoolId = (schoolId1.length() == 2) ? ("0" + schoolId1) : schoolId1;
         }
     }
