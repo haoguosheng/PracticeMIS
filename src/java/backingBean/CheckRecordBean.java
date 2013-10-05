@@ -152,14 +152,17 @@ public class CheckRecordBean implements Serializable {
             this.studentNo = studentNo;
             String sql1 = "seleclt * from student" + myUser.getSchoolId() + " where uno='" + studentNo + "'";
             this.StudentUser = userDao.getBeanListHandlerRunner(sql1, new User()).get(0);
+            this.StudentUser.setSchoolId(myUser.getSchoolId());
             String sql2 = "seleclt * from pracricenote" + myUser.getSchoolId() + " where uno='" + studentNo + "'";
             this.practiceList = pDao.getBeanListHandlerRunner(sql2, new Practicenote());
+            for(Practicenote p:practiceList){
+                p.setSchoolId( myUser.getSchoolId());
+            }
         } else {
             this.studentNo = "0";
             this.StudentUser = null;
             this.practiceList = new LinkedList<Practicenote>();
         }
-
     }
 
     /**
