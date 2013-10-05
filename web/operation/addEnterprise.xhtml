@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                                  <div class ="enterpriseInfo">
+                <h:form prependId="false">
+                    <h1><h:outputText value="#{msgs.addorEdit}"/></h1>
+                     <h:messages  style="color: red" id="latestMessage"/>
+                     <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                        <h:outputLabel value="#{msgs.enterName}:" for="name" />
+                        <h:inputText id="name" value="#{enterpriseInfo.enterName}" required="true" size="40"/>
+                        <h:outputLabel value="#{msgs.myurl}:" for="enterurl"/>
+                        <h:inputText id="enterurl" value="#{enterpriseInfo.enterprise.enterurl}"/>
+                        <h:outputLabel value="#{msgs.city}:" for="city" />
+                        <h:panelGrid columns="4">
+                            <h:selectOneMenu id="city"  value="#{enterpriseInfo.cityId}" required="true">
+                                <f:selectItems value="#{cityBackingBean.cityMap}" />
+                            </h:selectOneMenu>
+                            <h:inputText value="#{cityBackingBean.newCityName}" id="newCity" size="40"/>
+                            <h:commandButton value="#{msgs.addNewCity}" class="button">
+                                <f:ajax  execute="newCity"  render="city latestMessage" />
+                            </h:commandButton>
+                        </h:panelGrid>
+                        <h:outputLabel value="#{msgs.contactName}:"/>
+                        <h:inputText id="contactName" value="#{enterpriseInfo.enterprise.contactname}" required="true" size="40"/>
+                        <h:outputLabel value="#{msgs.contactTelephone}:" id="telephone"/>
+                        <h:inputText id="contactTelephone" value="#{enterpriseInfo.enterprise.contacttelephone}">
+                            <f:validateRegex for="telephone" pattern="((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)" />
+                        </h:inputText>
+                        <h:outputLabel value="#{msgs.contactAddrss}:"/>
+                        <h:inputText id="contactAddress" value="#{enterpriseInfo.enterprise.contactaddress}" required="true" size="40"/>
+                         <h:outputLabel value="#{msgs.stuNum}:" for="stunum" />
+                        <h:inputText id="stunum" value="#{enterpriseInfo.entStu.studnum}" required="true" size="40" >
+                            <f:validateLongRange minimum="0" maximum="100"/>
+                        </h:inputText>
+                        <h:outputLabel value="#{msgs.position}:"/>
+                        <h:panelGrid columns="3">
+                            <h:selectOneMenu value="#{enterpriseInfo.positionId}" required="true" id="position">
+                                <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                            </h:selectOneMenu>
+                            <h:inputText value="#{positionBackingBean.newPosition}" id="newPosition" size="40"/>
+                            <h:commandButton value="#{msgs.newPosition}" class="button">
+                                <f:ajax  execute="newPosition"  render="position latestMessage" />
+                            </h:commandButton>
+                        </h:panelGrid>
+                        <h:outputLabel value="#{msgs.other}:"/>
+                        <h:inputTextarea value="#{enterpriseInfo.entStu.other}"  cols="70" rows="15"/>
+                        <h:outputLabel value="#{msgs.require}:" for="requirement" />
+                        <h:inputTextarea id="requirement" value="#{enterpriseInfo.entStu.requirement}" required="true" cols="70" rows="15"/>
+                        <h:outputLabel value="#{msgs.payment}:" for="payement" />
+                        <h:inputTextarea id="payement" value="#{enterpriseInfo.entStu.payment}" required="true" cols="70" rows="15" />
+                  </h:panelGrid>   
+                     <h:commandButton action="#{enterpriseInfo.addEnterprise}" value="" class ="submit"/>
+                </h:form>
+              </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

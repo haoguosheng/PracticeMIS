@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
+                    <h:commandButton value="search" action="#{enterpriseInfo.search()}">
+                        <!--<f:ajax  execute="searchcity"/>-->
+                    </h:commandButton>
+                    <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
+                    <h1><h:outputText value="#{msgs.enterpriseList}"></h:outputText></h1>
+                    <h:dataTable value="#{enterpriseInfo.paginator.model}" var="ep"
+                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn,seventhColumn,eighthColumn " 
+                                 >
+                        <h:column>
+                            <f:facet name="header">#{msgs.enterName}</f:facet>
+                            <h:inputText value="#{ep.ent.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.city}</f:facet>
+                            <h:selectOneMenu value="#{ep.cityId}">
+                                <f:selectItem  itemValue="#{ep.cityId}" itemLabel="#{ep.ent.city.name}" />
+                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                <f:ajax render="enterprise" event="change"/>
+                            </h:selectOneMenu>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.alter}</f:facet>
+                            <h:commandButton id="enterprise" value="#{msgs.alter}" action="#{enterpriseInfo.savaEnter(ep.ent.id,ep.ent.name,ep.cityId)}"/>
+                        </h:column> 
+                        <h:column>
+                            <f:facet name="header">#{msgs.delete}</f:facet>
+                            <h:commandButton value="#{msgs.delete}" action="#{enterpriseInfo.deleteRow(ep.ent)}"/>
+                        </h:column>
+                    </h:dataTable>
+
+                    <h:commandButton value="&lt; prev" action="#{enterpriseInfo.paginator.prev}"/>
+                    <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}"/>
+                    <h:commandButton value="next &gt;" action="#{enterpriseInfo.paginator.next}"/>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

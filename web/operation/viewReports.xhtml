@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h1><h:outputLabel value="#{msgs.viewStuReports}"/></h1>
+                <h:messages   style="color: red" id="latestMessage"/>
+                <h:form id="myForm">
+                    <h:outputLabel value="#{msgs.submittedNote}:"/>
+                    <h:panelGrid columns="1" rendered="#{submitReport.submittedNoteList.size()>0}">
+                        <c:forEach items="#{submitReport.submittedNoteList}" var="submitted">
+                            <h:panelGrid columns="3">
+                                <h:commandLink action="#{submitReport.directToNote()}" value="#{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日">
+                                    <f:param value="#{submitted.submitdate}" name="submitDate"/>
+                                </h:commandLink>
+                                <h:commandLink value="#{msgs.alter}" action="#{submitReport.alterSelectReport()}"/>
+                                <h:commandLink value="#{msgs.delete}" action="#{submitReport.deleteSelectReport()}"/>
+                            </h:panelGrid>
+                        </c:forEach>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
