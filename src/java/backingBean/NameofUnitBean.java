@@ -19,9 +19,9 @@ import tools.StaticFields;
  */
 @ManagedBean
 @SessionScoped
-public class NameofUnitBean implements java.io.Serializable{
+public class NameofUnitBean implements java.io.Serializable {
 
-    private LinkedHashMap<String, Integer> classNameMap, schoolMap;
+    private LinkedHashMap<String, String> classNameMap, schoolMap;
     private List<Nameofunit> classList, schoolList;
     private SQLTool<Nameofunit> nameDAO = new SQLTool<Nameofunit>();
     private Nameofunit unit = new Nameofunit();
@@ -30,16 +30,19 @@ public class NameofUnitBean implements java.io.Serializable{
     /**
      * @return the classNameMap
      */
-    public LinkedHashMap<String, Integer> getClassNameMap() {
+    public LinkedHashMap<String, String> getClassNameMap() {
         if (schoolId != null) {
             classNameMap = new LinkedHashMap();
             Iterator<Nameofunit> it = this.getClassList().iterator();
             while (it.hasNext()) {
                 Nameofunit temunit = it.next();
-                classNameMap.put(temunit.getName(), Integer.valueOf(temunit.getId()));
+                classNameMap.put(temunit.getName(), temunit.getId());
             }
+            return classNameMap;
+        } else {
+            return null;
         }
-        return classNameMap;
+
     }
 
     /**
@@ -71,8 +74,10 @@ public class NameofUnitBean implements java.io.Serializable{
      * @param schoolId the schoolId to set
      */
     public void setSchoolId(String schoolId1) {
-        this.classList = null;
-        this.schoolId = (schoolId1.length()==2)?("0"+schoolId1):schoolId1;
+        if (null != schoolId1) {
+            this.classList = null;
+            this.schoolId = (schoolId1.length() == 2) ? ("0" + schoolId1) : schoolId1;
+        }
     }
 
     /**
@@ -92,13 +97,13 @@ public class NameofUnitBean implements java.io.Serializable{
     /**
      * @return the schoolMap
      */
-    public LinkedHashMap<String, Integer> getSchoolMap() {
+    public LinkedHashMap<String, String> getSchoolMap() {
         if (null == schoolMap) {
-            this.schoolMap = new LinkedHashMap<String, Integer>();
+            this.schoolMap = new LinkedHashMap<String, String>();
             Iterator<Nameofunit> it = this.getSchoolList().iterator();
             while (it.hasNext()) {
                 Nameofunit temunit = it.next();
-                schoolMap.put(temunit.getName(), Integer.valueOf(temunit.getId()));
+                schoolMap.put(temunit.getName(), temunit.getId());
             }
         }
         return schoolMap;

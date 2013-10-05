@@ -26,27 +26,27 @@ public class StatisticalResultBean implements Serializable {
 
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<User> userDao = new SQLTool<User>();
-    private LinkedHashMap<String, Integer> teacherMap;
+    private LinkedHashMap<String, String> teacherMap;
     private ArrayList<Checkrecords> checkList;
     private String[] rankString = new String[]{"优秀", "良好", "及格", "不及格"};
     private String teacherNo;
     private User loginUser;
     private Checkrecords checkRecord=new Checkrecords();
 
-    public LinkedHashMap<String, Integer> getTeacherMap() {
+    public LinkedHashMap<String, String> getTeacherMap() {
         if (null == teacherMap) {
-            teacherMap = new LinkedHashMap<String, Integer>();
+            teacherMap = new LinkedHashMap<String, String>();
             switch (this.getLoginUser().getRoleinfo().getCanseeall()) {
                 case 0: {
                     List<User> userList = userDao.getBeanListHandlerRunner("select * from teacherinfo where roleid != 2", new User());
                     for (Iterator<User> it = userList.iterator(); it.hasNext();) {
                         User tempUser = it.next();
-                        teacherMap.put(tempUser.getName(), Integer.valueOf(tempUser.getUno()));
+                        teacherMap.put(tempUser.getName(), tempUser.getUno());
                     }
                 }
                 break;
                 case 1: {
-                    teacherMap.put(this.loginUser.getName(),Integer.valueOf(this.loginUser.getUno()));
+                    teacherMap.put(this.loginUser.getName(),this.loginUser.getUno());
                 }
                 break;
             }
