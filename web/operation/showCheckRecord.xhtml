@@ -3,9 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      >
+      xmlns:h="http://java.sun.com/jsf/html">
     <f:loadBundle  basename="messages" var="msgs"/>
     <h:head></h:head>
     <body>
@@ -32,9 +30,11 @@
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.remark}" />
                         <h:inputTextarea value="#{teachSeeCheckRecords.checkrecord.remark}"  rows="10" cols="60" readonly="#{teachSeeCheckRecords.readflag}"/>
-                        <h:commandButton value="#{msgs.edit}" action="#{teachSeeCheckRecords.editSelectRecord()}" />
-                        <h:commandButton value="#{msgs.alter}" action="#{teachSeeCheckRecords.alterSelectRecord()}"/>
-                        <h:commandButton value="#{msgs.delete}" action="#{teachSeeCheckRecords.deleteSelectRecord()}"/>
+                        <h:panelGrid columns="3">
+                            <h:commandButton value="#{msgs.edit}" action="#{teachSeeCheckRecords.editSelectRecord()}" />
+                            <h:commandButton value="#{msgs.alter}" action="#{teachSeeCheckRecords.alterSelectRecord()}"/>
+                            <h:commandButton value="#{msgs.delete}" action="#{teachSeeCheckRecords.deleteSelectRecord()}"/>
+                        </h:panelGrid>
                     </h:panelGrid>
                 </h:form>
             </ui:define>

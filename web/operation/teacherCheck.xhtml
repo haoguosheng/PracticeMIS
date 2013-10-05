@@ -19,13 +19,13 @@
                         <h:selectOneMenu value="#{userinfoBean.cityId}" required="true">
                             <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
                             <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                            <f:ajax render="myEntireForm" event="change"/>
+                            <f:ajax render="students" event="change"/>
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.selectStudents}"/>
                         <h:selectOneMenu  value="#{checkRecordBean.studentNo}" id="students" required="true">
                             <f:selectItem  itemValue="0" itemLabel="#{msgs.pleaseSelect}"/>
                             <f:selectItems value="#{userinfoBean.studentMap}"/>
-                            <f:ajax event="change" render="myEntireForm" />
+                            <f:ajax event="change" render="studentReport" />
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.submittedNote}:"/>
                         <h:panelGrid id="studentReport">
