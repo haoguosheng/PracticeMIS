@@ -41,8 +41,8 @@ public class CheckRecordBean implements Serializable {
     private SQLTool<Practicenote> pDao = new SQLTool<Practicenote>();
 
     public String addCheckRecord() {
-        User user= new ForCallBean().getUser();
-        checkrecords.setSchoolId(user.getSchoolId());
+        User myUser= new ForCallBean().getUser();
+        checkrecords.setSchoolId(myUser.getSchoolId());
         Calendar tempc = Calendar.getInstance();
         tempc.add(Calendar.YEAR, year - c.get(Calendar.YEAR));
         tempc.add(Calendar.MONTH, month - c.get(Calendar.MONTH));
@@ -54,10 +54,10 @@ public class CheckRecordBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(UserAnalysis.getRoleName(this.studentNo) + "的检查记录已经存在，不能再添加了"));
         } else {
             checkrecords.setStuno(this.studentNo);
-            checkrecords.setTeachno(user.getUno());
+            checkrecords.setTeachno(myUser.getUno());
             checkrecords.setCheckdate(tempc.getTime());
             String insert = "insert into checkrecords" + checkrecords.getSchoolId() + "(stuno, teachno, checkdate, checkcontent, recommendation, rank, remark) values('"
-                    + this.studentNo + "', '" + user.getUno() + "', " + tempc.getTime() + ", '" + checkrecords.getCheckcontent() + "', '"
+                    + this.studentNo + "', '" + myUser.getUno() + "', " + tempc.getTime() + ", '" + checkrecords.getCheckcontent() + "', '"
                     + checkrecords.getRecommendation() + "', '" + checkrecords.getRank() + "', '" + checkrecords.getRemark() + "')";
             cDao.executUpdate(insert);
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));

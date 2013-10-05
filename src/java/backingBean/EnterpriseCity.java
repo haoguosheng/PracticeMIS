@@ -14,7 +14,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean
 @ApplicationScoped
-public class EnterpriseCity {
+public class EnterpriseCity  implements java.io.Serializable{
     private Enterprise ent;
     private int cityId;
     

@@ -11,7 +11,7 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                 <h:form enctype="multipart/form-data">
-                      <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.selectSchool}"/>
                         <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true">
@@ -27,10 +27,10 @@
                         <c:set var="classId" value="#{nameofUnitBean.classId}"/>
                         <h:inputFile value="#{userinfoBean.excelFile}" required="true"/>
                         <h:commandButton value="#{msgs.myimport}" action="#{userinfoBean.importStudent}"/>
-                </h:panelGrid>
-            </h:form>
-        </ui:define>
-    </ui:composition>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
 
-</body>
+    </body>
 </html>

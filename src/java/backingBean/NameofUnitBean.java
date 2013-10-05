@@ -19,7 +19,7 @@ import tools.StaticFields;
  */
 @ManagedBean
 @SessionScoped
-public class NameofUnitBean {
+public class NameofUnitBean implements java.io.Serializable{
 
     private LinkedHashMap<String, Integer> classNameMap, schoolMap;
     private List<Nameofunit> classList, schoolList;
