@@ -147,9 +147,9 @@ public class CheckRecordBean implements Serializable {
         User user =new ForCallBean().getUser();
         if (!"0".equals(studentNo)) {
             this.studentNo = studentNo;
-            String sql1 = "seleclt * from student" + user.getSchoolId() + " where uno='" + studentNo + "'";
+            String sql1 = "select * from student" + user.getSchoolId() + " where uno='" + studentNo + "'";
             this.StudentUser = userDao.getBeanListHandlerRunner(sql1, new User()).get(0);
-            String sql2 = "seleclt * from pracricenote" + user.getSchoolId() + " where uno='" + studentNo + "'";
+            String sql2 = "select * from practicenote" + user.getSchoolId() + " where uno='" + studentNo + "'";
             this.practiceList = pDao.getBeanListHandlerRunner(sql2, new Practicenote());
         } else {
             this.studentNo = "0";
