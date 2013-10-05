@@ -23,7 +23,7 @@ import tools.SQLTool;
  */
 @ManagedBean
 @ApplicationScoped
-public class CityBackingBean {
+public class CityBackingBean implements java.io.Serializable{
 
     private SQLTool<City> cDao = new SQLTool<City>();
     private LinkedHashMap<String, Integer> cityMap;
