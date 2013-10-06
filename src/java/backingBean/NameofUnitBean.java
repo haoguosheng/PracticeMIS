@@ -49,7 +49,7 @@ public class NameofUnitBean implements java.io.Serializable {
 
     public List<Nameofunit> getClassList() {
         if (null != schoolId) {
-            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where parentid ='" + this.getSchoolId() + "' order by name", unit);
+            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where parentid ='" + this.getSchoolId() + "' order by name", unit);
         } else {
             classList = null;
         }
@@ -61,10 +61,10 @@ public class NameofUnitBean implements java.io.Serializable {
             User myUser=new ForCallBean().getUser();
             switch (myUser.getRoleinfo().getCanseeall()) {
                 case StaticFields.CanSeeAll:
-                     schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
+                     schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeOnlySchool:
-                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + myUser.getNameofunitid() + "' order by pinyin", unit);
+                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where  parentid='" + myUser.getNameofunitid() + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeSelf:
                     schoolList=null;

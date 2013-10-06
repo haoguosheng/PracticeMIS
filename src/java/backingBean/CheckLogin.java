@@ -41,7 +41,7 @@ public class CheckLogin implements Serializable {
     private boolean isUserlegal(String name, String password) {
         boolean result;
         if (name.trim().length() == 6) {
-            String sql = "select * from teacherinfo where uno='" + name + "' and password='" + password + "'";
+            String sql = "select * from teacherinfo"+StaticFields.currentGradeNum+" where uno='" + name + "' and password='" + password + "'";
             List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
             if (null == userList) {
                 result = false;

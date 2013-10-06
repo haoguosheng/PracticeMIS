@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 
 @ManagedBean
 @ViewScoped
@@ -28,7 +29,7 @@ public class NewsBean implements Serializable {
         if (this.news.getContent().trim().length() >= 0) {
             this.news.setInputdate(Calendar.getInstance().getTime());
             this.news.setUserno(new ForCallBean().getUser().getUno());
-            newsDao.executUpdate("insert into news(content, inputDate, userno) values('" + this.news.getContent() + "', " + this.news.getInputdate() + ", '" + this.news.getUserno() + "'");
+            newsDao.executUpdate("insert into news" +StaticFields.currentGradeNum+" (content, inputDate, userno) values('" + this.news.getContent() + "', " + this.news.getInputdate() + ", '" + this.news.getUserno() + "'");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("添加成功，您可以继续添加"));
             this.news = new News();
         } else {
@@ -58,7 +59,7 @@ public class NewsBean implements Serializable {
         if (this.recentNews.isEmpty()) {
             Calendar c1 = Calendar.getInstance();
             c1.add(Calendar.DAY_OF_MONTH, -30);
-            String sqlString = "select *  from news where date(inputdate)>date('" + c1.get(Calendar.YEAR) + "-" + c1.get(Calendar.MONTH) + "-" + c1.get(Calendar.DAY_OF_MONTH) + "')";
+            String sqlString = "select *  from news"+StaticFields.currentGradeNum+" where date(inputdate)>date('" + c1.get(Calendar.YEAR) + "-" + c1.get(Calendar.MONTH) + "-" + c1.get(Calendar.DAY_OF_MONTH) + "')";
             this.recentNews = newsDao.getBeanListHandlerRunner(sqlString, this.news);
         }
         return recentNews;

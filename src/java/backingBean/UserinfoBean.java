@@ -51,7 +51,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public LinkedHashMap<String, String> getStudentMap() {
-        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
+        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where ENTERID in (select id from enterprise"+StaticFields.currentGradeNum+" where cityid=" + cityId + "))", getUser());
         if (null != usrList && usrList.size() > 0) {
             Iterator<User> it = usrList.iterator();
             studentMap = new LinkedHashMap<String, String>();
@@ -95,10 +95,10 @@ public class UserinfoBean implements java.io.Serializable {
             while (it.hasNext()) {
                 Practicenote tem = new Practicenote();
                 //创建一个新表
-                String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) +StaticFields.currentGradeNum+ schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
+                String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) + schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
                 praDao.executUpdate(createPra);
                 //把旧的数据插入新表
-                String insPra = "INSERT INTO HGS.PRACTICENOTE" +StaticFields.currentGradeNum+ schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
+                String insPra = "INSERT INTO HGS.PRACTICENOTE" +gradeNum+ ""+schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
                         + tem.getDetail() + "', '" + tem.getSubmitdate() + "', " + tem.getEnterid() + "," + tem.getPositionid() + ",'" + tem.getStuno() + "')";
                 praDao.executUpdate(insPra);
                 //把旧的数据从旧表中删除

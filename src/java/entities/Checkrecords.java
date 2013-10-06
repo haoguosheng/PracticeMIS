@@ -102,7 +102,7 @@ public class Checkrecords implements Serializable {
 
     public User getTeacher() {
         if(teacher == null){
-            teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='" + teachno + "'", new User()).get(0);
+            teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo"+StaticFields.currentGradeNum+" where uno='" + teachno + "'", new User()).get(0);
         }
         return teacher;
     }

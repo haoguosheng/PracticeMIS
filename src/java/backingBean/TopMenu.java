@@ -15,6 +15,7 @@ import javax.faces.bean.SessionScoped;
 import tools.ApplicationForCallBean;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -40,7 +41,7 @@ public class TopMenu implements Serializable {
 
     private void calcuListResList() {
         User myUser = new ForCallBean().getUser();
-        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + myUser.getRoleid()).get(0) + ",";
+        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo" +StaticFields.currentGradeNum+"  where id=" + myUser.getRoleid()).get(0) + ",";
         LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
         LinkedList<ResourceWithChildren> readyResource = ApplicationForCallBean.getListResList();
         for (int i = 0; i < readyResource.size(); i++) {

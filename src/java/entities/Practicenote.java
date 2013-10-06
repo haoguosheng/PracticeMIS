@@ -90,7 +90,7 @@ public class Practicenote implements Serializable {
      */
     public Enterprise getEnterprise() {
         if (enterprise == null) {
-            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + enterid, new Enterprise()).get(0);
+            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" +StaticFields.currentGradeNum+"  where id=" + enterid, new Enterprise()).get(0);
         }
         return enterprise;
     }
@@ -107,7 +107,7 @@ public class Practicenote implements Serializable {
      */
     public Position getPosition() {
         if (position == null) {
-            position = positionDao.getBeanListHandlerRunner("select * from position where id=" + positionid, new Position()).get(0);
+            position = positionDao.getBeanListHandlerRunner("select * from position" +StaticFields.currentGradeNum+"  where id=" + positionid, new Position()).get(0);
         }
         return position;
     }

@@ -25,7 +25,7 @@ public class UserAnalysis {
     public static String getSchoolId(String uno) {
         String schoolId;
         if (uno.trim().length() == 6) {
-            String sql = "select * from teacherinfo where uno = '" + uno + "'";
+            String sql = "select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno = '" + uno + "'";
             schoolId = userDao.getBeanListHandlerRunner(sql, csUser).get(0).getNameofunitid();
         } else {
             if (uno.trim().length() == 8) {
@@ -43,7 +43,7 @@ public class UserAnalysis {
         String temp;
         //      System.out.println("SchoolId11============================" + uno);
         if (uno.length() == 6) {
-            String sql = "select * from teacherinfo where uno = '" + uno + "'";
+            String sql = "select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno = '" + uno + "'";
             List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);
             temp = teacherList.get(0).getNameofunitid();
         } else {
@@ -53,7 +53,7 @@ public class UserAnalysis {
                 temp = uno.substring(2, 5);
             }
         }
-        String s = "select * from nameofunit where id='" + temp + "'";
+        String s = "select * from nameofunit" +StaticFields.currentGradeNum+"  where id='" + temp + "'";
         List<Nameofunit> list = nameDao.getBeanListHandlerRunner(s, csNameofUnit);
         return list.get(0).getName();
     }
@@ -62,7 +62,7 @@ public class UserAnalysis {
         String temp;
         int roleid;
         if (uno.length() == 6) {
-            String sql = "select * from teacherinfo where uno = '" + uno + "'";
+            String sql = "select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno = '" + uno + "'";
             List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);
             roleid = teacherList.get(0).getRoleid();
         } else {
@@ -71,11 +71,11 @@ public class UserAnalysis {
             } else {
                 temp = uno.substring(2, 5);
             }
-            String sql = "select * from student" + temp + " where uno='" + uno + "'";
+            String sql = "select * from student" +StaticFields.currentGradeNum  + temp + " where uno='" + uno + "'";
             List<User> studentList = userDao.getBeanListHandlerRunner(sql, csUser);
             roleid = studentList.get(0).getRoleid();
         }
-        String s = "select * from roleinfo where id=" + roleid;
+        String s = "select * from roleinfo" +StaticFields.currentGradeNum+"  where id=" + roleid;
         List<Roleinfo> roleList = roleDao.getBeanListHandlerRunner(s, csRoleinfo);
         return roleList.get(0).getName();
     }

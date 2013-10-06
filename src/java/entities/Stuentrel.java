@@ -57,7 +57,7 @@ public class Stuentrel implements Serializable {
 
     public Enterprise getEnterprise() {
         if (enterprise == null) {
-            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + this.enterid, new Enterprise()).get(0);
+            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" +StaticFields.currentGradeNum+"  where id=" + this.enterid, new Enterprise()).get(0);
         }
         return enterprise;
     }

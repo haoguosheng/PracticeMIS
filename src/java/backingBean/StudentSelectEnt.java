@@ -101,7 +101,7 @@ public class StudentSelectEnt implements java.io.Serializable {
      */
     public void setEnterpriseid(int enterpriseid) {
         this.enterpriseid = enterpriseid;
-        this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + this.getEnterpriseid(), new Enterprise()).get(0);
+        this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where id=" + this.getEnterpriseid(), new Enterprise()).get(0);
         this.enterprise.setSchoolId(this.getUser().getSchoolId());
     }
 

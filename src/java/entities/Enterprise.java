@@ -155,7 +155,7 @@ public class Enterprise implements Serializable {
      */
     public City getCity() {
         if (city == null) {
-            city = cityDao.getBeanListHandlerRunner("select * from city where id=" + cityId, new City()).get(0);
+            city = cityDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id=" + cityId, new City()).get(0);
         }
         return city;
     }
@@ -172,7 +172,7 @@ public class Enterprise implements Serializable {
      */
     public List<Enterstudent> getEnterstudentList() {
         if (enterstudentList == null) {
-            enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent where enterid=" + id, new Enterstudent());
+            enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent"+StaticFields.currentGradeNum+" where enterid=" + id, new Enterstudent());
         }
         return enterstudentList;
     }

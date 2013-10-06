@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.PublicFields;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -36,11 +37,11 @@ public class PositionBackingBean implements java.io.Serializable {
     public void setNewPosition(String newPosition) {
         this.newPosition = newPosition.trim();
         if (this.newPosition.length() > 0 && !this.newPosition.equals(new PublicFields().getTag())) {
-            if (pDao.getBeanListHandlerRunner("select * from Position where locate('" + this.newPosition + "',name)>0", position).size() <= 0) {
+            if (pDao.getBeanListHandlerRunner("select * from Position"+StaticFields.currentGradeNum+" where locate('" + this.newPosition + "',name)>0", position).size() <= 0) {
                 Position myposition = new Position();
                 myposition.setName(newPosition);
                 myposition.setUserno(new ForCallBean().getUser().getUno());
-                pDao.executUpdate("insert into position(name, userno) values('" + myposition.getName() + "', '" + myposition.getUserno() + "')");
+                pDao.executUpdate("insert into position" +StaticFields.currentGradeNum+" (name, userno) values('" + myposition.getName() + "', '" + myposition.getUserno() + "')");
                 this.positionMap = null;
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把" + this.newPosition + "添加到左边列表框，请选择！"));
             }
@@ -57,7 +58,7 @@ public class PositionBackingBean implements java.io.Serializable {
     public LinkedHashMap<String, Integer> getPositionMap() {
         if (null == this.positionMap) {
             this.positionMap = new LinkedHashMap<String, Integer>();
-            List<Position> positionList = pDao.getBeanListHandlerRunner("select * from position", position);
+            List<Position> positionList = pDao.getBeanListHandlerRunner("select * from position"+StaticFields.currentGradeNum+"", position);
             Iterator<Position> it = positionList.iterator();
             while (it.hasNext()) {
                 Position po = it.next();

@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -66,7 +67,7 @@ public class News implements Serializable {
      */
     public User getTeacher() {
         if(teacher == null){
-            teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='" + userno +"'", new User()).get(0);
+            teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno='" + userno +"'", new User()).get(0);
         }
         return teacher;
     }
