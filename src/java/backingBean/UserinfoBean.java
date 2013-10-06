@@ -33,7 +33,7 @@ import tools.SQLTool;
 @ManagedBean
 @SessionScoped
 public class UserinfoBean implements java.io.Serializable {
-    
+
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Practicenote> praDao = new SQLTool<Practicenote>();
     private SQLTool<Checkrecords> chkDao = new SQLTool<Checkrecords>();
@@ -43,10 +43,12 @@ public class UserinfoBean implements java.io.Serializable {
     private LinkedHashMap<String, String> studentMap;
     private User myUser;
     private Part excelFile;
-    
+    private List<User> student;
+    private String schoolId;
+
     public UserinfoBean() {
     }
-    
+
     public LinkedHashMap<String, String> getStudentMap() {
         List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
         if (null != usrList && usrList.size() > 0) {
@@ -63,20 +65,20 @@ public class UserinfoBean implements java.io.Serializable {
             return null;
         }
     }
-    
+
     public String submit() {
         userDao.executUpdate("update student" + getUser().getSchoolId() + " set password='" + getUser().getPassword() + "', email='" + getUser().getEmail() + "', name='" + getUser().getName() + "', phone='" + getUser().getPhone() + "', roleId=" + getUser().getRoleid() + ", nameofunitid='" + getUser().getNameofunitid() + "' where uno='" + getUser().getUno() + "'");
         FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
         return null;
     }
-    
+
     public User getUser() {
         if (null == myUser) {
             this.myUser = new ForCallBean().getUser();
         }
         return myUser;
     }
-    
+
     public String backupStu(String schoolId, String gradeNum) {
         if (null != schoolId) {
             //备份学生学号的前2位等于传入的参数：gradeNum
@@ -86,7 +88,7 @@ public class UserinfoBean implements java.io.Serializable {
             String checkSelectString = "select * from HGS.CHECKRECORDS" + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
             String stuEntRelSelectString = "select * from HGS.STUENTREL" + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
             String stuSelectString = "select * from HGS.STUDENT" + schoolId + " where substr(uno,1,2)='" + gradeNum + "'";
-            
+
             List<Practicenote> praList = praDao.getBeanListHandlerRunner(practicNoteSelectString, new Practicenote());
             Iterator<Practicenote> it = praList.iterator();
             while (it.hasNext()) {
@@ -100,14 +102,14 @@ public class UserinfoBean implements java.io.Serializable {
                 praDao.executUpdate(insPra);
                 //把旧的数据从旧表中删除
                 praDao.executUpdate(insPra);
-                
+
             }
         } else {
             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("请指定要备份的学生所在的学院！"));
         }
         return null;
     }
-    
+
     public String restorStu(String schoolId) {
         if (null != schoolId) {
         } else {
@@ -115,7 +117,7 @@ public class UserinfoBean implements java.io.Serializable {
         }
         return null;
     }
-    
+
     public String importStudent(String schoolId) {
         if (null != schoolId) {
             try {
@@ -163,27 +165,60 @@ public class UserinfoBean implements java.io.Serializable {
         }
         return null;
     }
-    
+
+    public List<User> getStudent() {
+        return student;
+    }
+
+    public void setStudent(List<User> student) {
+        this.student = student;
+    }
+
+    public void save(String nuo, String nameofunit, String parNameofunit) {
+    }
+
+    public void delete(User user) {
+    }
+
+    public void check(String cc) {
+        this.setSchoolId(cc);
+    }
+
+    /**
+     * @return the schoolId //
+     */
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    /**
+     * @param schoolId the schoolId to set
+     */
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+        student = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where nameofunitid in(select id from nameofunit where parentid='" + schoolId + "')", myUser);
+    }
+
     public String getUserno() {
         return userno;
     }
-    
+
     public void setUserno(String userno) {
         this.userno = userno;
     }
-    
+
     public int getCityId() {
         return cityId;
     }
-    
+
     public void setCityId(int cityId) {
         this.cityId = cityId;
     }
-    
+
     public Part getExcelFile() {
         return excelFile;
     }
-    
+
     public void setExcelFile(Part excelFile) {
         this.excelFile = excelFile;
     }
