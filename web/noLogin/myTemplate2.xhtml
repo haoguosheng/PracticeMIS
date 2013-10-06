@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:loadBundle basename="messages" var="msgs"/>
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>#{msgs.mytitle}</title>
+       <link type="text/css" rel="stylesheet" href="../../resources/css/news.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/companyInfo.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/selected.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/select.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/addEnterprise.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/personInfo.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/left.css" />
+        <link type="text/css" rel="stylesheet" href="../../resources/css/template.css" />
+        <script type ="text/javascript" src="../../resources/javaScript/jquery.js"></script>
+        <script type ="text/javascript" src="../../resources/javaScript/left.js"></script>
+        <script type ="text/javascript" src="../../resources/javaScript/table.js"></script>
+    </h:head>
+
+    <h:body>
+        <div id ="template_main">
+        
+            
+                <div id="top">
+                    <ui:insert name="top">
+                        <ui:include src="top.xhtml"/>
+                    </ui:insert>
+                </div>
+           
+            <table class ="layout" width="100%" cellpadding="0" cellspacing="0">
+                   <tr>
+                       <td class ="layout" valign="top" width ="12%">
+                            <div id="left">
+                                <ui:insert name="left">
+                                    <ui:include src="left.xhtml"/>
+                                </ui:insert>
+                            </div>
+                       </td>
+                       <td width ="88%" valign ="top" class ="layout">
+                        <div id="content">
+                            <ui:insert name="content">
+                            </ui:insert>
+                        </div>
+                          </td>
+                     </tr>
+                   </table>
+                <div id="bottom" >
+                    <ui:insert name="bottom">
+                        <ui:include src="bottom.xhtml"/>
+                    </ui:insert>
+                </div>
+            </div>
+    </h:body>
+
+</html>

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages   style="color: red" id="latestMessage"/>
+                <h:form>
+                <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.schoolName}"></h:outputLabel>
+                        <h:selectOneMenu value="#{classBean.schoolId}" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.schoolMap}"/>
+                            <f:ajax render="classes" event="change"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="#{msgs.selectclass}"/>
+                        <h:selectOneMenu  value="#{classBean.classId}" id="classes" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.classMap}"/>
+                            <!--<f:ajax event="change" render="studentReport" />-->
+                        </h:selectOneMenu>
+                        
+                       <h:panelGrid columns="3">
+                            <h:commandButton value="#{msgs.edit}" action="#{schoolBean.editSchool()}" />
+                            <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool()}"/>
+                            <h:commandButton value="#{msgs.delete}" action="#{schoolBean.deleteSchool()}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <h:dataTable value="#{statisticalResultBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
+                        <f:facet name="caption">#{msgs.scoresQuery}</f:facet>
+                        <h:column>
+                            <f:facet name="header">#{msgs.userno}</f:facet>
+                                #{checkRecord.stuno}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.name}</f:facet>
+                                #{checkRecord.student.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.rank}</f:facet>
+                                #{statisticalResultBean.rankString[checkRecord.rank]}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.checkTeacher}</f:facet>
+                                #{checkRecord.teacher.name}
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
