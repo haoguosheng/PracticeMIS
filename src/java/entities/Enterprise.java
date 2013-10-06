@@ -154,8 +154,8 @@ public class Enterprise implements Serializable {
      * @return the city
      */
     public City getCity() {
-        if (city == null) {
-            city = cityDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id=" + cityId, new City()).get(0);
+        if (city == null&&cityId!=0) {
+            city = cityDao.getBeanListHandlerRunner("select * from city"+new StaticFields().currentGradeNum+" where id=" + cityId, new City()).get(0);
         }
         return city;
     }

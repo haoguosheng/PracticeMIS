@@ -15,14 +15,11 @@
                 <h:form>
                     <h:messages  style="color: red" id="latestMessage"/>
                     <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
-                    <h:commandButton value="search" action="#{enterpriseInfo.search()}">
-                        <!--<f:ajax  execute="searchcity"/>-->
-                    </h:commandButton>
+                    <h:commandButton value="search" action="#{enterpriseInfo.search()}"/>
                     <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
                     <h1><h:outputText value="#{msgs.enterpriseList}"></h:outputText></h1>
                     <h:dataTable rowClasses="oddRows evenRows"  value="#{enterpriseInfo.paginator.model}" var="ep"
-                                 border="1"
-                                 >
+                                 border="1" >
                         <h:column>
                             <f:facet name="header">#{msgs.enterName}</f:facet>
                             <h:inputText value="#{ep.ent.name}"/>
