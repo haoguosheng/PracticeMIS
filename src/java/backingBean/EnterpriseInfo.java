@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.RepeatPaginator;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -50,7 +51,7 @@ public class EnterpriseInfo implements java.io.Serializable {
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
             this.entStu.setPositionid(this.positionId);
             this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise").get(0)));
-            esDao.executUpdate("insert into enterstudent" + myUser.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
+            esDao.executUpdate("insert into enterstudent" +StaticFields.currentGradeNum+ myUser.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
                     + this.entStu.getEnterid() + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();

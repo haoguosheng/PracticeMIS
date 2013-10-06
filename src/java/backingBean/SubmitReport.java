@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -86,9 +87,9 @@ public class SubmitReport implements Serializable {
                 //注意：java.sql.Date只能读取日期("yyyy-MM-dd")
                 //java.sql.Date date = Date.Valuseof(s);
                 practiceNote.setStuno(getUser().getUno());
-                practiceNote.setEnterid(Integer.parseInt(seDao.getIdListHandlerRunner("select enterId from stuentrel" + loginUser.getSchoolId() + " where stuno='" + getUser().getUno() + "'").get(0)));
+                practiceNote.setEnterid(Integer.parseInt(seDao.getIdListHandlerRunner("select enterId from stuentrel" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + getUser().getUno() + "'").get(0)));
                 practiceNote.setPositionid(positionId);
-                practDao.executUpdate("insert into practicenote" + loginUser.getSchoolId() + "(detail, submitdate, enterid, positionId, stuno) values('" + practiceNote.getDetail() + "', '" + s + "', " + practiceNote.getEnterid() + ", " + practiceNote.getPositionid() + ", '" + practiceNote.getStuno() + "')");
+                practDao.executUpdate("insert into practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + "(detail, submitdate, enterid, positionId, stuno) values('" + practiceNote.getDetail() + "', '" + s + "', " + practiceNote.getEnterid() + ", " + practiceNote.getPositionid() + ", '" + practiceNote.getStuno() + "')");
                 submittedNoteList = null;//重新生成该列表
                 practiceNote = new Practicenote();
                 this.setYear(c.get(Calendar.YEAR));
@@ -112,7 +113,7 @@ public class SubmitReport implements Serializable {
 
     public List<Practicenote> getSubmittedNoteList() {
         if (null == submittedNoteList) {
-            submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
+            submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
         }
         for (Practicenote s : submittedNoteList) {
             s.setSchoolId(loginUser.getSchoolId());
@@ -126,8 +127,8 @@ public class SubmitReport implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         if (null != (context.getExternalContext().getRequestParameterMap().get("studentNo"))) {
             //主要用于教师查看学生的周记
-            this.studentUser = userDao.getBeanListHandlerRunner("select * from student" + loginUser.getSchoolId() + " where uno='" + context.getExternalContext().getRequestParameterMap().get("studentNo") + "'", loginUser).get(0);
-            this.submittedNoteList = practDao.getBeanListHandlerRunner("select * from practice" + loginUser.getSchoolId() + " where stuno='" + this.studentUser.getUno() + "'", practiceNote);
+            this.studentUser = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where uno='" + context.getExternalContext().getRequestParameterMap().get("studentNo") + "'", loginUser).get(0);
+            this.submittedNoteList = practDao.getBeanListHandlerRunner("select * from practice" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.studentUser.getUno() + "'", practiceNote);
         }
         String strToFormat = context.getExternalContext().getRequestParameterMap().get("submitDate");
         deleteRepDate = strToFormat;
@@ -153,7 +154,7 @@ public class SubmitReport implements Serializable {
     public LinkedHashMap<String, Integer> getPositionMap() {
         if (null == this.positionMap || this.positionMap.isEmpty()) {
             this.positionMap = new LinkedHashMap();
-            List<Stuentrel> ent = seDao.getBeanListHandlerRunner("select * from Stuentrel" + loginUser.getSchoolId() + " where stuno='" + this.loginUser.getUno() + "'", stuEnRel);
+            List<Stuentrel> ent = seDao.getBeanListHandlerRunner("select * from Stuentrel" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.loginUser.getUno() + "'", stuEnRel);
             if (ent.size() <= 0) {//还没有选择企业呢，跳转选择企业
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("因为没有选中实习的单位，所以需要在此选择实习的单位，如果这里没您实习的单位，则需要\"添加实习单位\""));
                 new ForCallBean().setReason(1);
@@ -179,8 +180,8 @@ public class SubmitReport implements Serializable {
 
     public String deleteSelectReport() {
         String s = deleteRepDate;
-        practDao.executUpdate("delete from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
-        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
+        practDao.executUpdate("delete from practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
         readflag = true;
         return "viewReports.xhtml";
     }
@@ -192,8 +193,8 @@ public class SubmitReport implements Serializable {
     
     public String alterSelectReport() {
         String s = alterDate;
-        practDao.executUpdate("update practicenote" + loginUser.getSchoolId() + " set detail='" + temPraNote.getDetail() + "' where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
-        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
+        practDao.executUpdate("update practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " set detail='" + temPraNote.getDetail() + "' where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
         return "viewReports.xhtml";
     }
 
@@ -267,7 +268,7 @@ public class SubmitReport implements Serializable {
      * @return the studentUser
      */
     public User getStudentUser() {
-        studentUser = userDao.getBeanListHandlerRunner("select * from student" + loginUser.getSchoolId() + " where uno='" + studentUserno + "'", this.getUser()).get(0);
+        studentUser = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where uno='" + studentUserno + "'", this.getUser()).get(0);
         studentUser.setSchoolId(loginUser.getSchoolId());
         return studentUser;
     }

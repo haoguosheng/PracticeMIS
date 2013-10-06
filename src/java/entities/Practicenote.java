@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -123,7 +124,7 @@ public class Practicenote implements Serializable {
      */
     public User getStudent() {
         if (student == null) {
-            student = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where uno='" + stuno + "'", new User()).get(0);
+            student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", new User()).get(0);
         }
         return student;
     }

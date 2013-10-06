@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -77,7 +78,7 @@ public class Roleinfo implements Serializable {
      */
     public List<User> getStudentList() {
         if (getStudentList() == null) {
-            studentList = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where roleid=" + id, new User());
+            studentList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where roleid=" + id, new User());
         }
         return studentList;
     }
