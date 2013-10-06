@@ -8,11 +8,11 @@ import entities.Resourceinfo;
 import entities.Roleinfo;
 import entities.User;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import tools.ApplicationForCallBean;
 import tools.ForCallBean;
 import tools.SQLTool;
 
@@ -42,7 +42,7 @@ public class TopMenu implements Serializable {
         User myUser = new ForCallBean().getUser();
         String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + myUser.getRoleid()).get(0) + ",";
         LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
-        LinkedList<ResourceWithChildren> readyResource = new ForCallBean().getListResList();
+        LinkedList<ResourceWithChildren> readyResource = ApplicationForCallBean.getListResList();
         for (int i = 0; i < readyResource.size(); i++) {
             ResourceWithChildren preparedRe = readyResource.get(i).clone();
             if (resourceIds.contains("," + String.valueOf(preparedRe.getParent().getId()) + ",")) {

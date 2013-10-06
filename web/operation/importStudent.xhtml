@@ -32,9 +32,9 @@
                     </h:panelGrid>
                     <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
                     <h:inputFile value="#{userinfoBean.excelFile}"/>
-                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="submit" />
+                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginImport}" />
                     <h:dataTable id="classInclude" value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum" >
+                                     columnClasses="firstColumn,secondColum,thirdColumn" >
                             <h:column> 
                                 <f:facet name="header">#{msgs.myclassName}</f:facet>
                                 <h:outputLabel value="#{classUnit.name}"/>  
