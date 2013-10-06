@@ -225,7 +225,7 @@ public class EnterpriseInfo implements java.io.Serializable {
                 Enterprise tem = it.next();
                 EnterpriseCity temec = new EnterpriseCity();
                 temec.setEnt(tem);
-                temec.setCityId(tem.getCity().getId());
+                temec.setCityId(tem.getCityId());
                 entCityList.add(temec);
             }
         }
