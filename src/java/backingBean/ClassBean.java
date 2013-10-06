@@ -145,7 +145,7 @@ public class ClassBean implements Serializable {
      */
     public List<Nameofunit> getClassList() {
         if (null == this.classList || this.classList.isEmpty()) {
-            this.classList = new LinkedList<>();
+            this.classList = new LinkedList<Nameofunit>();
         }
         classList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='" + StaticFields.currentGradeNum + schoolId + "' order by name", nameofunit);
         return classList;
