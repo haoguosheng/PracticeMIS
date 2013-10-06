@@ -110,7 +110,7 @@ public class ClassBean implements Serializable {
         if (null == this.schoolMap || this.schoolMap.isEmpty()) {
             this.schoolMap = new LinkedHashMap();
         }
-        List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by id", nameofunit);
+        List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by name", nameofunit);
         for (int i = 0; i < unit.size(); i++) {
             Nameofunit tempP = unit.get(i);
             this.schoolMap.put(tempP.getName(), tempP.getId());
