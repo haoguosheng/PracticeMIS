@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages   style="color: red" id="latestMessage"/>
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.schoolName}"></h:outputLabel>
+                        <h:selectOneMenu value="#{classBean.schoolId}" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.schoolMap}"/>
+                            <f:ajax render="classes" event="change"/>
+                        </h:selectOneMenu>
+
+                        <h:panelGrid columns="2" id="classes">
+                            <h:outputLabel value="#{msgs.selectclass}:"/>
+                            <h:panelGrid columns="4">
+                                <c:forEach items="#{classBean.classList}" var="c">
+                                    <h:outputLabel value="#{c.name}" />
+                                    <h:commandButton value="#{msgs.delete}" action="#{classBean.deleteClass()}">
+                                        <f:param value="#{c.id}" name="cId"/>
+                                    </h:commandButton>
+                                </c:forEach>
+                            </h:panelGrid>
+                            <h:outputLabel value="#{msgs.classNum}"/>
+                            <h:inputText value="#{classBean.classId}"/>
+                            <h:outputLabel value="#{msgs.selectclass}"/>
+                            <h:inputText value="#{classBean.newClass}"/>
+                            <h:outputLabel value="#{msgs.classPinyin}"/>
+                            <h:inputText value="#{classBean.pinyin}"/>
+                            <h:commandButton value="#{msgs.add}" action="#{classBean.addClass()}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
