@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head>
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="select">
+                <h:form prependId="false" style="alignment-adjust: middle">
+                    <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>        
+                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                    <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter" rowClasses="oddRows,evenRows">
+                        <c:set value="#{selectedEnter.enterprise.id}" var="enterId"/>
+                        <h:column>
+                            <f:facet name="header"></f:facet>
+                            <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(enterId)}" value="#{msgs.delete}"/>
+                        </h:column>                        
+                        <h:column>
+                            <f:facet name="header">#{msgs.city}</f:facet>
+                                #{selectedEnter.enterprise.city.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.enterName}</f:facet>
+                                #{selectedEnter.enterprise.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
+                            <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(enterId)}" var="user">
+                                <h:column>
+                                    <f:facet name="header">#{msgs.name}</f:facet>
+                                        #{user.student.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.unitNamein}</f:facet>
+                                        #{user.student.nameofunit.parNameofunit.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.phone}</f:facet>
+                                        #{user.student.phone}
+                                </h:column>
+                            </h:dataTable>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
