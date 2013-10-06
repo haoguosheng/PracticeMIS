@@ -13,7 +13,7 @@
                 <h1><h:outputLabel value="#{msgs.viewSchools}"/></h1>
                 <h:messages   style="color: red" id="latestMessage"/>
                 <h:form id="myForm">
-                    <h:outputLabel value="#{msgs.Schools}:"/>
+                    <h:outputLabel value="#{msgs.schools}:"/>
                     <h:panelGrid columns="1" rendered="#{schoolBean.nameofunitList.size()>0}">
                         <c:forEach items="#{schoolBean.nameofunitList}" var="school">
                             <h:commandLink action="#{schoolBean.directToNote()}" value="#{school.name}">

@@ -9,30 +9,23 @@
         <f:loadBundle var="msgs" basename="messages"/>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <h1><h:outputLabel value="#{msgs.addSchool}"/></h1>
                 <h:messages   style="color: red" id="latestMessage"/>
                 <h:form>
                 <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.schoolNum}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.id}"  readonly="true">
+                        <h:inputText value="#{schoolBean.schoolId}" >
                                 <f:validateLength maximum="3" minimum="3"/>
                             </h:inputText>
                         <h:outputLabel value="#{msgs.schoolName}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.name}" readonly="#{schoolBean.readflag}">
+                        <h:inputText value="#{schoolBean.schoolName}" >
                                 <f:validateLength maximum="50" minimum="3"/>
                             </h:inputText>
                         <h:outputLabel value="#{msgs.schoolPinyin}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.pinyin}" readonly="#{schoolBean.readflag}">
+                        <h:inputText value="#{schoolBean.pinyin}" >
                                 <f:validateLength maximum="20" minimum="3"/>
                             </h:inputText>
-                        <h:outputLabel value="#{msgs.unit}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.parNameofunit.name}" readonly="true">
-                                <f:validateLength maximum="3" minimum="3"/>
-                            </h:inputText>
-                       <h:panelGrid columns="3">
-                            <h:commandButton value="#{msgs.edit}" action="#{schoolBean.editSchool()}" />
-                            <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool()}"/>
-                            <h:commandButton value="#{msgs.delete}" action="#{schoolBean.deleteSchool()}"/>
-                        </h:panelGrid>
+                        <h:commandButton action="#{schoolBean.addSchool()}" value="#{msgs.submit}"/>
                     </h:panelGrid>
                 </h:form>
             </ui:define>
