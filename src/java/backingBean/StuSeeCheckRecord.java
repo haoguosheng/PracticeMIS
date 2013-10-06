@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 import tools.UserAnalysis;
 
 /**
@@ -40,10 +41,10 @@ public class StuSeeCheckRecord implements Serializable {
         String stuno = context.getExternalContext().getRequestParameterMap().get("studentNo");
         String teachno = context.getExternalContext().getRequestParameterMap().get("teacherNo");
         String schoolId = UserAnalysis.getSchoolId(stuno);
-        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" + schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "' and teachno='" + teachno + "'", getCheckrecord()).get(0);
+        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "' and teachno='" + teachno + "'", getCheckrecord()).get(0);
         checkrecord.setSchoolId(schoolId);
-        city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" + schoolId + " where stuno='" + stuno + "'))", city).get(0);
-        student = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where uno='" + stuno + "'", student).get(0);
+        city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "'))", city).get(0);
+        student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", student).get(0);
         student.setSchoolId(schoolId);
         return "stuSeeCheckRecord.xhtml";
     }
@@ -52,7 +53,7 @@ public class StuSeeCheckRecord implements Serializable {
      * @return the submittedRecordList
      */
     public List<Checkrecords> getSubmittedRecordList() {
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + loginUser.getSchoolId() + " where stuno='" + loginUser.getUno() + "' order by checkDate", getCheckrecord());
+        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + loginUser.getUno() + "' order by checkDate", getCheckrecord());
         for (Checkrecords c : submittedRecordList) {
             c.setSchoolId(loginUser.getSchoolId());
         }

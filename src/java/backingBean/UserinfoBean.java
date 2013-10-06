@@ -25,6 +25,7 @@ import jxl.read.biff.BiffException;
 import tools.ApplicationForCallBean;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -50,7 +51,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public LinkedHashMap<String, String> getStudentMap() {
-        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
+        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where ENTERID in (select id from enterprise where cityid=" + cityId + "))", getUser());
         if (null != usrList && usrList.size() > 0) {
             Iterator<User> it = usrList.iterator();
             studentMap = new LinkedHashMap<String, String>();
@@ -67,7 +68,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public String submit() {
-        userDao.executUpdate("update student" + getUser().getSchoolId() + " set password='" + getUser().getPassword() + "', email='" + getUser().getEmail() + "', name='" + getUser().getName() + "', phone='" + getUser().getPhone() + "', roleId=" + getUser().getRoleid() + ", nameofunitid='" + getUser().getNameofunitid() + "' where uno='" + getUser().getUno() + "'");
+        userDao.executUpdate("update student" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " set password='" + getUser().getPassword() + "', email='" + getUser().getEmail() + "', name='" + getUser().getName() + "', phone='" + getUser().getPhone() + "', roleId=" + getUser().getRoleid() + ", nameofunitid='" + getUser().getNameofunitid() + "' where uno='" + getUser().getUno() + "'");
         FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
         return null;
     }
@@ -84,20 +85,20 @@ public class UserinfoBean implements java.io.Serializable {
             //备份学生学号的前2位等于传入的参数：gradeNum
             //数据先取出，再插入新表
             //先取所学号作为外键的表，再取学生表；
-            String practicNoteSelectString = "select * from HGS.PRACTICENOTE" + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String checkSelectString = "select * from HGS.CHECKRECORDS" + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String stuEntRelSelectString = "select * from HGS.STUENTREL" + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String stuSelectString = "select * from HGS.STUDENT" + schoolId + " where substr(uno,1,2)='" + gradeNum + "'";
+            String practicNoteSelectString = "select * from HGS.PRACTICENOTE" +StaticFields.currentGradeNum+ schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
+            String checkSelectString = "select * from HGS.CHECKRECORDS" +StaticFields.currentGradeNum+ schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
+            String stuEntRelSelectString = "select * from HGS.STUENTREL" +StaticFields.currentGradeNum+ schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
+            String stuSelectString = "select * from HGS.STUDENT" +StaticFields.currentGradeNum+ schoolId + " where substr(uno,1,2)='" + gradeNum + "'";
 
             List<Practicenote> praList = praDao.getBeanListHandlerRunner(practicNoteSelectString, new Practicenote());
             Iterator<Practicenote> it = praList.iterator();
             while (it.hasNext()) {
                 Practicenote tem = new Practicenote();
                 //创建一个新表
-                String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) + schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
+                String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) +StaticFields.currentGradeNum+ schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
                 praDao.executUpdate(createPra);
                 //把旧的数据插入新表
-                String insPra = "INSERT INTO HGS.PRACTICENOTE" + schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
+                String insPra = "INSERT INTO HGS.PRACTICENOTE" +StaticFields.currentGradeNum+ schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
                         + tem.getDetail() + "', '" + tem.getSubmitdate() + "', " + tem.getEnterid() + "," + tem.getPositionid() + ",'" + tem.getStuno() + "')";
                 praDao.executUpdate(insPra);
                 //把旧的数据从旧表中删除
@@ -133,7 +134,7 @@ public class UserinfoBean implements java.io.Serializable {
                     try {
                         for (; i < rownum; i++) {
                             String uno = "";
-                            String sqlString = "INSERT INTO HGS.STUDENT" + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
+                            String sqlString = "INSERT INTO HGS.STUDENT" +StaticFields.currentGradeNum+ schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
                             String NAMEOFUNITID = "'" + sheet.getCell(5, i).getContents() + "'";//ClassId
                             uno = "'" + sheet.getCell(0, i).getContents() + "',";
                             if (ApplicationForCallBean.getUnitIdList().contains(NAMEOFUNITID)) {
@@ -196,7 +197,7 @@ public class UserinfoBean implements java.io.Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
-        student = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where nameofunitid in(select id from nameofunit where parentid='" + schoolId + "')", myUser);
+        student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where nameofunitid in(select id from nameofunit where parentid='" +StaticFields.currentGradeNum+ schoolId + "')", myUser);
     }
 
     public String getUserno() {

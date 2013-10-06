@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -69,14 +70,14 @@ public class StatisticalResultBean implements Serializable {
             if (!teacherNo.equals("unRecord")) {
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 } else {
                     checkList.clear();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
@@ -92,7 +93,7 @@ public class StatisticalResultBean implements Serializable {
                 else{
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", stuentrel);
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + ")", stuentrel);
                     for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
                         Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -101,7 +102,7 @@ public class StatisticalResultBean implements Serializable {
                     }
                 } else {
                     checkList.clear();
-                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + myUser.getSchoolId() + ")", stuentrel);
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + ")", stuentrel);
                     for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
                         Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -118,14 +119,14 @@ public class StatisticalResultBean implements Serializable {
         } else {
             if (null == checkList) {
                 checkList = new ArrayList<Checkrecords>();
-                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
                 for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                     Checkrecords Checkrecord = it.next();
                     checkList.add(Checkrecord);
                 }
             } else {
                 checkList.clear();
-                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
                 for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                     Checkrecords Checkrecord = it.next();
                     checkList.add(Checkrecord);

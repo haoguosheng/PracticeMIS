@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 import tools.UserAnalysis;
 
 /**
@@ -44,18 +45,18 @@ public class TeachSeeCheckRecords implements Serializable {
         deleteRepDate = checkDate;
         alterDate = checkDate;
         String schoolId = UserAnalysis.getSchoolId(stuno);
-        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" + schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "'", getCheckrecord()).get(0);
+        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "'", getCheckrecord()).get(0);
         checkrecord.setSchoolId(schoolId);
-        city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" + schoolId + " where stuno='" + stuno + "'))", city).get(0);
-        student = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where uno='" + stuno + "'", student).get(0);
+        city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "'))", city).get(0);
+        student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", student).get(0);
         student.setSchoolId(schoolId);
         return "showCheckRecord.xhtml";
     }
 
     public String deleteSelectRecord() {
         String s = deleteRepDate;
-        checkDao.executUpdate("delete from checkrecords" + loginUser.getSchoolId() + " where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
+        checkDao.executUpdate("delete from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
+        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
         readflag = true;
         return "viewCheckRecords.xhtml";
     }
@@ -67,8 +68,8 @@ public class TeachSeeCheckRecords implements Serializable {
 
     public String alterSelectRecord() {
         String s = alterDate;
-        checkDao.executUpdate("update checkrecords" + loginUser.getSchoolId() + " set checkcontent='" + checkrecord.getCheckcontent() + "', recommendation='" + checkrecord.getRecommendation() + "', rank='" + checkrecord.getRank() + "', remark='" + checkrecord.getRemark() + "' where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
+        checkDao.executUpdate("update checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " set checkcontent='" + checkrecord.getCheckcontent() + "', recommendation='" + checkrecord.getRecommendation() + "', rank='" + checkrecord.getRank() + "', remark='" + checkrecord.getRemark() + "' where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
+        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
         return "viewCheckRecords.xhtml";
     }
 
@@ -77,7 +78,7 @@ public class TeachSeeCheckRecords implements Serializable {
      */
     public List<Checkrecords> getSubmittedRecordList() {
 //        if (submittedRecordList == null) {
-            submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "' order by stuno", getCheckrecord());
+            submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "' order by stuno", getCheckrecord());
 //        }
         for (Checkrecords c : submittedRecordList) {
             c.setSchoolId(loginUser.getSchoolId());

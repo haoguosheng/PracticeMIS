@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -188,7 +189,7 @@ public class Enterprise implements Serializable {
      */
     public List<Practicenote> getPracticenoteList() {
         if (practicenoteList == null) {
-            practicenoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + schoolId + " where enterid=" + id, new Practicenote());
+            practicenoteList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ schoolId + " where enterid=" + id, new Practicenote());
         }
         return practicenoteList;
     }
@@ -205,7 +206,7 @@ public class Enterprise implements Serializable {
      */
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
-            stuentrelList = selDao.getBeanListHandlerRunner("select * from stuentrel" + schoolId + " where enterid=" + id, new Stuentrel());
+            stuentrelList = selDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where enterid=" + id, new Stuentrel());
             for (Stuentrel s : stuentrelList) {
                 s.setSchoolId(schoolId);
             }

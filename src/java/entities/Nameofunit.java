@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -98,7 +99,7 @@ public class Nameofunit implements Serializable {
             if (userno.length() == 6) {
                 userList = userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='" + userno + "'", new User());
             } else {
-                userList = userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where uno='" + userno + "'", new User());
+                userList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + userno + "'", new User());
             }
         }
         return userList;

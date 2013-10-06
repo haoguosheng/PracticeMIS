@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -86,7 +87,7 @@ public class Position implements Serializable {
      */
     public List<Practicenote> getPractList() {
         if (practList == null) {
-            practList = practDao.getBeanListHandlerRunner("select * from practicenote" + schoolId + " where positionid=" + id, new Practicenote());
+            practList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ schoolId + " where positionid=" + id, new Practicenote());
         }
         return practList;
     }
