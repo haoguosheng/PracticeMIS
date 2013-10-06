@@ -19,7 +19,6 @@
                             <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" onchange="document.getElementById('myForm:myClick').click();">
                                 <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                                 <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
-
                             </h:selectOneMenu>
                         </h:panelGrid>
                         <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
