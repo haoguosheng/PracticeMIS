@@ -43,7 +43,7 @@
                         </h:panelGrid>
                         <h:panelGrid columns="1">
                             <h:outputLabel value="#{msgs.practiceContent}（字数在500~2000字内）:" />
-                            <h:inputTextarea value="#{submitReport.practiceNote.detail}" rows="20" cols="60" >
+                            <h:inputTextarea value="#{submitReport.practiceNote.detail}" rows="20" cols="60" required="true">
                                 <f:validateLength maximum="2000" minimum="500"/>
                             </h:inputTextarea>
                             <h:commandButton action="#{submitReport.submitPracNote()}" value="#{msgs.submit}"/>
