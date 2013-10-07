@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ConnectionManager;
@@ -31,7 +32,8 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class SchoolBean implements Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
@@ -39,7 +41,7 @@ public class SchoolBean implements Serializable {
     private SQLTool<Stuentrel> seDao = new SQLTool<Stuentrel>();
     private Nameofunit nameofunit = new Nameofunit();
     private List<Nameofunit> nameofunitList;
-    private User loginUser = new ForCallBean().getUser();
+    private User loginUser = checkLogin.getUser();
     private String schoolId;
     private String schoolName;
     private String pinyin;
@@ -195,5 +197,18 @@ public class SchoolBean implements Serializable {
      */
     public void setPinyin(String pinyin) {
         this.pinyin = pinyin;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

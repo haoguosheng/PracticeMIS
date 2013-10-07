@@ -8,6 +8,7 @@ import entities.*;
 import java.util.*;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -22,7 +23,8 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class EnterpriseInfo implements java.io.Serializable {
-
+    @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
     private SQLTool<City> cDao = new SQLTool<City>();
     private SQLTool<Enterstudent> esDao = new SQLTool<Enterstudent>();
@@ -41,11 +43,11 @@ public class EnterpriseInfo implements java.io.Serializable {
     private RepeatPaginator paginator;
 
     public synchronized String addEnterprise() {
-        User myUser = new ForCallBean().getUser();
+        User myUser = checkLogin.getUser();
         if (epDao.getBeanListHandlerRunner("select * from Enterprise"+StaticFields.currentGradeNum+" where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
-            this.enterprise.setUserno(new ForCallBean().getUser().getUno());
+            this.enterprise.setUserno(checkLogin.getUser().getUno());
             epDao.executUpdate("insert into enterprise" +StaticFields.currentGradeNum+" (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
@@ -289,5 +291,18 @@ public class EnterpriseInfo implements java.io.Serializable {
      */
     public void setPaginator(RepeatPaginator paginator) {
         this.paginator = paginator;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

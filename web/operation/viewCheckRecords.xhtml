@@ -12,7 +12,7 @@
             <ui:define name="content">
                 <h1><h:outputLabel value="#{msgs.viewCheckRecords}"/></h1>
                 <h:messages   style="color: red" id="latestMessage"/>
-                <h:form id="myForm">
+                <h:form >
                     <h:outputLabel value="#{msgs.submittedCheckRecords}:"/>
                     <h:panelGrid columns="1" rendered="#{teachSeeCheckRecords.submittedRecordList.size()>0}">
                         <c:forEach items="#{teachSeeCheckRecords.submittedRecordList}" var="check">

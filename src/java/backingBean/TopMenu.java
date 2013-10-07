@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import tools.ApplicationForCallBean;
 import tools.ForCallBean;
@@ -25,6 +26,8 @@ import tools.StaticFields;
 @ManagedBean
 public class TopMenu implements Serializable {
 
+    @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Roleinfo> roleDao = new SQLTool<Roleinfo>();
     private LinkedList<ResourceWithChildren> resWithChildrenList;
     Resourceinfo resource = new Resourceinfo();
@@ -40,8 +43,8 @@ public class TopMenu implements Serializable {
     }
 
     private void calcuListResList() {
-        User myUser = new ForCallBean().getUser();
-        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo" +StaticFields.currentGradeNum+"  where id=" + myUser.getRoleid()).get(0) + ",";
+        User myUser = checkLogin.getUser();
+        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo" + StaticFields.currentGradeNum + "  where id=" + myUser.getRoleid()).get(0) + ",";
         LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
         LinkedList<ResourceWithChildren> readyResource = ApplicationForCallBean.getListResList();
         for (int i = 0; i < readyResource.size(); i++) {
@@ -50,7 +53,7 @@ public class TopMenu implements Serializable {
                 result.add(preparedRe);
                 List<Resourceinfo> childrenRes = preparedRe.getChildrenResourceList();
                 for (int j = 0; j < childrenRes.size(); j++) {
-                    Resourceinfo tem =  childrenRes.get(j);
+                    Resourceinfo tem = childrenRes.get(j);
                     if (!resourceIds.contains(String.valueOf(tem.getId()))) {
                         childrenRes.remove(tem);
                     }
@@ -58,5 +61,18 @@ public class TopMenu implements Serializable {
             }
         }
         this.resWithChildrenList = result;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

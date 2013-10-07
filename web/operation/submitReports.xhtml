@@ -16,9 +16,9 @@
                     <h:panelGrid columns="1">
                         <h:panelGrid columns="2" class="oddRows">
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:outputLabel value="#{submitReport.user.name}"/>                     
+                            <h:outputLabel value="#{checkLogin.user.name}"/>                     
                             <h:outputLabel value="#{msgs.enterpriseName}:"/>
-                            <c:set value="#{submitReport.user.stuentrelList[0]}" var="ent" />
+                            <c:set value="#{checkLogin.user.stuentrelList[0]}" var="ent" />
                             <h:outputLabel value="#{ent.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
                             <h:selectOneMenu value="#{submitReport.positionId}" >

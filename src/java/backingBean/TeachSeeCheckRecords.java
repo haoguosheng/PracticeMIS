@@ -10,6 +10,7 @@ import entities.User;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -24,7 +25,8 @@ import tools.UserAnalysis;
 @ManagedBean
 @SessionScoped
 public class TeachSeeCheckRecords implements Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<City> cityDao = new SQLTool<City>();
     private SQLTool<User> userDao = new SQLTool<User>();
@@ -33,7 +35,7 @@ public class TeachSeeCheckRecords implements Serializable {
     private User student = new User();
     private List<Checkrecords> submittedRecordList;
     private String checkDate;
-    private User loginUser = new ForCallBean().getUser();
+    private User loginUser =checkLogin.getUser();
     private String deleteRepDate, alterDate;
     private boolean readflag;
 
@@ -161,5 +163,18 @@ public class TeachSeeCheckRecords implements Serializable {
      */
     public void setCheckDate(String checkDate) {
         this.checkDate = checkDate;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

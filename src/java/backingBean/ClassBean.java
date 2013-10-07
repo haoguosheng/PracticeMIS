@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -25,10 +26,11 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class ClassBean implements Serializable {
-
+    @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
     private Nameofunit nameofunit = new Nameofunit();
-    private User loginUser = new ForCallBean().getUser();
+    private User loginUser = checkLogin.getUser();
     private String schoolId, classId;
     private String pinyin;
     private String newClass;
@@ -176,5 +178,18 @@ public class ClassBean implements Serializable {
      */
     public void setNewClass(String newClass) {
         this.newClass = newClass;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

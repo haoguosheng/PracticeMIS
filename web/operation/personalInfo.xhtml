@@ -14,15 +14,15 @@
                 <h:form>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.password}"/>
-                        <h:inputText value="#{userinfoBean.user.password}" required="true"/>
+                        <h:inputText value="#{checkLogin.user.password}" required="true"/>
                         <h:outputLabel value="#{msgs.email}"/>
-                        <h:inputText value="#{userinfoBean.user.email}" required="true"/>
+                        <h:inputText value="#{checkLogin.user.email}" required="true"/>
                         <h:outputLabel value="#{msgs.phone}"/>
-                        <h:inputText value="#{userinfoBean.user.phone}"  required="true" >
+                        <h:inputText value="#{checkLogin.user.phone}"  required="true" >
                             <f:validateRegex for="telephone" pattern="((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)" />
                         </h:inputText>
                         <h:outputLabel/>
-                        <h:commandButton value="" action="#{userinfoBean.submit}" class="submit"/>
+                        <h:commandButton value="" action="#{checkLogin.submit}" class="submit"/>
                     </h:panelGrid>
                 </h:form>
                 </div>

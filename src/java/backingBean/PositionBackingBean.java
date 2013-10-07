@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -24,7 +25,8 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class PositionBackingBean implements java.io.Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Position> pDao = new SQLTool<Position>();
     private LinkedHashMap<String, Integer> positionMap;
     private String newPosition = new PublicFields().getTag();
@@ -40,7 +42,7 @@ public class PositionBackingBean implements java.io.Serializable {
             if (pDao.getBeanListHandlerRunner("select * from Position"+StaticFields.currentGradeNum+" where locate('" + this.newPosition + "',name)>0", position).size() <= 0) {
                 Position myposition = new Position();
                 myposition.setName(newPosition);
-                myposition.setUserno(new ForCallBean().getUser().getUno());
+                myposition.setUserno(this.checkLogin.getUser().getUno());
                 pDao.executUpdate("insert into position" +StaticFields.currentGradeNum+" (name, userno) values('" + myposition.getName() + "', '" + myposition.getUserno() + "')");
                 this.positionMap = null;
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把" + this.newPosition + "添加到左边列表框，请选择！"));
@@ -66,5 +68,18 @@ public class PositionBackingBean implements java.io.Serializable {
             }
         }
         return positionMap;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import tools.ForCallBean;
 import tools.SQLTool;
@@ -25,7 +26,8 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class StatisticalResultBean implements Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Stuentrel> stuentrelDao = new SQLTool<Stuentrel>();
@@ -33,14 +35,13 @@ public class StatisticalResultBean implements Serializable {
     private ArrayList<Checkrecords> checkList;
     private String[] rankString = new String[]{"优秀", "良好", "及格", "不及格"};
     private String teacherNo;
-    private User loginUser;
     private Checkrecords checkRecord = new Checkrecords();
     private Stuentrel stuentrel = new Stuentrel();
 
     public LinkedHashMap<String, String> getTeacherMap() {
         if (null == teacherMap) {
             teacherMap = new LinkedHashMap<String, String>();
-            switch (this.getLoginUser().getRoleinfo().getCanseeall()) {
+            switch (this.checkLogin.getUser().getRoleinfo().getCanseeall()) {
                 case 0: {
                     List<User> userList = userDao.getBeanListHandlerRunner("select * from teacherinfo"+StaticFields.currentGradeNum+" where roleid != 2", new User());
                     for (Iterator<User> it = userList.iterator(); it.hasNext();) {
@@ -50,7 +51,7 @@ public class StatisticalResultBean implements Serializable {
                 }
                 break;
                 case 1: {
-                    teacherMap.put(this.loginUser.getName(), this.loginUser.getUno());
+                    teacherMap.put(this.checkLogin.getUser().getName(), this.checkLogin.getUser().getUno());
                 }
                 break;
             }
@@ -65,35 +66,34 @@ public class StatisticalResultBean implements Serializable {
      * @return the checkList
      */
     public ArrayList<Checkrecords> getCheckList() {
-        User myUser = this.getLoginUser();
         if (teacherNo != null) {
             if (!teacherNo.equals("unRecord")) {
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 } else {
                     checkList.clear();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 }
                 for (Checkrecords s : checkList) {
-                    s.setSchoolId(this.getLoginUser().getSchoolId());
+                    s.setSchoolId(this.checkLogin.getUser().getSchoolId());
                 }
            } 
             else {
-                if (myUser.getRoleid() == 1)
+                if (this.checkLogin.getUser().getRoleid() == 1)
                     return null;
                 else{
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + ")", stuentrel);
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+this.checkLogin.getUser().getSchoolId() + ")", stuentrel);
                     for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
                         Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -102,7 +102,7 @@ public class StatisticalResultBean implements Serializable {
                     }
                 } else {
                     checkList.clear();
-                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + ")", stuentrel);
+                    List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where  stuno not in ( select stuno from checkrecords" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + ")", stuentrel);
                     for (Iterator<Stuentrel> it = stuList.iterator(); it.hasNext();) {
                         Stuentrel tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -113,26 +113,26 @@ public class StatisticalResultBean implements Serializable {
             }
         }
             for (Checkrecords s : checkList) {
-                s.setSchoolId(this.getLoginUser().getSchoolId());
+                s.setSchoolId(this.checkLogin.getUser().getSchoolId());
             }
             return checkList;
         } else {
             if (null == checkList) {
                 checkList = new ArrayList<Checkrecords>();
-                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where stuno = '" + this.checkLogin.getUser().getUno() + "'", checkRecord);
                 for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                     Checkrecords Checkrecord = it.next();
                     checkList.add(Checkrecord);
                 }
             } else {
                 checkList.clear();
-                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where stuno = '" + myUser.getUno() + "'", checkRecord);
+                List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ this.checkLogin.getUser().getSchoolId() + " where stuno = '" + this.checkLogin.getUser().getUno() + "'", checkRecord);
                 for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                     Checkrecords Checkrecord = it.next();
                     checkList.add(Checkrecord);
                 }
                 for (Checkrecords s : checkList) {
-                    s.setSchoolId(this.getLoginUser().getSchoolId());
+                    s.setSchoolId(this.checkLogin.getUser().getSchoolId());
                 }
             }
             return checkList;
@@ -173,14 +173,17 @@ public class StatisticalResultBean implements Serializable {
     public void setRankString(String[] rankString) {
         this.rankString = rankString;
     }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
 
     /**
-     * @return the loginUser
+     * @param checkLogin the checkLogin to set
      */
-    public User getLoginUser() {
-        if (null == this.loginUser) {
-            this.loginUser = new ForCallBean().getUser();
-        }
-        return loginUser;
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

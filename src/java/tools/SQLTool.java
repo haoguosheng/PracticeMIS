@@ -23,7 +23,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
  */
 @ManagedBean
 @SessionScoped
-public class SQLTool<T> implements java.io.Serializable{
+public class SQLTool<T> implements java.io.Serializable {
 
     public List<T> getBeanListHandlerRunner(String sql, T t) {
         List<T> paperClassificationList = null;
@@ -36,7 +36,7 @@ public class SQLTool<T> implements java.io.Serializable{
         }
         return paperClassificationList;
     }
-    
+
     public int executUpdate(String sql) {
         int result = 0;
         QueryRunner run = new QueryRunner(ConnectionManager.getDataSource());
@@ -45,9 +45,14 @@ public class SQLTool<T> implements java.io.Serializable{
         } catch (SQLException ex) {
             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("更新失败！"));
         }
+        if (result <= 0) {
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("被影响的记录数为0，表明更改部分或全部失败！请查找原因"));
+        } else {
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("被影响的记录数为" + result + "，表明更改部分或全部成功！"));
+        }
         return result;
     }
-    
+
     public List<String> getIdListHandlerRunner(String sql) {
         List<String> ls = new LinkedList<String>();
         ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>() {
@@ -69,9 +74,8 @@ public class SQLTool<T> implements java.io.Serializable{
                 ls.add(myTem[i].toString());
             }
         } catch (SQLException ex) {
-             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功！"));
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功！"));
         }
         return ls;
     }
-
 }
