@@ -111,7 +111,7 @@ public class NameofUnitBean implements java.io.Serializable {
      * @return the schoolMap
      */
     public LinkedHashMap<String, String> getSchoolMap() {
-        if (null == schoolMap) {
+        if (null == schoolMap||schoolMap.isEmpty()) {
             this.schoolMap = new LinkedHashMap<String, String>();
             Iterator<Nameofunit> it = this.getSchoolList().iterator();
             while (it.hasNext()) {

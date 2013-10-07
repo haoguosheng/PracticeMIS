@@ -33,7 +33,6 @@
                         <c:set value="#{nameofUnitBean.classId}" var="classId"/>
                         <h:commandButton action="#{userinfoBean.checkclass(classId)}"  style="display:none" id="myClick"/>
 
-
                         <h1><h:outputText value="学生信息列表"></h:outputText></h1>
                         <h:dataTable id ="stu" value="#{userinfoBean.student}" var="ci"
                                      border="1" styleClass="tableClass" headerClass="tableHeaderClass" 

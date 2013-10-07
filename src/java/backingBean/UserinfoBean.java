@@ -11,14 +11,9 @@ import entities.Stuentrel;
 import entities.User;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -28,10 +23,10 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import tools.ApplicationForCallBean;
-import tools.ConnectionManager;
 import tools.ForCallBean;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -57,6 +52,7 @@ public class UserinfoBean implements java.io.Serializable {
     private String studentname;
     private String nameofunit;
     private String classId;
+    private String successStudentNums;
 
     public UserinfoBean() {
     }
@@ -131,49 +127,72 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public String importStudent(String schoolId) {
-        if (null != schoolId) {
-            try {
-                InputStream ins = excelFile.getInputStream();
-                Workbook book = Workbook.getWorkbook(ins);
-                Sheet sheet = book.getSheet(0);
-                int columnum = sheet.getColumns();//得到列数  
-                int rownum = sheet.getRows();//得到行数
-                if (columnum != 6) {
-                    FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
-                } else {
-                    int i = 0;
-                    try {
-                        for (; i < rownum; i++) {
-                            String uno = "";
-                            String sqlString = "INSERT INTO HGS.STUDENT" + StaticFields.currentGradeNum + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
-                            String NAMEOFUNITID = "'" + sheet.getCell(5, i).getContents() + "'";//ClassId
-                            uno = "'" + sheet.getCell(0, i).getContents() + "',";
-                            if (ApplicationForCallBean.getUnitIdList().contains(NAMEOFUNITID)) {
-                                String password = "'" + sheet.getCell(1, i).getContents() + "',";
-                                String NAME = "'" + sheet.getCell(2, i).getContents() + "',";
-                                String EMAIL = "'" + sheet.getCell(3, i).getContents() + "',";
-                                String PHONE = "'" + sheet.getCell(4, i).getContents() + "',";
-                                String ROLEID = "2,";
-                                sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
-                                this.userDao.executUpdate(sqlString);
-                            } else {
-                                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage(",学号为：" + uno + "的记录导入出错了，原因是班级编号错误！"));
-                            }
-                        }
-                    } catch (Exception e) {
-                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了" + i + "行，但仍然导入出错了，请检查excel是否存在问题！"));
-                    } finally {
-                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了" + i + "行，导入完成！"));
-                        book.close();
+        if (null == schoolId || "null".equals(schoolId)) {
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("请选择学院"));
+            return null;
+        }
+        if (null == this.excelFile || this.getFilename(excelFile).trim().length() == 0) {
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("请先选择要导入的Excel！"));
+
+            return null;
+        }
+        try {
+            InputStream ins = excelFile.getInputStream();
+            Workbook book = Workbook.getWorkbook(ins);
+            Sheet sheet = book.getSheet(0);
+            int columnum = sheet.getColumns();//得到列数  
+            int rownum = sheet.getRows();//得到行数
+            if (columnum != 6) {
+                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，excel表格不是6列！"));
+            } else {
+                int i = 1;
+                try {
+                    String NAMEOFUNITID = sheet.getCell(5, i).getContents();
+                    if (!nameofDao.getIdListHandlerRunner("select PARENTID from NAMEOFUNIT where ID='" + NAMEOFUNITID + "'").get(0).equals(schoolId)) {
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("要导入的数据中第一条并不是指定学院的学生，请检查！"));
+                        return null;
                     }
+                    successStudentNums = "";
+                    for (; i <= rownum; i++) {
+                        NAMEOFUNITID = sheet.getCell(5, i).getContents();
+                        String uno = sheet.getCell(0, i).getContents();
+                        if (UserAnalysis.getSchoolId(uno).equals(this.schoolId) && ApplicationForCallBean.getUnitIdList().contains(NAMEOFUNITID)) {
+                            uno = "'" + sheet.getCell(0, i).getContents() + "',";
+                            NAMEOFUNITID = "'" + NAMEOFUNITID + "'";//ClassId
+                            String password = "'" + sheet.getCell(1, i).getContents() + "',";
+                            String NAME = "'" + sheet.getCell(2, i).getContents() + "',";
+                            String EMAIL = "'" + sheet.getCell(3, i).getContents() + "',";
+                            String PHONE = "'" + sheet.getCell(4, i).getContents() + "',";
+                            String ROLEID = "2,";
+                            String sqlString = "INSERT INTO HGS.STUDENT" + StaticFields.currentGradeNum + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
+                            sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
+                            this.userDao.executUpdate(sqlString);
+                            successStudentNums = successStudentNums + uno;
+                        } else {
+                            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("学号为：" + uno + "的记录导入出错了，原因是数据库中不存在对应的学院表或班级编号错误！"));
+                        }
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入结束！"));
+                    }
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage((successStudentNums.trim().length() == 0 ? "导入出错" : "下面这几个同学(学号)" + successStudentNums + "的信息导入成功，其他的导入出错了，在继续导入之前，请把这几个同学的信息从Excel中删除。") + "，请检查excel是否存在问题。"));
+                } finally {
+                    book.close();
                 }
-            } catch (BiffException ex) {
-                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
-            } catch (IOException ex) {
-                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
             }
-        } else {
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("请指定要导入的学生所在的学院！"));
+        } catch (BiffException ex) {
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("导入出错了，请检查excel是否存在问题！"));
+        }
+        return null;
+    }
+
+    private String getFilename(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+                return filename.substring(filename.lastIndexOf('/') + 1).substring(filename.lastIndexOf('\\') + 1); // MSIE fix.
+            }
         }
         return null;
     }
@@ -289,10 +308,8 @@ public class UserinfoBean implements java.io.Serializable {
         return null;
     }
 
-    
-
-    public String addTeacher(){
-    if (userDao.getBeanListHandlerRunner("select * from teacherinfo  where uno='" + userno + "'", getUser()).size() > 0) {
+    public String addTeacher() {
+        if (userDao.getBeanListHandlerRunner("select * from teacherinfo  where uno='" + userno + "'", getUser()).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该教师已经存在，请重新添加！"));
         } else {
             String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
@@ -301,7 +318,8 @@ public class UserinfoBean implements java.io.Serializable {
 
         }
         return null;
-}
+    }
+
     /**
      * @return the studentname
      */
