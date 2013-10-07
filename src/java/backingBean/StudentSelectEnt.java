@@ -40,9 +40,9 @@ public class StudentSelectEnt implements java.io.Serializable {
         List<Stuentrel> liststu = seDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ sessionuser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and enterid=" + enterId, stuEntRel);
         if (liststu.size() > 0) {
             seDao.executUpdate("delete from stuentrel" +StaticFields.currentGradeNum+ sessionuser.getSchoolId() + " where id=" + liststu.get(0).getId());
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除成功"));
-        } else {
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除失败"));
+           // FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除成功"));
+//        } else {
+//            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除失败"));
         }
         return "viewSelectedEnt";
     }
@@ -78,7 +78,7 @@ public class StudentSelectEnt implements java.io.Serializable {
             if (seDao.getBeanListHandlerRunner("select * from STUENTREL" +StaticFields.currentGradeNum+ this.getUser().getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", new Stuentrel()).size() < this.selectedEnt) {
                 Stuentrel stu = new Stuentrel();
                 this.seDao.executUpdate("insert into stuentrel" +StaticFields.currentGradeNum+ this.getUser().getSchoolId() + "(enterID,stuno) values(" + this.enterprise.getId() + ", '" + this.getUser().getUno() + "')");
-                FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("实习单位选择成功！"));
+              //  FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("实习单位选择成功！"));
             } else {
                 FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("已经选择" + this.selectedEnt + "个实习企业，不能再次选择！"));
             }

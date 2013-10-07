@@ -11,14 +11,9 @@ import entities.Stuentrel;
 import entities.User;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -29,8 +24,6 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import tools.ApplicationForCallBean;
-import tools.ConnectionManager;
-import tools.ForCallBean;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -85,7 +78,7 @@ public class UserinfoBean implements java.io.Serializable {
 
     public String submit() {
         userDao.executUpdate("update student" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + " set password='" + this.getCheckLogin().getUser().getPassword() + "', email='" + this.getCheckLogin().getUser().getEmail() + "', name='" + this.getCheckLogin().getUser().getName() + "', phone='" + this.getCheckLogin().getUser().getPhone() + "', roleId=" + this.getCheckLogin().getUser().getRoleid() + ", nameofunitid='" + this.getCheckLogin().getUser().getNameofunitid() + "' where uno='" + this.getCheckLogin().getUser().getUno() + "'");
-        FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
+       // FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
         return null;
     }
 
@@ -217,8 +210,8 @@ public class UserinfoBean implements java.io.Serializable {
     public void save(String uno, String nameofunit) {
         //String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
         if (this.userDao.executUpdate("update student" + this.getCheckLogin().getUser().getSchoolId() + " set nameofunitId='" + nameofunit + "' where uno='" + uno + "'") > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("修改成功"));
+          //  FacesContext context = FacesContext.getCurrentInstance();
+           // context.addMessage("globalMessages", new FacesMessage("修改成功"));
         }
         checkclass(classId);
     }
@@ -226,16 +219,16 @@ public class UserinfoBean implements java.io.Serializable {
     public void saveTeacher(String uno, String roleid, String nameofunit) {
         String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
         if (this.userDao.executUpdate("update teacherinfo set roleId=" + roleid + ",nameofunitId='" + nameofunit + "' where uno='" + uno + "'") > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("修改成功"));
+          //  FacesContext context = FacesContext.getCurrentInstance();
+           // context.addMessage("globalMessages", new FacesMessage("修改成功"));
         }
         checkschool(schoolId);
     }
 
     public String deleteRow(User user) {
         if (userDao.executUpdate("delete from student" + this.getCheckLogin().getUser().getSchoolId() + " where uno='" + user.getUno() + "'") > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+         //   FacesContext context = FacesContext.getCurrentInstance();
+         //   context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } else {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("此学生有选择的企业，无法删除"));
@@ -246,8 +239,8 @@ public class UserinfoBean implements java.io.Serializable {
 
     public String deleteTeacher(User user) {
         if (userDao.executUpdate("delete from teacherinfo  where uno='" + user.getUno() + "'") > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } else {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("此老师有学生选择，删除失败"));
@@ -287,7 +280,7 @@ public class UserinfoBean implements java.io.Serializable {
         } else {
             // String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
             if (userDao.executUpdate("insert into student" + this.getCheckLogin().getUser().getSchoolId() + "(uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',2,'" + nameofunit + "')") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学生成功！"));
+              //  FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学生成功！"));
                 student = userDao.getBeanListHandlerRunner("select * from student" + this.getCheckLogin().getUser().getSchoolId() + " where nameofunitid ='" + classId + "'", this.getCheckLogin().getUser());
                 this.bool = false;
             } else {
@@ -303,7 +296,7 @@ public class UserinfoBean implements java.io.Serializable {
         } else {
             //String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
             if (userDao.executUpdate("insert into teacherinfo (uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',1,'" + nameofunit + "')") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新教师成功！"));
+               // FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新教师成功！"));
                 this.bool = false;
             } else {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请选择学院！"));

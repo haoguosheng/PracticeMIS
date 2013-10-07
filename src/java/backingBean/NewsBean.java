@@ -32,7 +32,7 @@ public class NewsBean implements Serializable {
             this.news.setInputdate(Calendar.getInstance().getTime());
             this.news.setUserno(this.checkLogin.getUser().getUno());
             newsDao.executUpdate("insert into news" +StaticFields.currentGradeNum+" (content, inputDate, userno) values('" + this.news.getContent() + "', " + this.news.getInputdate() + ", '" + this.news.getUserno() + "'");
-            FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("添加成功，您可以继续添加"));
+           // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("添加成功，您可以继续添加"));
             this.news = new News();
         } else {
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("您需要加入消息的内容，而不能为空"));

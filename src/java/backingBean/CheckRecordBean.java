@@ -66,7 +66,7 @@ public class CheckRecordBean implements Serializable {
                     + this.studentNo + "', '" + myUser.getUno() + "', '" + s + "', '" + checkrecords.getCheckcontent() + "', '"
                     + checkrecords.getRecommendation() + "', '" + checkrecords.getRank() + "', '" + checkrecords.getRemark() + "')";
             cDao.executUpdate(insert);
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));
+  //          FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));
             this.checkrecords = new Checkrecords();
             this.setYear(c.get(Calendar.YEAR));
             this.setMonth(c.get(Calendar.MONTH));

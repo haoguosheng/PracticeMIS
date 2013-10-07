@@ -97,7 +97,7 @@ public class SubmitReport implements Serializable {
                 this.setYear(c.get(Calendar.YEAR));
                 this.setMonth(c.get(Calendar.MONTH));
                 this.setDay(c.get(Calendar.DAY_OF_MONTH));
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("提交周记成功"));
+               // FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("提交周记成功"));
             }
         }
     }

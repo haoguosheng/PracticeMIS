@@ -53,7 +53,7 @@ public class SchoolBean implements Serializable {
                 && checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + sId, new Checkrecords()).size() == 0
                 && pDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + sId, new Practicenote()).size() == 0
                 && seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + sId, new Stuentrel()).size() == 0) {
-            Statement stat;
+            Statement stat = null;
             try {
                 stat = ConnectionManager.getDataSource().getConnection().createStatement();
                 stat.executeUpdate("DROP table CheckRecords" + sId);
@@ -61,10 +61,16 @@ public class SchoolBean implements Serializable {
                 stat.executeUpdate("DROP Table StuEntRel" + sId);
                 stat.executeUpdate("DROP TABLE Student" + sId);
                 nameDao.executUpdate("delete from nameofunit" + StaticFields.currentGradeNum + "  where id='" + sId + "'");
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除学院成功！"));
-                stat.close();
+              //  FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除学院成功！"));
+               
             } catch (SQLException ex) {
                 Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                try {
+                    stat.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除学院失败！"));
@@ -75,27 +81,29 @@ public class SchoolBean implements Serializable {
 
     public String alterSchool(String sId, String sName, String sPinyin) {
         if (sId != null && sName != null && sPinyin != null) {
-            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "',pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-            } else {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-            }
+            nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "',pinyin='" + sPinyin + "'" + " where id='" + sId + "'");
+//            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "',pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
+//            }
         } else if(sId != null && sName != null){
-            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "' where id='" + sId + "'") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-            } else {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-            }
+            nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "' where id='" + sId + "'");
+//            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "' where id='" + sId + "'") > 0) {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
+//            }
         }else if(sId != null && sPinyin != null){
-            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-            } else {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-            }
+            nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set pinyin='" + sPinyin + "'" + " where id='" + sId + "'");
+//            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
+//            }
         } else{
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
         }
-
         nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where parentid='000' and id!='000' order by name", nameofunit);
         return "viewSchools.xhtml";
     }

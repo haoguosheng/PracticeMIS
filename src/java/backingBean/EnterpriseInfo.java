@@ -56,7 +56,7 @@ public class EnterpriseInfo implements java.io.Serializable {
             this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
             esDao.executUpdate("insert into enterstudent" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
                     + this.entStu.getEnterid() + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
-            FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
+           // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();
         }
         this.ep = null;
@@ -72,7 +72,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         int enterId=epDao.getBeanListHandlerRunner("select * from enterprise where name='"+enterName+"'", enterprise).get(0).getId();
         esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
                 + enterId + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
-        FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(enterName+ "添加成功，您可以继续添加"));
+        //FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(enterName+ "添加成功，您可以继续添加"));
         this.enterprise = new Enterprise();
         this.ep = null;
         this.entCityList = null;
@@ -89,7 +89,7 @@ public class EnterpriseInfo implements java.io.Serializable {
             epDao.executUpdate("insert into enterprise" + StaticFields.currentGradeNum + " (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
-            FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
+           // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();
         }
         this.ep = null;
@@ -203,30 +203,32 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public String deleteNeed(int id) {
-        try {
-            this.esDao.executUpdate("delete from enterstudent" + StaticFields.currentGradeNum + "  where id=" + id);
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除成功"));
-        } catch (Exception e) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除失败"));
-        }
+        this.esDao.executUpdate("delete from enterstudent" + StaticFields.currentGradeNum + "  where id=" + id);
+//        try {
+//            
+//           // FacesContext context = FacesContext.getCurrentInstance();
+//           // context.addMessage("globalMessages", new FacesMessage("删除成功"));
+//        } catch (Exception e) {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("删除失败"));
+//        }
         this.enterprise.setEnterstudentList(null);
         return null;
     }
 
     public void deleteRow(Enterprise en) throws Exception {
+        this.epDao.executUpdate("delete from enterprise" + StaticFields.currentGradeNum + "  where id=" + en.getId()) ;
 //        try {
-        if (this.epDao.executUpdate("delete from enterprise" + StaticFields.currentGradeNum + "  where id=" + en.getId()) > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("删除成功"));
-        } //            FacesContext context = FacesContext.getCurrentInstance();
-        //            context.addMessage("globalMessages", new FacesMessage("删除成功"));
-        //        } catch (Exception e) {
-        else {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("此企业已被选择，无法删除"));
-        }
+//        if () {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+//        } //            FacesContext context = FacesContext.getCurrentInstance();
+//        //            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+//        //        } catch (Exception e) {
+//        else {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("此企业已被选择，无法删除"));
+//        }
 //        }
 
 //        Iterator<EnterpriseCity> it=this.entCityList.iterator();
@@ -243,12 +245,15 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public void saveNeed(int id, String payment, String requirment, int num, String other, int positionId) {
-        if (this.esDao.executUpdate("update enterstudent" + StaticFields.currentGradeNum + "  set payment='" + payment + "', Requirement='" + requirment
+        this.esDao.executUpdate("update enterstudent" + StaticFields.currentGradeNum + "  set payment='" + payment + "', Requirement='" + requirment
                 + "',Other='" + other + "',Studnum=" + num + ", positionid=" + positionId
-                + " where id=" + id) > 0) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage("globalMessages", new FacesMessage("修改成功"));
-        }
+                + " where id=" + id) ;
+//        if (this.esDao.executUpdate("update enterstudent" + StaticFields.currentGradeNum + "  set payment='" + payment + "', Requirement='" + requirment
+//                + "',Other='" + other + "',Studnum=" + num + ", positionid=" + positionId
+//                + " where id=" + id) > 0) {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            context.addMessage("globalMessages", new FacesMessage("修改成功"));
+//        }
     }
 
     /**

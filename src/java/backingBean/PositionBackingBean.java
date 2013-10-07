@@ -45,7 +45,7 @@ public class PositionBackingBean implements java.io.Serializable {
                 myposition.setUserno(this.checkLogin.getUser().getUno());
                 pDao.executUpdate("insert into position" +StaticFields.currentGradeNum+" (name, userno) values('" + myposition.getName() + "', '" + myposition.getUserno() + "')");
                 this.positionMap = null;
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把" + this.newPosition + "添加到左边列表框，请选择！"));
+              //  FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把" + this.newPosition + "添加到左边列表框，请选择！"));
             }
 //            else {
 //                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.newPosition + "已经存在类似的职位了！请从左边选择！"));

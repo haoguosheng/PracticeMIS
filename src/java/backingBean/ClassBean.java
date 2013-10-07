@@ -40,11 +40,12 @@ public class ClassBean implements Serializable {
     public String deleteClass() {
         FacesContext context = FacesContext.getCurrentInstance();
         String s = context.getExternalContext().getRequestParameterMap().get("cId");
-        if(nameDao.executUpdate("delete from nameofunit where id='" + s + "'") > 0){
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
-        }else{
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
-        }
+        nameDao.executUpdate("delete from nameofunit where id='" + s + "'");
+//        if(nameDao.executUpdate("delete from nameofunit where id='" + s + "'") > 0){
+//            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
+//        }else{
+//            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
+//        }
         classList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='" + StaticFields.currentGradeNum + schoolId + "' order by name", nameofunit);
         return "viewClasses.xhtml";
     }
@@ -54,14 +55,15 @@ public class ClassBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败！请输入正确的班级编号，班级名称！"));
         } else {
             if ((schoolId != null && schoolId != "") && (newClass != null && newClass != "") && (pinyin != null && pinyin != "")) {
-                if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
-                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
-                    classId = "";
-                    newClass = "";
-                    pinyin = "";
-                } else {
-                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
-                }
+                nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')");
+//                if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
+//                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
+//                    classId = "";
+//                    newClass = "";
+//                    pinyin = "";
+//                } else {
+//                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
+//                }
             } else {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加失败，请选择你要添加班级所在学院！"));
             }
