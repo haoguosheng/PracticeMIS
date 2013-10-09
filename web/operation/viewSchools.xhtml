@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+
+                <h1><h:outputLabel value="#{msgs.schools}:"/></h1>
+                <h:messages   style="color: red" id="latestMessage"/>
+
+
+                <table rendered="#{schoolBean.nameofunitList.size()>0}" border="1">
+                    <tr>
+                        <th>#{msgs.schoolNum}</th>
+                        <th>#{msgs.schoolName}</th>
+                        <th>#{msgs.schoolPinyin}</th>
+                        <th>#{msgs.unit}</th>
+                        <th>#{msgs.alter}</th>
+                        <th>#{msgs.delete}</th>
+                    </tr>
+                    <c:forEach items="#{schoolBean.nameofunitList}" var="school">
+                        <h:form>
+                            <tr>
+                                <td><h:outputLabel value="#{school.id}"/></td>
+                                <td><h:inputText value="#{school.name}"/></td>
+                                <td><h:inputText value="#{school.pinyin}" /></td>
+                                <td><h:outputLabel value="#{school.parNameofunit.name}"/></td>
+                                <td>
+                                    <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool(school.id,school.name,school.pinyin)}" />
+                                </td>
+                                <td>
+                                    <h:commandButton value="#{msgs.delete}" action="#{schoolBean.deleteSchool()}">
+                                        <f:param value="#{school.id}" name="schoolId"/>
+                                    </h:commandButton>
+                                </td>
+                            </tr>
+                        </h:form>
+                    </c:forEach>
+                </table>
+
+
+                <h:form>
+                    <h:panelGrid>
+                        <h1><h:outputLabel value="#{msgs.addSchool}"/></h1>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="#{msgs.schoolNum}" />
+                            <h:inputText value="#{schoolBean.schoolId}" required="true">
+                                <f:validateLength maximum="3" minimum="3"/>
+                            </h:inputText>
+                            <h:outputLabel value="#{msgs.schoolName}" />
+                            <h:inputText value="#{schoolBean.schoolName}" required="true">
+                                <f:validateLength maximum="50" minimum="3"/>
+                            </h:inputText>
+                            <h:outputLabel value="#{msgs.schoolPinyin}" />
+                            <h:inputText value="#{schoolBean.pinyin}">
+                                <f:validateLength maximum="20" minimum="3"/>
+                            </h:inputText>
+                            <h:commandButton action="#{schoolBean.addSchool()}" value="#{msgs.add}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

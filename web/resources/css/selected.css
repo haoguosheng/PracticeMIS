@@ -1,0 +1,30 @@
+
+.selected {
+    width:600px;
+    background-color:#FFF;
+    margin:0px auto;
+    min-height:200px;
+    border:1px solid #ccc;
+}
+.selected .head {
+    height:40px;
+    background-color:#F4F4F4;
+}
+.selected h1 {
+     border-bottom:1px solid #ccc;
+        height:40px;
+        line-height:40px;
+        text-indent: 40px;
+}
+.selected table {
+    width:100%;
+}
+.selected a {
+    color:#895F39;
+    text-decoration:none;
+}
+
+.selected td {
+    border:1px solid #ccc;
+    text-align:center;
+}
