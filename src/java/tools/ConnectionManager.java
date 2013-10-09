@@ -30,7 +30,7 @@ public class ConnectionManager {
         if (conn == null) {
             try {
                 Context ctx = new InitialContext();
-                dataSource = (DataSource) ctx.lookup("jdbc/Enterprise");//这里要注意JNDI名称的大小写问题
+                dataSource = (DataSource) ctx.lookup("jdbc/EnterpriseInfo");//这里要注意JNDI名称的大小写问题
                 conn = dataSource.getConnection();
             } catch (NameNotFoundException nfe) {
                 nfe.printStackTrace();

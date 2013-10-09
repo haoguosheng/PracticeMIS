@@ -67,7 +67,7 @@ public class CheckLogin implements Serializable {
                 String table = "student" + StaticFields.currentGradeNum + UserAnalysis.getSchoolId(name);
                 String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
                 List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
-                if (userList.size() > 0) {
+                if (null!=userList&&userList.size() > 0) {
                     this.myUser = userList.get(0);
                     result = true;
                 } else {
