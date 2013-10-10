@@ -16,7 +16,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,14 +32,14 @@ import tools.UserAnalysis;
 public class CheckRecordBean implements Serializable {
 
     @Inject
-   private  CheckLogin checkLogin;
+    private CheckLogin checkLogin;
     private Checkrecords checkrecords = new Checkrecords();
     private Calendar c = Calendar.getInstance();
     private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH), currentMonth = month;
     private LinkedHashMap<String, Integer> rankMap;
     private String studentNo;
     private User StudentUser;
-    private LinkedHashMap<Integer, Integer> dayMap ;
+    private LinkedHashMap<Integer, Integer> dayMap;
     private List<Practicenote> practiceList;
     private SQLTool<User> userDao;
     private SQLTool<Checkrecords> cDao;
@@ -53,7 +52,7 @@ public class CheckRecordBean implements Serializable {
         cDao = new SQLTool<>();
         pDao = new SQLTool<>();
         dayMap = new LinkedHashMap<>();
-         practiceList = new LinkedList<>();
+        practiceList = new LinkedList<>();
     }
 
     public String addCheckRecord() {

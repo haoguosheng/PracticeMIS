@@ -24,13 +24,13 @@ public class UserAnalysis {
 
     public static String getSchoolId(String uno) {
         String schoolId;
-        if (uno.trim().length() == 6) {
+        if (uno.trim().length() == StaticFields.teacherUnoLength1) {
             String sql = "select * from teacherinfo" + StaticFields.currentGradeNum + "  where uno = '" + uno + "'";
             schoolId = userDao.getBeanListHandlerRunner(sql, csUser).get(0).getNameofunitid();
         } else {
-            if (uno.trim().length() == 8) {
+            if (uno.trim().length() == StaticFields.stuUnoLength1) {
                 schoolId = "0" + uno.substring(2, 4);
-            } else if (uno.trim().length() == 9) {
+            } else if (uno.trim().length() == StaticFields.stuUnoLength2) {
                 schoolId = uno.substring(2, 5);
             } else {
                 schoolId = null;
@@ -40,9 +40,9 @@ public class UserAnalysis {
     }
 
     public static String getTableName(String uno) {
-        if (uno.length() == 6) {
+        if (uno.length() == StaticFields.teacherUnoLength1) {
             return "teacherinfo";
-        } else if (uno.length() == 8 || uno.length() == 9) {
+        } else if (uno.length() == StaticFields.stuUnoLength1 || uno.length() == StaticFields.stuUnoLength2) {
             return "student";
         } else {
             return null;
@@ -52,15 +52,17 @@ public class UserAnalysis {
     public static String getSchoolName(String uno) {
         String temp;
         //      System.out.println("SchoolId11============================" + uno);
-        if (uno.length() == 6) {
+        if (uno.length() == StaticFields.teacherUnoLength1) {
             String sql = "select * from teacherinfo" + StaticFields.currentGradeNum + "  where uno = '" + uno + "'";
             List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);
             temp = teacherList.get(0).getNameofunitid();
         } else {
-            if (uno.length() == 8) {
+            if (uno.length() == StaticFields.stuUnoLength1) {
                 temp = "0" + uno.substring(2, 4);
-            } else {
+            } else if (uno.length() == StaticFields.stuUnoLength2) {
                 temp = uno.substring(2, 5);
+            } else {
+                return null;
             }
         }
         String s = "select * from nameofunit" + StaticFields.currentGradeNum + "  where id='" + temp + "'";
@@ -71,15 +73,17 @@ public class UserAnalysis {
     public static String getRoleName(String uno) {
         String temp;
         int roleid;
-        if (uno.length() == 6) {
+        if (uno.length() == StaticFields.teacherUnoLength1) {
             String sql = "select * from teacherinfo" + StaticFields.currentGradeNum + "  where uno = '" + uno + "'";
             List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);
             roleid = teacherList.get(0).getRoleid();
         } else {
-            if (uno.length() == 8) {
+            if (uno.length() == StaticFields.stuUnoLength1) {
                 temp = "0" + uno.substring(2, 4);
-            } else {
+            } else if (uno.length() == StaticFields.stuUnoLength2) {
                 temp = uno.substring(2, 5);
+            } else {
+                return null;
             }
             String sql = "select * from student" + StaticFields.currentGradeNum + temp + " where uno='" + uno + "'";
             List<User> studentList = userDao.getBeanListHandlerRunner(sql, csUser);

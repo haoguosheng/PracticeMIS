@@ -16,33 +16,19 @@
                         <h:messages  style="color: red" id="latestMessage"/>
                         <h:panelGrid columns="2" >
                             <h:outputLabel value="#{msgs.selectSchool}"/>
-                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschool" required="true" onchange="document.getElementById('myForm:myClick').click();">
+                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschool" required="true"  validator="#{userinfoBean.assingValue2SchoolId}" >
                                 <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                                 <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
-                                <f:ajax render="myschoolId" event="change"/>
+                                <f:ajax render="myschoolId"/>
                             </h:selectOneMenu>
                         </h:panelGrid>
                         <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
 
-                        <h:commandButton action="#{userinfoBean.checkschool(schoolId)}"  style="display:none" id="myClick"/>
-
-
-                        <h:commandButton value="#{msgs.add}" action="#{userinfoBean.checkBool(schoolId)}">
-                            <f:ajax render="bo"  event="change"/>
-                        </h:commandButton>
-                        <h:panelGrid   rendered="#{userinfoBean.bool}" id="bo">
+                        <h:panelGrid   columns="5">
                             <h:outputLabel value="#{msgs.teacherUno}:"  />
                             <h:inputText id="tuno" value="#{userinfoBean.userno}" required="true"/>
                             <h:outputLabel value="#{msgs.name}:" />
                             <h:inputText id="tname" value="#{userinfoBean.studentname}" required="true"/>
-
-
-
-                            <h:selectOneMenu value="#{userinfoBean.nameofunit}">
-                                <f:selectItem  itemValue="null" itemLabel="选择学院" />
-                                <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
-                            </h:selectOneMenu>
-
                             <h:commandButton action="#{userinfoBean.addTeacher}" value="#{msgs.add}"/>
                         </h:panelGrid>
 

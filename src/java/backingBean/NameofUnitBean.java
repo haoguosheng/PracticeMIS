@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
 import tools.SQLTool;
@@ -46,7 +45,7 @@ public class NameofUnitBean implements java.io.Serializable {
             Iterator<Nameofunit> it = this.getClassList().iterator();
             while (it.hasNext()) {
                 Nameofunit temunit = it.next();
-                classNameMap.put(temunit.getName()+":"+temunit.getId(), temunit.getId());
+                classNameMap.put(temunit.getName(), temunit.getId());
             }
             return classNameMap;
         } else {

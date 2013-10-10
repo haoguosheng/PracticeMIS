@@ -32,20 +32,20 @@ public class PublicFields {
     private static List<String> unitIdList = new ArrayList<String>();
     private static SQLTool<Resourceinfo> resDao = new SQLTool<Resourceinfo>();
     private static SQLTool<Nameofunit> nameofUnitDao = new SQLTool<Nameofunit>();
-    private static HashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
+    private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
 
     private static void calcuListResList() {
         //获得角色种类，把每个角色的一个List放到Map里作为一个元素
         List<Roleinfo> roleList = roleDao.getBeanListHandlerRunner("select * from roleinfo", new Roleinfo());
-        ReslistMap = new HashMap<>();
+        ReslistMap = new LinkedHashMap<>();
         for (int i = 0; i < roleList.size(); i++) {
             //准备第个角色的功能菜单;
             //准备父菜单
             String temSqlString = "select * from RESOURCEINFO where id in (" + roleList.get(i).getResouceids() + ") and parentid is null order by menuorder";
             List<Resourceinfo> parentResource = resDao.getBeanListHandlerRunner(temSqlString, new Resourceinfo());
             //为每个父菜单准备子菜单
-            HashMap<Resourceinfo, List<Resourceinfo>> menu = new HashMap();
+            LinkedHashMap<Resourceinfo, List<Resourceinfo>> menu = new LinkedHashMap();
             for (int j = 0; j < parentResource.size(); j++) {
                 String temChildSqlString = "select * from RESOURCEINFO where parentid=" + parentResource.get(j).getId() + " and id in (" + roleList.get(i).getResouceids() + ")  order by menuorder";
                 List<Resourceinfo> childrenResource = resDao.getBeanListHandlerRunner(temChildSqlString, new Resourceinfo());
@@ -65,7 +65,7 @@ public class PublicFields {
     /**
      * @return the ReslistMap
      */
-    public static HashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> getReslistMap() {
+    public static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> getReslistMap() {
         if (null == ReslistMap || ReslistMap.isEmpty()) {
             calcuListResList();
         }

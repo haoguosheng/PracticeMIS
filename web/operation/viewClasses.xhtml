@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       >
     <body>
@@ -17,10 +16,23 @@
                         <h:selectOneMenu value="#{classBean.schoolId}">
                             <f:selectItem itemLabel="#{msgs.pleaseSelect}"/>
                             <f:selectItems value="#{classBean.schoolMap}"/>
-                            <f:ajax render="classes" event="change"/>
+                            <f:ajax render="classes"/>
                         </h:selectOneMenu>
                     </h:panelGrid>
-
+                    <h:outputLabel value="addClassTip"/>
+                    <h:panelGrid columns="8">
+                        <h:outputLabel value="#{msgs.addClass}:"/>
+                        <h:outputLabel value="#{msgs.classNum}"/>
+                        <h:inputText value="#{classBean.classId}">
+                            <f:validateLength maximum="3" minimum="3"/>
+                        </h:inputText>
+                        <h:outputLabel value="#{msgs.selectclass}"/>
+                        <h:inputText value="#{classBean.newClass}" />
+                        <h:outputLabel value="#{msgs.classPinyin}"/>
+                        <h:inputText value="#{classBean.pinyin}" />
+                        <h:commandButton value="#{msgs.add}" action="#{classBean.addClass()}"/>
+                    </h:panelGrid>
+                    <h:outputLabel value="#{mgsg.addClassTip}"/>
                     <h:panelGrid  columns="2" id="classes">
                         <h:dataTable  value="#{classBean.classList}" var="c">
                             <f:facet name="caption">#{msgs.classesInSchool}</f:facet>
@@ -39,18 +51,6 @@
                                 </h:commandButton>
                             </h:column>
                         </h:dataTable>
-                    </h:panelGrid>
-
-                    <h:panelGrid columns="2">
-                        <h:outputLabel value="#{msgs.classNum}"/>
-                        <h:inputText value="#{classBean.classId}">
-                            <f:validateLength maximum="3" minimum="3"/>
-                        </h:inputText>
-                        <h:outputLabel value="#{msgs.selectclass}"/>
-                        <h:inputText value="#{classBean.newClass}" />
-                        <h:outputLabel value="#{msgs.classPinyin}"/>
-                        <h:inputText value="#{classBean.pinyin}" />
-                        <h:commandButton value="#{msgs.add}" action="#{classBean.addClass()}"/>
                     </h:panelGrid>
                 </h:form>
             </ui:define>
