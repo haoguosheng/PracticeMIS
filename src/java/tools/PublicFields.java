@@ -5,12 +5,15 @@
 package tools;
 
 import entities.Nameofunit;
+import entities.News;
 import entities.Resourceinfo;
 import entities.Roleinfo;
+import entities.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -29,11 +32,33 @@ public class PublicFields {
     private LinkedHashMap<Integer, Integer> yearMap;
     private LinkedHashMap<Integer, Integer> monthMap;
     private LinkedHashMap<Integer, Integer> dayMap = new LinkedHashMap<>();
-    private static List<String> unitIdList = new ArrayList<String>();
-    private static SQLTool<Resourceinfo> resDao = new SQLTool<Resourceinfo>();
-    private static SQLTool<Nameofunit> nameofUnitDao = new SQLTool<Nameofunit>();
+    private static List<String> unitIdList = new ArrayList<>();
+    private static List<Nameofunit> myunitList = new LinkedList<>();
+    private static SQLTool<Resourceinfo> resDao = new SQLTool<>();
+    private static SQLTool<Nameofunit> nameofUnitDao = new SQLTool<>();
+    private static SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
+    private static LinkedHashMap<String, LinkedList<News>>  recentNewsMap = new LinkedHashMap<>();
+    
+ 
+    public LinkedHashMap<String,LinkedList<News>> getRecentNewsMap() {
+        LinkedList<News> recentNews= (LinkedList)PublicFields.getNewsList();
+        List<Nameofunit> schoolList=PublicFields.getSchoolUnitList();
+        //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
+        LinkedList<News>[] unitNewsList=new LinkedList[schoolList.size()];
+        for (int i = 0; i < schoolList.size(); i++) {
+            unitNewsList[i]=new LinkedList();
+        }
+        for (int i = 0; i < recentNews.size(); i++) {
+            News tem=recentNews.get(i);
+            User user=tem.getTeacher();
+            if(recentNewsMap.get(tem))
+            unitNewsList[Integer.valueOf(user.getSchoolId())].add(tem);
+        }
+        
+        return recentNewsMap;
+    }
 
     private static void calcuListResList() {
         //获得角色种类，把每个角色的一个List放到Map里作为一个元素
@@ -55,11 +80,26 @@ public class PublicFields {
         }
     }
 
+    public static List<News> getNewsList() {
+        Calendar c1 = Calendar.getInstance();
+        c1.add(Calendar.DAY_OF_MONTH, -StaticFields.newsDisplayDay);
+        String sqlString = "select *  from news" + StaticFields.currentGradeNum + " where date(inputdate)>date('" + c1.get(Calendar.YEAR) + "-" + c1.get(Calendar.MONTH) + "-" + c1.get(Calendar.DAY_OF_MONTH) + "')";
+        LinkedList<News> temNewslist = (LinkedList) newsDao.getBeanListHandlerRunner(sqlString, new News());
+        return temNewslist;
+    }
+
     public static List<String> getUnitIdList() {
         if (unitIdList.isEmpty()) {
             unitIdList = nameofUnitDao.getIdListHandlerRunner("select id from nameofunit" + StaticFields.currentGradeNum);
         }
         return unitIdList;
+    }
+
+    public static LinkedList<Nameofunit> getSchoolUnitList() {
+        if (myunitList.isEmpty()) {
+            myunitList = nameofUnitDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where parentid='" + StaticFields.universityId + "'order by pri", new Nameofunit());
+        }
+        return (LinkedList) myunitList;
     }
 
     /**

@@ -4,18 +4,20 @@
  */
 package backingBean;
 
+import entities.Nameofunit;
 import entities.News;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import tools.PublicFields;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -23,27 +25,29 @@ import tools.StaticFields;
 @RequestScoped
 public class NewsBean implements Serializable {
 
-   @Inject
-   private  CheckLogin checkLogin;
+    @Inject
+    private CheckLogin checkLogin;
     private SQLTool<News> newsDao;
     private News news;
-    private List<News> recentNews;
+
 
     @PostConstruct
     public void init() {
-        newsDao = new SQLTool<News>();
-        recentNews = new ArrayList<News>();
+        newsDao = new SQLTool<>();
+       
         news = new News();
     }
 
     public String addNews() {
         if (this.news.getContent().trim().length() >= 0) {
-            newsDao.executUpdate("insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId) values('"
-                    + this.news.getContent() + "', " 
-                    +Calendar.getInstance().getTime() + ", '" 
+            newsDao.executUpdate("insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
+                    + this.news.getContent() + "', "
+                    + Calendar.getInstance().getTime() + ", '"
                     + this.checkLogin.getUser().getUno() + "','"
-                    +this.checkLogin.getUser().getNameofunitid()+"'");
+                    + this.checkLogin.getUser().getNameofunitid() + "'"
+                    + this.news.getNewsTitle());
             this.news = new News();
+            //需要调整Map中的list
         } else {
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("您需要加入消息的内容，而不能为空"));
         }
@@ -64,18 +68,7 @@ public class NewsBean implements Serializable {
         this.news = news;
     }
 
-    /**
-     * @return the recentNews
-     */
-    public List<News> getRecentNews() {
-        if (this.recentNews.isEmpty()) {
-            Calendar c1 = Calendar.getInstance();
-            c1.add(Calendar.DAY_OF_MONTH, -30);
-            String sqlString = "select *  from news" + StaticFields.currentGradeNum + " where date(inputdate)>date('" + c1.get(Calendar.YEAR) + "-" + c1.get(Calendar.MONTH) + "-" + c1.get(Calendar.DAY_OF_MONTH) + "')";
-            this.recentNews = newsDao.getBeanListHandlerRunner(sqlString, this.news);
-        }
-        return recentNews;
-    }
+
 
     /**
      * @return the checkLogin

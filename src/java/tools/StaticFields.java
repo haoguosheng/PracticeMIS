@@ -16,4 +16,5 @@ public class StaticFields {
     public static int stuUnoLength1=8;
     public static int stuUnoLength2=9;
     public static int teacherUnoLength1=6;
+    public static int newsDisplayDay=90;
 }
