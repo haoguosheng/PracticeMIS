@@ -4,12 +4,9 @@
  */
 package backingBean;
 
-import entities.Nameofunit;
 import entities.News;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -29,12 +26,12 @@ public class NewsBean implements Serializable {
     private CheckLogin checkLogin;
     private SQLTool<News> newsDao;
     private News news;
+    private List<News> recentNews;
 
 
     @PostConstruct
     public void init() {
         newsDao = new SQLTool<>();
-       
         news = new News();
     }
 
@@ -82,5 +79,13 @@ public class NewsBean implements Serializable {
      */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
+    }
+
+    /**
+     * @return the recentNews
+     */
+    public List<News> getRecentNews() {
+        this.recentNews= PublicFields.getRecentNewsMap().get( this.checkLogin.getUser().getNameofunitid() );
+        return recentNews;
     }
 }

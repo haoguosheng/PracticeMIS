@@ -39,24 +39,21 @@ public class PublicFields {
     private static SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
-    private static LinkedHashMap<String, LinkedList<News>>  recentNewsMap = new LinkedHashMap<>();
+    private static LinkedHashMap<String, List<News>>  recentNewsMap = new LinkedHashMap<>();
     
  
-    public LinkedHashMap<String,LinkedList<News>> getRecentNewsMap() {
-        LinkedList<News> recentNews= (LinkedList)PublicFields.getNewsList();
+    public static LinkedHashMap<String,List<News>> getRecentNewsMap() {
+       List<News> recentNews= getNewsList();
         List<Nameofunit> schoolList=PublicFields.getSchoolUnitList();
         //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
-        LinkedList<News>[] unitNewsList=new LinkedList[schoolList.size()];
         for (int i = 0; i < schoolList.size(); i++) {
-            unitNewsList[i]=new LinkedList();
+              recentNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
         }
         for (int i = 0; i < recentNews.size(); i++) {
             News tem=recentNews.get(i);
             User user=tem.getTeacher();
-            if(recentNewsMap.get(tem))
-            unitNewsList[Integer.valueOf(user.getSchoolId())].add(tem);
+            recentNewsMap.get(user.getNameofunitid()).add(tem);
         }
-        
         return recentNewsMap;
     }
 
@@ -80,11 +77,11 @@ public class PublicFields {
         }
     }
 
-    public static List<News> getNewsList() {
+    private static List<News> getNewsList() {
         Calendar c1 = Calendar.getInstance();
         c1.add(Calendar.DAY_OF_MONTH, -StaticFields.newsDisplayDay);
         String sqlString = "select *  from news" + StaticFields.currentGradeNum + " where date(inputdate)>date('" + c1.get(Calendar.YEAR) + "-" + c1.get(Calendar.MONTH) + "-" + c1.get(Calendar.DAY_OF_MONTH) + "')";
-        LinkedList<News> temNewslist = (LinkedList) newsDao.getBeanListHandlerRunner(sqlString, new News());
+        List<News> temNewslist = newsDao.getBeanListHandlerRunner(sqlString, new News());
         return temNewslist;
     }
 
@@ -95,11 +92,11 @@ public class PublicFields {
         return unitIdList;
     }
 
-    public static LinkedList<Nameofunit> getSchoolUnitList() {
+    public static List<Nameofunit> getSchoolUnitList() {
         if (myunitList.isEmpty()) {
             myunitList = nameofUnitDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where parentid='" + StaticFields.universityId + "'order by pri", new Nameofunit());
         }
-        return (LinkedList) myunitList;
+        return  myunitList;
     }
 
     /**

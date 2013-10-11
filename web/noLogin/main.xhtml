@@ -22,7 +22,7 @@
                 
                 <h1> <h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
 
-                <c:forEach items="#{newsBean.recentNewsMap}" var="news">
+                <c:forEach items="#{newsBean.recentNews}" var="news">
                     <h:outputLabel value="#{news.content}" />
                 </c:forEach>
 
