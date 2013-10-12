@@ -15,17 +15,34 @@
             </ui:define>
 
             <ui:define name="left">
-                left
+                left好精彩
             </ui:define>
 
             <ui:define name="content">
-                
+                好精彩
                 <h1> <h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
-
-                <c:forEach items="#{newsBean.recentNews}" var="news">
-                    <h:outputLabel value="#{news.content}" />
-                </c:forEach>
-
+                <h1> <h:outputLabel style="color:red" value="asdf"/></h1>
+                <table border="1">
+                    <c:forEach items="#{newsBean.recentNewsMap}" var="news" step="3">
+                        <tr>
+                            <td>
+                                <c:forEach items="#{news}" var="n">
+                                    <h:outputLabel value="#{n.value}" />
+                                </c:forEach>
+                            </td>
+                            <td>
+                                <c:forEach items="#{news.next()}" var="n">
+                                    <h:outputLabel value="#{n.value}" />
+                                </c:forEach>
+                            </td>
+                            <td>
+                                <c:forEach items="#{news.next().next()}" var="n">
+                                    <h:outputLabel value="#{n.value}" />
+                                </c:forEach>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
             </ui:define>
 
             <ui:define name="bottom">

@@ -7,6 +7,7 @@ package backingBean;
 import entities.News;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -27,7 +28,7 @@ public class NewsBean implements Serializable {
     private SQLTool<News> newsDao;
     private News news;
     private List<News> recentNews;
-
+    private LinkedHashMap<String, List<News>> recentNewsMap;
 
     @PostConstruct
     public void init() {
@@ -65,8 +66,6 @@ public class NewsBean implements Serializable {
         this.news = news;
     }
 
-
-
     /**
      * @return the checkLogin
      */
@@ -85,7 +84,19 @@ public class NewsBean implements Serializable {
      * @return the recentNews
      */
     public List<News> getRecentNews() {
-        this.recentNews= PublicFields.getRecentNewsMap().get( this.checkLogin.getUser().getNameofunitid() );
+        this.recentNews = PublicFields.getRecentNewsMap().get(this.checkLogin.getUser().getNameofunitid());
         return recentNews;
+    }
+
+    public LinkedHashMap<String, List<News>> getRecentNewsMap() {
+        recentNewsMap = PublicFields.getRecentNewsMap();
+        return recentNewsMap;
+    }
+
+    /**
+     * @param recentNewsMap the recentNewsMap to set
+     */
+    public void setRecentNewsMap(LinkedHashMap<String, List<News>> recentNewsMap) {
+        this.recentNewsMap = recentNewsMap;
     }
 }
