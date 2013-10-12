@@ -42,11 +42,10 @@ public class NewsBean implements Serializable {
         String temMonth = month < 10 ? "0" + month : "" + month;
         String myData = temCa.get(Calendar.YEAR) + "-" + temMonth.trim() + "-" + temCa.get(Calendar.DAY_OF_MONTH);
         if (this.news.getContent().trim().length() >= 0) {
-            String sqlString = "insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
+            String sqlString = "insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, newstitle) values('"
                     + this.news.getContent().trim() + "','"
                     + myData + "', '"
                     + myUser.getUno().trim() + "','"
-                    + myUser.getNameofunitid().trim() + "','"
                     + this.news.getNewsTitle().trim() + "')";
             newsDao.executUpdate(sqlString);
             this.news = new News();

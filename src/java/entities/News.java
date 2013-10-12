@@ -21,7 +21,6 @@ public class News implements Serializable {
     private Date inputdate;
     private String userno;
     private User teacher;
-    private String unitId;
     private String newsTitle;
     private SQLTool<User> userDao = new SQLTool<User>();
 
@@ -81,21 +80,7 @@ public class News implements Serializable {
         this.teacher = teacher;
     }
 
-    /**
-     * @return the unitId
-     */
-    public String getUnitId() {
-        return unitId;
-    }
-
-    /**
-     * @param unitId the unitId to set
-     */
-    public void setUnitId(String unitId) {
-        this.unitId = unitId;
-    }
-
-    /**
+      /**
      * @return the newsTitle
      */
     public String getNewsTitle() {
