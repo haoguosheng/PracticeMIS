@@ -28,16 +28,16 @@
                             <f:ajax event="change" render="studentReport" />
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.submittedNote}:"/>
-                        <h:panelGrid  id="studentReport">
-                            <h:outputLabel value=""  rendered="#{checkRecordBean.practiceList.size()==0}" id="tem" />
-                            <h:panelGrid columns="1" rendered="#{checkRecordBean.practiceList.size()>0}"  >
-                                <c:forEach items="#{checkRecordBean.practiceList}" var="submitted">
-                                    <h:commandLink action="#{teachSeeReport.directToNote()}" value="#{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日">
-                                        <f:param value="#{submitted.submitdate}" name="submitDate"/>
-                                        <f:param value="#{checkRecordBean.studentNo}" name="studentNo"/>
-                                    </h:commandLink>
-                                </c:forEach>
-                            </h:panelGrid>
+                        <h:panelGrid id="studentReport">
+                        <h:outputLabel value=""  rendered="#{checkRecordBean.practiceList.size()==0}" id="tem" />
+                        <h:panelGrid columns="1" rendered="#{checkRecordBean.practiceList.size()>0}" >
+                            <c:forEach items="#{checkRecordBean.practiceList}" var="submitted">
+                                <h:commandLink action="#{teachSeeReport.directToNote()}" value="#{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日">
+                                    <f:param value="#{submitted.submitdate}" name="submitDate"/>
+                                    <f:param value="#{checkRecordBean.studentNo}" name="studentNo"/>
+                                </h:commandLink>
+                            </c:forEach>
+                        </h:panelGrid>
                         </h:panelGrid>
                     </h:panelGrid>
                     <h:panelGrid columns="2">

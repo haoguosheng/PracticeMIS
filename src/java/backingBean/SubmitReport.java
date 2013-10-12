@@ -122,6 +122,7 @@ public class SubmitReport implements Serializable {
     private Practicenote temPraNote;//存放临时的周记报告，用于只读显示
 
     public String directToNote() {
+        readflag = true;
         FacesContext context = FacesContext.getCurrentInstance();
         if (null != (context.getExternalContext().getRequestParameterMap().get("studentNo"))) {
             //主要用于教师查看学生的周记
@@ -180,19 +181,19 @@ public class SubmitReport implements Serializable {
         String s = deleteRepDate;
         practDao.executUpdate("delete from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
         submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
+        readflag = true;
         return "viewReports.xhtml";
     }
 
     public String editSelectReport() {
         readflag = false;
-        return "viewReport.xhtml";
+        return "showStudentReport.xhtml";
     }
     
     public String alterSelectReport() {
         String s = alterDate;
         practDao.executUpdate("update practicenote" + loginUser.getSchoolId() + " set detail='" + temPraNote.getDetail() + "' where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
         submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
-        readflag = true;
         return "viewReports.xhtml";
     }
 
