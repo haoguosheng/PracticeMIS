@@ -1,0 +1,21 @@
+/* 
+    Document   : myCss
+    Created on : 2013-6-23, 15:47:14
+    Author     : myPC
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+.mymessages{
+    color: red;
+}
+.oddRows{
+    background:#e1ddf4;
+}
+.evenRows{
+    background:#d7f4f4
+}
+

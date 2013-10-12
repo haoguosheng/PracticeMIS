@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <script type="text/javascript"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:inputText value="#{cityBackingBean.searchName}" id="searchcity"/>
+                    <h:commandButton value="search" action="#{cityBackingBean.search()}">
+                        <!--<f:ajax  execute="searchcity"/>-->
+                    </h:commandButton>
+                    <h:inputText value="#{cityBackingBean.newCityName}" id="newCity"/>
+                    <h:commandButton value="#{msgs.addNewCity}"  action="#{cityBackingBean.add()}">
+<!--                        <f:ajax  execute="newCity"/>-->
+                    </h:commandButton>
+                    <h:commandButton value="显示全部" action="#{cityBackingBean.searchAll()}"/>
+                    <h1><h:outputText value="#{msgs.cityList}"></h:outputText></h1>
+                    <h:dataTable value="#{cityBackingBean.paginator.model}" var="ci"
+                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                 >
+                        <h:column> 
+                            <f:facet name="header">#{msgs.cityName}</f:facet>
+                            <h:inputText value="#{ci.name}"/>  
+                        </h:column>    
+                        <h:column>
+                            <f:facet name="header">#{msgs.alter}</f:facet>
+                            <h:commandButton value="#{msgs.alter}" action="#{cityBackingBean.save(ci.id,ci.name)}"/>
+                        </h:column> 
+                        <h:column>
+                            <f:facet name="header">#{msgs.delete}</f:facet>
+                            <h:commandButton value="#{msgs.delete}" action="#{cityBackingBean.deleteRow(ci)}"/>
+                        </h:column>
+
+                    </h:dataTable>
+                   
+                    <h:commandButton value="&lt; prev" action="#{cityBackingBean.paginator.prev}"/>
+                    <h:outputText value="#{cityBackingBean.paginator.pageIndex} / #{cityBackingBean.paginator.pages}"/>
+                    <h:commandButton value="next &gt;" action="#{cityBackingBean.paginator.next}"/>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
