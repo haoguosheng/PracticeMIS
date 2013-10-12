@@ -19,14 +19,14 @@
                             <f:ajax render="classes"/>
                         </h:selectOneMenu>
                     </h:panelGrid>
-                    <h:outputLabel value="addClassTip"/>
+                    <h:outputLabel value="#{msgs.addClassTip}"/>
                     <h:panelGrid columns="8">
                         <h:outputLabel value="#{msgs.addClass}:"/>
                         <h:outputLabel value="#{msgs.classNum}"/>
                         <h:inputText value="#{classBean.classId}">
                             <f:validateLength maximum="3" minimum="3"/>
                         </h:inputText>
-                        <h:outputLabel value="#{msgs.selectclass}"/>
+                        <h:outputLabel value="#{msgs.Class}#{msgs.name}"/>
                         <h:inputText value="#{classBean.newClass}" />
                         <h:outputLabel value="#{msgs.classPinyin}"/>
                         <h:inputText value="#{classBean.pinyin}" />

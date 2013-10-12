@@ -5,11 +5,12 @@
 package backingBean;
 
 import entities.News;
+import entities.User;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ import tools.SQLTool;
 import tools.StaticFields;
 
 @Named
-@RequestScoped
+@SessionScoped
 public class NewsBean implements Serializable {
 
     @Inject
@@ -28,7 +29,6 @@ public class NewsBean implements Serializable {
     private News news;
     private List<News> recentNews;
 
-
     @PostConstruct
     public void init() {
         newsDao = new SQLTool<>();
@@ -36,18 +36,29 @@ public class NewsBean implements Serializable {
     }
 
     public String addNews() {
+        User myUser = getCheckLogin().getUser();
+        Calendar temCa = Calendar.getInstance();
+        int month = temCa.get(Calendar.MONTH);
+        String temMonth = month < 10 ? "0" + month : "" + month;
+        String myData = temCa.get(Calendar.YEAR) + "-" + temMonth.trim() + "-" + temCa.get(Calendar.DAY_OF_MONTH);
         if (this.news.getContent().trim().length() >= 0) {
-            newsDao.executUpdate("insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
-                    + this.news.getContent() + "', "
-                    + Calendar.getInstance().getTime() + ", '"
-                    + this.checkLogin.getUser().getUno() + "','"
-                    + this.checkLogin.getUser().getNameofunitid() + "'"
-                    + this.news.getNewsTitle());
+            String sqlString = "insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
+                    + this.news.getContent().trim() + "','"
+                    + myData + "', '"
+                    + myUser.getUno().trim() + "','"
+                    + myUser.getNameofunitid().trim() + "','"
+                    + this.news.getNewsTitle().trim() + "')";
+            newsDao.executUpdate(sqlString);
             this.news = new News();
             //需要调整Map中的list
         } else {
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("您需要加入消息的内容，而不能为空"));
         }
+        return null;
+    }
+
+    public String delete(int id) {
+        newsDao.executUpdate("delete from news where id=" + id);
         return null;
     }
 
@@ -64,8 +75,6 @@ public class NewsBean implements Serializable {
     public void setNews(News news) {
         this.news = news;
     }
-
-
 
     /**
      * @return the checkLogin
@@ -85,7 +94,7 @@ public class NewsBean implements Serializable {
      * @return the recentNews
      */
     public List<News> getRecentNews() {
-        this.recentNews= PublicFields.getRecentNewsMap().get( this.checkLogin.getUser().getNameofunitid() );
+        this.recentNews = PublicFields.getRecentNewsMap().get(this.checkLogin.getUser().getNameofunitid());
         return recentNews;
     }
 }

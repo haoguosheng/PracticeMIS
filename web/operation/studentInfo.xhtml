@@ -27,9 +27,9 @@
                             </h:panelGrid>
                         </h:panelGrid>
                         <h:panelGrid columns="2" >
-                            <h:outputLabel value="#{msgs.selectClass}"/>
+                            <h:outputLabel value="#{msgs.selectclass}"/>
                             <h:selectOneMenu value="#{nameofUnitBean.classId}" id="mysclassId" validator="#{userinfoBean.assingValue2Classid}" >
-                                <f:selectItem itemLabel="#{msgs.selectClass}" itemValue="null" />
+                                <f:selectItem itemLabel="#{msgs.selectclass}" itemValue="null" />
                                 <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
                                 <f:ajax render="stu"/>
                             </h:selectOneMenu>

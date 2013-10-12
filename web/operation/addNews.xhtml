@@ -8,9 +8,9 @@
         <f:loadBundle var="msgs" basename="messages"/>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                 <h1><h:outputLabel value="#{msgs.add}"/></h1>
                 <h:form prependId="false">
                     <h:messages   style="color: red" id="latestMessage"/>
-                    <h1><h:outputLabel value="#{msgs.add}"/></h1>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.title}"/>
                         <h:inputText value="#{newsBean.news.newsTitle}"/>
@@ -18,6 +18,24 @@
                         <h:inputTextarea value="#{newsBean.news.content}" />
                         <h:commandButton action="#{newsBean.addNews()}" value="#{msgs.save}" />
                     </h:panelGrid>
+                    <h:dataTable value="#{newsBean.recentNews}" var="newsItem" border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                 >
+                        <f:facet name="caption">#{msgs.newsInfo}#{msgs.list}</f:facet>
+                        <h:column> 
+                            <f:facet name="header">#{msgs.title}</f:facet>
+                            <h:outputLabel value="#{newsItem.newsTitle}"/>  
+                        </h:column> 
+                        <h:column> 
+                            <f:facet name="header">#{msgs.content}</f:facet>
+                            <h:outputLabel value="#{newsItem.content}"/>  
+                        </h:column> 
+                        <h:column>
+                            <f:facet name="header"></f:facet>
+                            <h:commandButton value="#{msgs.delete}" action="#{newsBean.delete(newsItem.id)}"/>
+                        </h:column> 
+                    
+                    </h:dataTable>
                 </h:form>
             </ui:define>
         </ui:composition>

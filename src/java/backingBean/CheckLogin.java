@@ -26,7 +26,7 @@ import tools.UserAnalysis;
  *
  * @author myPC
  */
-@Named(value = "checkLogin")
+@Named
 @SessionScoped
 public class CheckLogin implements Serializable {
 

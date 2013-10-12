@@ -18,7 +18,7 @@
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h:panelGrid columns="2" >
                         <h:outputLabel value="#{msgs.selectSchool}"/>
-                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true">
+                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" rendered="#{nameofUnitBean.canSeeAll==0}">
                             <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                             <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
                             <f:ajax render="@all"/>
@@ -26,7 +26,7 @@
                     </h:panelGrid>
                     <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
                     <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginBacku}" />
-                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginRestore}" />
+                    
                     <h:dataTable id="classInclude" value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
                                  columnClasses="firstColumn,secondColum,thirdColumn" >
                         <h:column> 

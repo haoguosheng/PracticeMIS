@@ -47,17 +47,18 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     @PostConstruct
     public void init() {
-        epDao = new SQLTool<Enterprise>();
-        cDao = new SQLTool<City>();
-        esDao = new SQLTool<Enterstudent>();
+        epDao = new SQLTool<>();
+        cDao = new SQLTool<>();
+        esDao = new SQLTool<>();
         enterprise = new Enterprise();
-        enterMap = new LinkedHashMap<String, Integer>();
+        enterMap = new LinkedHashMap<>();
         isNull = true;
          entStu = new Enterstudent();
     }
 
     public synchronized String addEnterpriseNeed(String enterName) {
-        this.enterprise.setUserno(this.getCheckLogin().getUser().getUno());
+        User temUser=this.getCheckLogin().getUser();
+        this.enterprise.setUserno(temUser.getUno());
         this.entStu.setPositionid(this.positionId);
         this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
         int enterId = epDao.getBeanListHandlerRunner("select * from enterprise where name='" + enterName + "'", enterprise).get(0).getId();
@@ -76,7 +77,8 @@ public class EnterpriseInfo implements java.io.Serializable {
         if (epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
-            this.enterprise.setUserno(this.getCheckLogin().getUser().getUno());
+            User temUser=this.getCheckLogin().getUser();
+            this.enterprise.setUserno(temUser.getUno());
             epDao.executUpdate("insert into enterprise" + StaticFields.currentGradeNum + " (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");

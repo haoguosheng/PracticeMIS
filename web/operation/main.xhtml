@@ -12,11 +12,11 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                <h1> <h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
-                
+               <h:panelGrid columns="1">
                <c:forEach items="#{newsBean.recentNews}" var="news">
                         <h:outputLabel value="#{news.content}" />
                     </c:forEach>
-                
+               </h:panelGrid>
             </ui:define>
 
         </ui:composition>

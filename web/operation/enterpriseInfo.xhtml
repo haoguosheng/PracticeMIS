@@ -49,7 +49,7 @@
                         <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}"/>
                         <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
                         <br/>
-                        <h:outputLabel value="#{msgs.enter}#{msgs.mylist}" />
+                        <h:outputLabel value="#{msgs.enter}#{msgs.list}" />
                         <hr/>
                         <h:dataTable rowClasses="oddRows evenRows"  value="#{enterpriseInfo.paginator.model}" var="ep"
                                      border="1" >

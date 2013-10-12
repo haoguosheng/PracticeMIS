@@ -10,7 +10,7 @@ package tools;
  */
 public class StaticFields {
     public static final String universityId="000";
-    public static final int CanSeeAll=0,CanSeeOnlySchool=1,CanSeeSelf=2;
+    public static final int CanSeeAll=0,CanSeeOnlySchool=1,CanSeeSelf=2,CanSeeNothing=3;
     public static String currentGradeNum="";
     public static String schoolExample="026";
     public static int stuUnoLength1=8;

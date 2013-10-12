@@ -14,7 +14,7 @@
                 <div class="companyInfo">
                     <h:form id="myForm">
                         <h:messages  style="color: red" id="latestMessage"/>
-                        <h:panelGrid columns="2" >
+                        <h:panelGrid columns="2">
                             <h:outputLabel value="#{msgs.selectSchool}"/>
                             <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschool" required="true"  validator="#{userinfoBean.assingValue2SchoolId}" >
                                 <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
@@ -26,15 +26,14 @@
 
                         <h:panelGrid   columns="5">
                             <h:outputLabel value="#{msgs.teacherUno}:"  />
-                            <h:inputText id="tuno" value="#{userinfoBean.userno}" required="true"/>
+                            <h:inputText id="tuno" value="#{userinfoBean.userno}"/>
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:inputText id="tname" value="#{userinfoBean.studentname}" required="true"/>
+                            <h:inputText id="tname" value="#{userinfoBean.studentname}"/>
                             <h:commandButton action="#{userinfoBean.addTeacher}" value="#{msgs.add}"/>
                         </h:panelGrid>
 
-
                         <h1><h:outputText value="教师信息列表"></h:outputText></h1>
-                        <h:dataTable id ="myschoolId" value="#{userinfoBean.teacher}" var="ci"
+                        <h:dataTable id ="myschoolId" value="#{userinfoBean.teacherList}" var="ci"
                                      border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
                                      columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
                                      >
@@ -47,10 +46,9 @@
                                 <h:outputText value="#{ci.uno}"/>  
                             </h:column>
 
-
                             <h:column>
                                  <f:facet name="header">#{msgs.role}</f:facet>
-                                 <h:selectOneMenu value="#{ci.roleid}" id="myrile" required="true">
+                                 <h:selectOneMenu value="#{userinfoBean.roleid}" id="myrile" required="true">
                                      <f:selectItem itemLabel="#{ci.roleinfo.name}" itemValue="#{ci.roleid}" />
                                     <f:selectItems value="#{userinfoBean.roo}"/>
                                   
@@ -58,10 +56,9 @@
                             </h:column>
                         
 
-
                             <h:column> 
                                 <f:facet name="header">#{msgs.school}</f:facet>
-                                <h:selectOneMenu value="#{ci.nameofunit.id}" id="myschool" required="true">
+                                <h:selectOneMenu value="#{userinfoBean.nameofunitid}" id="myschool" required="true">
                                     <f:selectItem itemLabel="#{ci.nameofunit.name}" itemValue="#{ci.nameofunit.id}" />
                                     <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
                                     <f:ajax render="myschoolId" event="change"/>
@@ -69,7 +66,7 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.alter}</f:facet>
-                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.saveTeacher(ci.uno,ci.roleid,ci.nameofunit.id)}"/>
+                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.saveTeacher(ci.uno)}"/>
                             </h:column> 
                             <h:column>
                                 <f:facet name="header">#{msgs.delete}</f:facet>
