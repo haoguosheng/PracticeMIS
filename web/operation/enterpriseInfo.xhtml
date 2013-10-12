@@ -20,9 +20,8 @@
                     </h:commandButton>
                     <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
                     <h1><h:outputText value="#{msgs.enterpriseList}"></h:outputText></h1>
-                    <h:dataTable value="#{enterpriseInfo.paginator.model}" var="ep"
-                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn,seventhColumn,eighthColumn " 
+                    <h:dataTable rowClasses="oddRows evenRows"  value="#{enterpriseInfo.paginator.model}" var="ep"
+                                 border="1"
                                  >
                         <h:column>
                             <f:facet name="header">#{msgs.enterName}</f:facet>
