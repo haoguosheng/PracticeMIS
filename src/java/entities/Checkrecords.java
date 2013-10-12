@@ -111,8 +111,8 @@ public class Checkrecords implements Serializable {
     }
 
     public User getStudent() {
-        if(teacher == null){
-            teacher = userDao.getBeanListHandlerRunner("select * from student"+ schoolId +" where uno='" + stuno + "'", new User()).get(0);
+        if(student == null){
+            student = userDao.getBeanListHandlerRunner("select * from student"+ schoolId +" where uno='" + stuno + "'", new User()).get(0);
         }
         return student;
     }

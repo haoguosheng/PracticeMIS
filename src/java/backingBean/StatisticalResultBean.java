@@ -31,7 +31,7 @@ public class StatisticalResultBean implements Serializable {
     private String[] rankString = new String[]{"优秀", "良好", "及格", "不及格"};
     private String teacherNo;
     private User loginUser;
-    private Checkrecords checkRecord=new Checkrecords();
+    private Checkrecords checkRecord = new Checkrecords();
 
     public LinkedHashMap<String, String> getTeacherMap() {
         if (null == teacherMap) {
@@ -66,23 +66,26 @@ public class StatisticalResultBean implements Serializable {
             if (!teacherNo.equals("unRecord")) {
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + user.getSchoolId() + " where teacherNo = '" + teacherNo + "'", checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + user.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 } else {
                     checkList.clear();
-                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + user.getSchoolId() + " where teacherNo = '" + teacherNo + "'",checkRecord);
+                    List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + user.getSchoolId() + " where teachNo = '" + teacherNo + "'", checkRecord);
                     for (Iterator<Checkrecords> it = tempList.iterator(); it.hasNext();) {
                         Checkrecords Checkrecord = it.next();
                         checkList.add(Checkrecord);
                     }
                 }
+                 for (Checkrecords s : checkList) {
+                s.setSchoolId(this.getLoginUser().getSchoolId());
+            }
             } else {
                 if (null == checkList) {
                     checkList = new ArrayList<Checkrecords>();
-                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from student" + user.getSchoolId() + " where roleid = 2 and nameofunitid!=15 and userno not in ( select stuno from checkrecords" + user.getSchoolId() + ")", this.getLoginUser());
+                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from stuentrel" + user.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + user.getSchoolId() + ")", this.getLoginUser());
                     for (Iterator<User> it = stuList.iterator(); it.hasNext();) {
                         User tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -91,7 +94,7 @@ public class StatisticalResultBean implements Serializable {
                     }
                 } else {
                     checkList.clear();
-                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from student" + user.getSchoolId() + " where roleid = 2 and nameofunitid!=15 and userno not in ( select stuno from checkrecords" + user.getSchoolId() + ")", this.getLoginUser());
+                    List<User> stuList = userDao.getBeanListHandlerRunner("select * from stuentrel" + user.getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + user.getSchoolId() + ")", this.getLoginUser());
                     for (Iterator<User> it = stuList.iterator(); it.hasNext();) {
                         User tempuser = it.next();
                         Checkrecords c = new Checkrecords();
@@ -99,6 +102,9 @@ public class StatisticalResultBean implements Serializable {
                         checkList.add(c);
                     }
                 }
+            }
+            for (Checkrecords s : checkList) {
+                s.setSchoolId(this.getLoginUser().getSchoolId());
             }
             return checkList;
         }
