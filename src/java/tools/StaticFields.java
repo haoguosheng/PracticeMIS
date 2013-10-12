@@ -9,6 +9,6 @@ package tools;
  * @author Idea
  */
 public class StaticFields {
-    public static final int canseeAll=0;
     public static final String universityId="000";
+    public static final int CanSeeAll=0,CanSeeOnlySchool=1,CanSeeSelf=2;
 }

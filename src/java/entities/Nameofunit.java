@@ -4,6 +4,7 @@
  */
 package entities;
 
+import backingBean.TeachSeeReport;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
@@ -27,6 +28,7 @@ public class Nameofunit implements Serializable {
     private List<Nameofunit> childnameofunits;
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
+    private User teacher;
 
     public Nameofunit() {
     }
@@ -156,5 +158,15 @@ public class Nameofunit implements Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    /**
+     * @return the teacher
+     */
+    public User getTeacher() {
+        if(null==teacher){
+            teacher=userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='"+this.getUserno()+"'", new User()).get(0);
+        }
+        return teacher;
     }
 }

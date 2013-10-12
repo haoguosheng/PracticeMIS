@@ -14,28 +14,30 @@
                 <h1><h:outputLabel value="#{msgs.submitTeaReport}"/> </h1>
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form >
-                    <h:panelGrid columns="2" id="myEntireForm">
+                    <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.selectCity}" />
                         <h:selectOneMenu value="#{userinfoBean.cityId}" required="true">
                             <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
                             <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                            <f:ajax render="myEntireForm" event="change"/>
+                            <f:ajax render="students" event="change"/>
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.selectStudents}"/>
                         <h:selectOneMenu  value="#{checkRecordBean.studentNo}" id="students" required="true">
-                            <f:selectItem  itemValue="0" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
                             <f:selectItems value="#{userinfoBean.studentMap}"/>
-                            <f:ajax event="change" render="myEntireForm" />
+                            <f:ajax event="change" render="studentReport" />
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.submittedNote}:"/>
-                        <h:outputLabel value=""  rendered="#{checkRecordBean.practiceList.size()==0}" id="tem" />
-                        <h:panelGrid columns="1" rendered="#{checkRecordBean.practiceList.size()>0}"  id="studentReport" >
-                            <c:forEach items="#{checkRecordBean.practiceList}" var="submitted">
-                                <h:commandLink action="#{teachSeeReport.directToNote()}" value="#{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日">
-                                    <f:param value="#{submitted.submitdate}" name="submitDate"/>
-                                    <f:param value="#{checkRecordBean.studentNo}" name="studentNo"/>
-                                </h:commandLink>
-                            </c:forEach>
+                        <h:panelGrid  id="studentReport">
+                            <h:outputLabel value=""  rendered="#{checkRecordBean.practiceList.size()==0}" id="tem" />
+                            <h:panelGrid columns="1" rendered="#{checkRecordBean.practiceList.size()>0}"  >
+                                <c:forEach items="#{checkRecordBean.practiceList}" var="submitted">
+                                    <h:commandLink action="#{teachSeeReport.directToNote()}" value="#{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日">
+                                        <f:param value="#{submitted.submitdate}" name="submitDate"/>
+                                        <f:param value="#{checkRecordBean.studentNo}" name="studentNo"/>
+                                    </h:commandLink>
+                                </c:forEach>
+                            </h:panelGrid>
                         </h:panelGrid>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
