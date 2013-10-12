@@ -11,6 +11,7 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <div class="companyInfo">
                 <h:form>
                     <h:messages  style="color: red" id="latestMessage"/>
                     <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
@@ -49,6 +50,7 @@
                     <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}"/>
                     <h:commandButton value="next &gt;" action="#{enterpriseInfo.paginator.next}"/>
                 </h:form>
+                </div>
             </ui:define>
         </ui:composition>
     </body>

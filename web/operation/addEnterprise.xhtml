@@ -10,6 +10,7 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <div class="enterpriseInfo">
                 <h:form prependId="false" style="alignment-adjust: middle">
                     <h1><h:outputText value="#{msgs.addorEdit}"/></h1>
                      <h:messages  style="color: red" id="latestMessage"/>
@@ -59,6 +60,7 @@
                     <h:commandButton action="#{enterpriseInfo.addEnterprise}" value="#{msgs.add}"/>
                   </h:panelGrid>     
                 </h:form>
+                </div>
             </ui:define>
         </ui:composition>
     </body>

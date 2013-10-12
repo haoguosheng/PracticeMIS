@@ -10,6 +10,7 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <div class="select">
                 <h:form  style="alignment-adjust: middle">
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
@@ -58,10 +59,9 @@
                             <h:outputLabel value="#{ep.other}" id="other"/>
                         </h:column>
                     </h:dataTable> 
-
                     <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" id="myselect" />
-                    
                 </h:form>
+                </div>
             </ui:define>
         </ui:composition>
     </body>
