@@ -24,15 +24,16 @@ public class UserAnalysis {
 
     public static String getSchoolId(String uno) {
         String schoolId;
-        if (uno.length() == 6) {
+        if (uno.trim().length() == 6) {
             String sql = "select * from teacherinfo where uno = '" + uno + "'";
-            List<User> teacherList = userDao.getBeanListHandlerRunner(sql, csUser);
-            schoolId = teacherList.get(0).getNameofunitid();
+            schoolId = userDao.getBeanListHandlerRunner(sql, csUser).get(0).getNameofunitid();
         } else {
-            if (uno.length() == 8) {
+            if (uno.trim().length() == 8) {
                 schoolId = "0" + uno.substring(2, 4);
-            } else {
+            } else if(uno.trim().length() == 9){
                 schoolId = uno.substring(2, 5);
+            }else{
+            schoolId=null;
             }
         }
         return schoolId;

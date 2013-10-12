@@ -30,7 +30,7 @@ body {
 
 .left .left_2 {
 	height:148px;
-	background:url(../../resources/images/login_left_2.gif) no-repeat left top;
+	background:url(.././resources/images/login_left_2.gif) no-repeat left top;
 }
 
 .main_body {

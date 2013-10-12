@@ -21,10 +21,10 @@
             30
         </session-timeout>
     </session-config>
-    <description>Derby conn pool</description>
     <welcome-file-list>
         <welcome-file>login/login.xhtml</welcome-file>
     </welcome-file-list>
+    <description>Derby conn pool</description>
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/Enterprise</res-ref-name>

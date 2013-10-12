@@ -39,24 +39,33 @@ public class CheckLogin implements Serializable {
 
     private boolean isUserlegal(String name, String password) {
         boolean result;
-        if (name.length() == 6) {
+        if (name.trim().length() == 6) {
             String sql = "select * from teacherinfo where uno='" + name + "' and password='" + password + "'";
             List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
-            if (userList.size() > 0) {
-                this.user = userList.get(0);
-                result = true;
-            } else {
+            if (null == userList) {
                 result = false;
+            } else {
+                if (userList.size() > 0) {
+                    this.user = userList.get(0);
+                    result = true;
+                } else {
+                    result = false;
+                }
             }
         } else {
-            String table = "student" + UserAnalysis.getSchoolId(name);
-            String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
-            List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
-            if (userList.size() > 0) {
-                this.user = userList.get(0);
-                result = true;
-            } else {
+            if (null == UserAnalysis.getSchoolId(name)) {
                 result = false;
+                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("错误的用户名"));
+            } else {
+                String table = "student" + UserAnalysis.getSchoolId(name);
+                String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
+                List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
+                if (userList.size() > 0) {
+                    this.user = userList.get(0);
+                    result = true;
+                } else {
+                    result = false;
+                }
             }
         }
         return result;
@@ -79,7 +88,7 @@ public class CheckLogin implements Serializable {
                     this.welcomeMess = this.getUser().getName() + "," + schoolName + "," + UserAnalysis.getRoleName(this.username);
                     tryTime = 0;
                     this.logined = true;
-                    return "/noLogin/main?faces-redirect=true";
+                    return "/operation/main?faces-redirect=true";
 
                     // return;
                 } else {//用户名或密码错误

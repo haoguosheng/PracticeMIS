@@ -38,18 +38,18 @@ public class TopMenu implements Serializable {
         return this.resWithChildrenList;
     }
 
-    private synchronized void calcuListResList() {
+    private void calcuListResList() {
         User user = new ForCallBean().getUser();
         String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + user.getRoleid()).get(0) + ",";
         LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
         LinkedList<ResourceWithChildren> readyResource = new ForCallBean().getListResList();
         for (int i = 0; i < readyResource.size(); i++) {
             ResourceWithChildren preparedRe = readyResource.get(i).clone();
-            if (resourceIds.contains(","+String.valueOf(preparedRe.getParent().getId())+",")) {
+            if (resourceIds.contains("," + String.valueOf(preparedRe.getParent().getId()) + ",")) {
                 result.add(preparedRe);
                 List<Resourceinfo> childrenRes = preparedRe.getChildrenResourceList();
                 for (int j = 0; j < childrenRes.size(); j++) {
-                    Resourceinfo tem = childrenRes.get(j);
+                    Resourceinfo tem =  childrenRes.get(j);
                     if (!resourceIds.contains(String.valueOf(tem.getId()))) {
                         childrenRes.remove(tem);
                     }
