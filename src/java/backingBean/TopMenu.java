@@ -39,8 +39,8 @@ public class TopMenu implements Serializable {
     }
 
     private void calcuListResList() {
-        User user = new ForCallBean().getUser();
-        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + user.getRoleid()).get(0) + ",";
+        User myUser = new ForCallBean().getUser();
+        String resourceIds = "," + roleDao.getIdListHandlerRunner("select resouceids from roleinfo where id=" + myUser.getRoleid()).get(0) + ",";
         LinkedList<ResourceWithChildren> result = new LinkedList<ResourceWithChildren>();
         LinkedList<ResourceWithChildren> readyResource = new ForCallBean().getListResList();
         for (int i = 0; i < readyResource.size(); i++) {

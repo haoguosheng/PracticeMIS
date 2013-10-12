@@ -54,6 +54,8 @@ public class SubmitReport implements Serializable {
     private Position position = new Position();
     private Enterstudent entStu = new Enterstudent();
     private Stuentrel stuEnRel = new Stuentrel();
+    private String deleteRepDate, alterDate;
+    private boolean readflag;
 
     public void submitPracNote() {
         Calendar tempc = Calendar.getInstance();
@@ -61,10 +63,10 @@ public class SubmitReport implements Serializable {
         tempc.add(Calendar.MONTH, month - c.get(Calendar.MONTH));
         tempc.add(Calendar.DAY_OF_MONTH, day - c.get(Calendar.DAY_OF_MONTH));
         int week = tempc.get(Calendar.WEEK_OF_YEAR);
+        boolean hasSubmitted = false;
         if (tempc.after(Calendar.getInstance())) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("实习日期不能超过今天"));
         } else {
-            boolean hasSubmitted = false;
             Iterator<Practicenote> it = this.getSubmittedNoteList().iterator();
             while (it.hasNext()) {
                 Date submitDate = it.next().getSubmitdate();
@@ -112,7 +114,7 @@ public class SubmitReport implements Serializable {
         if (null == submittedNoteList) {
             submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
         }
-        for(Practicenote s:submittedNoteList){
+        for (Practicenote s : submittedNoteList) {
             s.setSchoolId(loginUser.getSchoolId());
         }
         return submittedNoteList;
@@ -126,8 +128,10 @@ public class SubmitReport implements Serializable {
             this.studentUser = userDao.getBeanListHandlerRunner("select * from student" + loginUser.getSchoolId() + " where uno='" + context.getExternalContext().getRequestParameterMap().get("studentNo") + "'", loginUser).get(0);
             this.submittedNoteList = practDao.getBeanListHandlerRunner("select * from practice" + loginUser.getSchoolId() + " where stuno='" + this.studentUser.getUno() + "'", practiceNote);
         }
-        String strToFormat=context.getExternalContext().getRequestParameterMap().get("submitDate");
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String strToFormat = context.getExternalContext().getRequestParameterMap().get("submitDate");
+        deleteRepDate = strToFormat;
+        alterDate = strToFormat;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date requestDate = null;
         try {
             requestDate = sdf.parse(strToFormat);
@@ -171,16 +175,25 @@ public class SubmitReport implements Serializable {
         }
         return positionMap;
     }
-    
-    public String deleteSelectReport(){
-        FacesContext context = FacesContext.getCurrentInstance();
-        String s = context.getExternalContext().getRequestParameterMap().get("submitDate");
-        practDao.executUpdate("delete * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and date='" + s + "'");
+
+    public String deleteSelectReport() {
+        String s = deleteRepDate;
+        practDao.executUpdate("delete from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
         return "viewReports.xhtml";
     }
+
+    public String editSelectReport() {
+        readflag = false;
+        return "viewReport.xhtml";
+    }
     
-    public void alterSelectReport(){
-        
+    public String alterSelectReport() {
+        String s = alterDate;
+        practDao.executUpdate("update practicenote" + loginUser.getSchoolId() + " set detail='" + temPraNote.getDetail() + "' where stuno='" + this.getUser().getUno() + "' and submitdate='" + s + "'");
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + loginUser.getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", practiceNote);
+        readflag = true;
+        return "viewReports.xhtml";
     }
 
     public Practicenote getTemPraNote() {
@@ -270,5 +283,19 @@ public class SubmitReport implements Serializable {
      */
     public void setStudentUserno(String studentUserno) {
         this.studentUserno = studentUserno;
+    }
+
+    /**
+     * @return the readflag
+     */
+    public boolean isReadflag() {
+        return readflag;
+    }
+
+    /**
+     * @param readflag the readflag to set
+     */
+    public void setReadflag(boolean readflag) {
+        this.readflag = readflag;
     }
 }
