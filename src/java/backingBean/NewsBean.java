@@ -5,12 +5,13 @@
 package backingBean;
 
 import entities.News;
+import entities.User;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ import tools.SQLTool;
 import tools.StaticFields;
 
 @Named
-@RequestScoped
+@SessionScoped
 public class NewsBean implements Serializable {
 
     @Inject
@@ -37,18 +38,29 @@ public class NewsBean implements Serializable {
     }
 
     public String addNews() {
+        User myUser = getCheckLogin().getUser();
+        Calendar temCa = Calendar.getInstance();
+        int month = temCa.get(Calendar.MONTH);
+        String temMonth = month < 10 ? "0" + month : "" + month;
+        String myData = temCa.get(Calendar.YEAR) + "-" + temMonth.trim() + "-" + temCa.get(Calendar.DAY_OF_MONTH);
         if (this.news.getContent().trim().length() >= 0) {
-            newsDao.executUpdate("insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
-                    + this.news.getContent() + "', "
-                    + Calendar.getInstance().getTime() + ", '"
-                    + this.checkLogin.getUser().getUno() + "','"
-                    + this.checkLogin.getUser().getNameofunitid() + "'"
-                    + this.news.getNewsTitle());
+            String sqlString = "insert into news" + StaticFields.currentGradeNum + " (content, inputDate, userno, UnitId,newstitle) values('"
+                    + this.news.getContent().trim() + "','"
+                    + myData + "', '"
+                    + myUser.getUno().trim() + "','"
+                    + myUser.getNameofunitid().trim() + "','"
+                    + this.news.getNewsTitle().trim() + "')";
+            newsDao.executUpdate(sqlString);
             this.news = new News();
             //需要调整Map中的list
         } else {
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("您需要加入消息的内容，而不能为空"));
         }
+        return null;
+    }
+
+    public String delete(int id) {
+        newsDao.executUpdate("delete from news where id=" + id);
         return null;
     }
 

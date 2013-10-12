@@ -5,6 +5,7 @@
 package backingBean;
 
 import entities.Nameofunit;
+import entities.User;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,22 +24,24 @@ import tools.StaticFields;
 @SessionScoped
 public class NameofUnitBean implements java.io.Serializable {
 
-     @Inject
-   private  CheckLogin checkLogin;
+    @Inject
+    private CheckLogin checkLogin;
     private LinkedHashMap<String, String> classNameMap, schoolMap;
     private List<Nameofunit> classList, schoolList;
     private SQLTool<Nameofunit> nameDAO;
-    private Nameofunit unit ;
+    private Nameofunit unit;
     private String schoolId, classId;
+    private int canSeeAll;
 
     /**
      * @return the classNameMap
      */
     @PostConstruct
-    public void init(){
+    public void init() {
         nameDAO = new SQLTool<Nameofunit>();
         unit = new Nameofunit();
     }
+
     public LinkedHashMap<String, String> getClassNameMap() {
         if (schoolId != null) {
             classNameMap = new LinkedHashMap();
@@ -55,8 +58,8 @@ public class NameofUnitBean implements java.io.Serializable {
     }
 
     public List<Nameofunit> getClassList() {
-        if (null != schoolId) {
-            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where parentid ='" + this.getSchoolId() + "' order by pinyin", unit);
+        if (null != this.getSchoolId()) {
+            classList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where parentid ='" + this.getSchoolId() + "' order by pinyin", unit);
         } else {
             classList = null;
         }
@@ -64,20 +67,24 @@ public class NameofUnitBean implements java.io.Serializable {
     }
 
     public List<Nameofunit> getSchoolList() {
-        if (null == schoolList||schoolList.isEmpty()) {
-            switch (this.getCheckLogin().getUser().getRoleinfo().getCanseeall()) {
+        User temUser=this.getCheckLogin().getUser();
+        if (null == schoolList || schoolList.isEmpty()) {
+            switch (temUser.getRoleinfo().getCanseeall()) {
                 case StaticFields.CanSeeAll:
-                     schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' and id!='000' order by pinyin", unit);
+                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  parentid='" + StaticFields.universityId + "' and id!='000' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeOnlySchool:
-                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where  parentid='" + this.getCheckLogin().getUser().getNameofunitid() + "' order by pinyin", unit);
+                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  id='" + temUser.getNameofunitid() + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeSelf:
-                    schoolList=null;
+                    schoolList = null;
                     break;
-                default:schoolList=null;
+                case StaticFields.CanSeeNothing:
+                    schoolList=null;
+                default:
+                    schoolList = null;
             }
-           
+
         }
         return schoolList;
     }
@@ -86,9 +93,12 @@ public class NameofUnitBean implements java.io.Serializable {
      * @return the schoolId
      */
     public String getSchoolId() {
+        User temUser=this.getCheckLogin().getUser();
+        if(this.canSeeAll!=StaticFields.CanSeeNothing){//可以确定一定是教师，下面拿到的一定是学院的编号
+            this.schoolId=temUser.getNameofunitid();
+        }
         return schoolId;
     }
-
 
     /**
      * @param schoolId the schoolId to set
@@ -118,7 +128,7 @@ public class NameofUnitBean implements java.io.Serializable {
      * @return the schoolMap
      */
     public LinkedHashMap<String, String> getSchoolMap() {
-        if (null == schoolMap||this.schoolMap.isEmpty()) {
+        if (null == schoolMap || this.schoolMap.isEmpty()) {
             this.schoolMap = new LinkedHashMap<String, String>();
             Iterator<Nameofunit> it = this.getSchoolList().iterator();
             while (it.hasNext()) {
@@ -141,5 +151,21 @@ public class NameofUnitBean implements java.io.Serializable {
      */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
+    }
+
+    /**
+     * @return the canSeeAll
+     */
+    public int getCanSeeAll() {
+        User temUser=this.getCheckLogin().getUser();
+        this.canSeeAll=temUser.getRoleinfo().getCanseeall();
+        return canSeeAll;
+    }
+
+    /**
+     * @param canSeeAll the canSeeAll to set
+     */
+    public void setCanSeeAll(int canSeeAll) {
+        this.canSeeAll = canSeeAll;
     }
 }

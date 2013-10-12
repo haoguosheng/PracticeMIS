@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class UserAnalysis {
+public class UserAnalysis implements java.io.Serializable{
 
     private static SQLTool<User> userDao = new SQLTool<User>();
     private static User csUser = new User();

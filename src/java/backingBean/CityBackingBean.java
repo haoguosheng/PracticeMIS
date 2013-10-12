@@ -5,6 +5,7 @@
 package backingBean;
 
 import entities.City;
+import entities.User;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,7 +71,8 @@ public class CityBackingBean implements java.io.Serializable {
             if (cDao.getBeanListHandlerRunner("select * from city" + StaticFields.currentGradeNum + " where locate('" + this.newCityName + "',name)>0", new City()).size() <= 0) {
                 City city = new City();
                 city.setName(newCityName);
-                cDao.executUpdate("insert into city" + StaticFields.currentGradeNum + " (name, userno) values('" + newCityName + "', '" + this.getCheckLogin().getUser().getUno() + "')");
+                User temUser=this.getCheckLogin().getUser();
+                cDao.executUpdate("insert into city" + StaticFields.currentGradeNum + " (name, userno) values('" + newCityName + "', '" + temUser.getUno() + "')");
                 this.ci = null;
                 //       FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把\"" + this.newCityName + "\"添加到城市列表！添加成功！"));
             } else {
@@ -90,9 +92,10 @@ public class CityBackingBean implements java.io.Serializable {
     }
 
     public void save(int id, String s) {
+        User temUser=this.getCheckLogin().getUser();
         City city = (City) cDao.getBeanListHandlerRunner("select * from city" + StaticFields.currentGradeNum + " where id=" + id, new City()).get(0);
         city.setName(s);
-        cDao.executUpdate("update city" + StaticFields.currentGradeNum + "  set name='" + s + "' , userno='" + this.getCheckLogin().getUser().getUno() + "' where id=" + id);
+        cDao.executUpdate("update city" + StaticFields.currentGradeNum + "  set name='" + s + "' , userno='" + temUser.getUno() + "' where id=" + id);
         this.ci = null;
 //        Iterator<City> it = this.ci.iterator();
 //        while (it.hasNext()) {

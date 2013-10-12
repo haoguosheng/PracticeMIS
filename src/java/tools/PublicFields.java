@@ -24,7 +24,7 @@ import javax.inject.Named;
  */
 @Named
 @ApplicationScoped
-public class PublicFields {
+public class PublicFields implements java.io.Serializable{
 
     private String tag = "左边没有就在这里添加";
     private Calendar c = Calendar.getInstance();
