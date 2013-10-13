@@ -52,14 +52,17 @@ public class UserinfoBean implements java.io.Serializable {
     private User myUser;
     private Part excelFile;
     private List<User> student;
-    private User stu;
+    private List<User> teacher;
     private String schoolId;
+    private String studentname;
+    private String nameofunit;
+    private String classId;
 
     public UserinfoBean() {
     }
 
     public LinkedHashMap<String, String> getStudentMap() {
-        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" +StaticFields.currentGradeNum+ getUser().getSchoolId() + " where ENTERID in (select id from enterprise"+StaticFields.currentGradeNum+" where cityid=" + cityId + "))", getUser());
+        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + StaticFields.currentGradeNum + getUser().getSchoolId() + " where ENTERID in (select id from enterprise" + StaticFields.currentGradeNum + " where cityid=" + cityId + "))", getUser());
         if (null != usrList && usrList.size() > 0) {
             Iterator<User> it = usrList.iterator();
             studentMap = new LinkedHashMap<String, String>();
@@ -106,7 +109,7 @@ public class UserinfoBean implements java.io.Serializable {
                 String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) + schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
                 praDao.executUpdate(createPra);
                 //把旧的数据插入新表
-                String insPra = "INSERT INTO HGS.PRACTICENOTE" +gradeNum+ ""+schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
+                String insPra = "INSERT INTO HGS.PRACTICENOTE" + gradeNum + "" + schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
                         + tem.getDetail() + "', '" + tem.getSubmitdate() + "', " + tem.getEnterid() + "," + tem.getPositionid() + ",'" + tem.getStuno() + "')";
                 praDao.executUpdate(insPra);
                 //把旧的数据从旧表中删除
@@ -216,7 +219,13 @@ public class UserinfoBean implements java.io.Serializable {
     public void save(String uno, String nameofunit) {
         String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
         this.userDao.executUpdate("update student" + getUser().getSchoolId() + " set nameofunitId='" + id + "' where uno='" + uno + "'");
-        check(schoolId);
+        checkclass(classId);
+    }
+
+    public void saveTeacher(String uno, String nameofunit) {
+        String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
+        this.userDao.executUpdate("update teacherinfo set nameofunitId='" + id + "' where uno='" + uno + "'");
+        checkschool(schoolId);
     }
 
     public String deleteRow(User user) {
@@ -227,11 +236,28 @@ public class UserinfoBean implements java.io.Serializable {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("此学生有选择的企业，无法删除"));
         }
-        check(schoolId);
+        checkclass(classId);
         return null;
     }
 
-    public void check(String cc) {
+    public String deleteTeacher(User user) {
+        if (userDao.executUpdate("delete from teacherinfo  where uno='" + user.getUno() + "'") > 0) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage("globalMessages", new FacesMessage("删除成功"));
+        } else {
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage("globalMessages", new FacesMessage("删除失败"));
+        }
+        checkschool(schoolId);
+        return null;
+    }
+
+    public void checkclass(String cc) {
+        this.setClassId(cc);
+
+    }
+
+    public void checkschool(String cc) {
         this.setSchoolId(cc);
 
     }
@@ -248,32 +274,88 @@ public class UserinfoBean implements java.io.Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
-        student = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where nameofunitid ='" + schoolId + "'", getUser());
-    }
-
-    /**
-     * @return the stu
-     */
-    public User getStu() {
-        return stu;
-    }
-
-    /**
-     * @param stu the stu to set
-     */
-    public void setStu(User stu) {
-        this.stu = stu;
+        teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where nameofunitid ='" + schoolId + "'", getUser());
     }
 
     public String addStudent() {
         if (userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where uno='" + userno + "'", getUser()).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该学生已经存在，请重新添加！"));
         } else {
-            String nameofunitId=nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + stu.getNameofunit().getName() + "'", new Nameofunit()).get(0).getId();
-            userDao.executUpdate("insert into student" + getUser().getSchoolId() + "(uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + stu.getName() + "',  '" + stu.getRoleid() + "','" + nameofunitId + "')");
+            String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
+            userDao.executUpdate("insert into student" + getUser().getSchoolId() + "(uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',2,'" + nameofunitId + "')");
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学生成功！"));
-        
+
         }
         return null;
+    }
+
+    
+
+    public String addTeacher(){
+    if (userDao.getBeanListHandlerRunner("select * from teacherinfo  where uno='" + userno + "'", getUser()).size() > 0) {
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该教师已经存在，请重新添加！"));
+        } else {
+            String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
+            userDao.executUpdate("insert into teacherinfo (uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',1,'" + nameofunitId + "')");
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新教师成功！"));
+
+        }
+        return null;
+}
+    /**
+     * @return the studentname
+     */
+    public String getStudentname() {
+        return studentname;
+    }
+
+    /**
+     * @param studentname the studentname to set
+     */
+    public void setStudentname(String studentname) {
+        this.studentname = studentname;
+    }
+
+    /**
+     * @return the nameofunit
+     */
+    public String getNameofunit() {
+        return nameofunit;
+    }
+
+    /**
+     * @param nameofunit the nameofunit to set
+     */
+    public void setNameofunit(String nameofunit) {
+        this.nameofunit = nameofunit;
+    }
+
+    /**
+     * @return the teacher
+     */
+    public List<User> getTeacher() {
+        return teacher;
+    }
+
+    /**
+     * @param teacher the teacher to set
+     */
+    public void setTeacher(List<User> teacher) {
+        this.teacher = teacher;
+    }
+
+    /**
+     * @return the classId
+     */
+    public String getClassId() {
+        return classId;
+    }
+
+    /**
+     * @param classId the classId to set
+     */
+    public void setClassId(String classId) {
+        this.classId = classId;
+        student = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where nameofunitid ='" + classId + "'", getUser());
     }
 }

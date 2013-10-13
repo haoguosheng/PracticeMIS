@@ -15,18 +15,18 @@
                         <h1><h:outputText value="#{msgs.addorEdit}"/></h1>
                         <h:messages  style="color: red" id="latestMessage"/>
                         <h:panelGrid columns="2">
-                            <h:outputLabel value="#{msgs.userno}:" for="name" />
+                            <h:outputLabel value="#{msgs.teacherUno}:" for="name" />
                             <h:inputText id="name" value="#{userinfoBean.userno}" required="true"/>
                             <h:outputLabel value="#{msgs.name}" for="enterurl"/>
                             <h:inputText id="enterurl" value="#{userinfoBean.studentname}" required="true"/>
 
                            <h:outputLabel value="#{msgs.role}:"/>
-                           <h:outputText id="contactName" value="2" />
+                           <h:outputText id="contactName" value="1" />
 
-                            <h:outputLabel value="#{msgs.unitNamein}:" id="telephone"/>
+                            <h:outputLabel value="#{msgs.school}:" id="telephone"/>
                             <h:inputText id="contactTelephone" value="#{userinfoBean.nameofunit}">
                             </h:inputText>
-                            <h:commandButton action="#{userinfoBean.addStudent}" value="#{msgs.add}"/>
+                            <h:commandButton action="#{userinfoBean.addTeacher}" value="#{msgs.add}"/>
                         </h:panelGrid>     
                     </h:form>
                 </div>
