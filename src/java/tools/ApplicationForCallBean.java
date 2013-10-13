@@ -42,8 +42,8 @@ public class ApplicationForCallBean {
     }
 
     private static void calcuListResList() {
-        List<Resourceinfo> parentResource = resDao.getBeanListHandlerRunner("select * from resourceinfo where parentid is null order by MENUORDER", resource);//把双亲拿来
-        List<Resourceinfo> childrenResource = resDao.getBeanListHandlerRunner("select * from resourceinfo where parentid is not null", resource);
+        List<Resourceinfo> parentResource = resDao.getBeanListHandlerRunner("select * from resourceinfo" +StaticFields.currentGradeNum+"  where parentid is null order by MENUORDER", resource);//把双亲拿来
+        List<Resourceinfo> childrenResource = resDao.getBeanListHandlerRunner("select * from resourceinfo" +StaticFields.currentGradeNum+"  where parentid is not null", resource);
         LinkedList<ResourceWithChildren> tem = new LinkedList<ResourceWithChildren>();
         Iterator<Resourceinfo> parentIt = parentResource.iterator();
         int i = 0;
@@ -65,7 +65,7 @@ public class ApplicationForCallBean {
 
     public static List<String> getUnitIdList() {
         if (unitIdList.isEmpty()) {
-            unitIdList=nameofUnitDao.getIdListHandlerRunner("select id from nameofunit");
+            unitIdList=nameofUnitDao.getIdListHandlerRunner("select id from nameofunit" +StaticFields.currentGradeNum);
         }
         return unitIdList;
     }

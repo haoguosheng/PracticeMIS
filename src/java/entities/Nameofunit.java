@@ -97,7 +97,7 @@ public class Nameofunit implements Serializable {
     public List<User> getUserList() {
         if (userList == null) {
             if (userno.length() == 6) {
-                userList = userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='" + userno + "'", new User());
+                userList = userDao.getBeanListHandlerRunner("select * from teacherinfo"+StaticFields.currentGradeNum+" where uno='" + userno + "'", new User());
             } else {
                 userList = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + userno + "'", new User());
             }
@@ -117,7 +117,7 @@ public class Nameofunit implements Serializable {
      */
     public Nameofunit getParNameofunit() {
         if (parNameofunit == null) {
-            parNameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit where id='" + parentid + "'", new Nameofunit()).get(0);
+            parNameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+" where id='" + parentid + "'", new Nameofunit()).get(0);
         }
         return parNameofunit;
     }
@@ -134,7 +134,7 @@ public class Nameofunit implements Serializable {
      */
     public List<Nameofunit> getChildnameofunits() {
         if (childnameofunits == null) {
-            childnameofunits = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='" + id + "'", new Nameofunit());
+            childnameofunits = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+"  where parentid='" + id + "'", new Nameofunit());
         }
         return childnameofunits;
     }
@@ -165,7 +165,7 @@ public class Nameofunit implements Serializable {
      */
     public User getTeacher() {
         if(null==teacher){
-            teacher=userDao.getBeanListHandlerRunner("select * from teacherinfo where uno='"+this.getUserno()+"'", new User()).get(0);
+            teacher=userDao.getBeanListHandlerRunner("select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno='"+this.getUserno()+"'", new User()).get(0);
         }
         return teacher;
     }

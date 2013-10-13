@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -63,7 +64,7 @@ public class City implements Serializable {
 
     public List<Enterprise> getEnterprises() {
         if(enterprises == null){
-            enterprises = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + id, new Enterprise());
+            enterprises = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where id=" + id, new Enterprise());
         }
         return enterprises;
     }

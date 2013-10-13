@@ -16,6 +16,7 @@ import tools.ForCallBean;
 import tools.PublicFields;
 import tools.RepeatPaginator;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -39,7 +40,7 @@ public class CityBackingBean implements java.io.Serializable{
     public LinkedHashMap<String, Integer> getCityMap() {
         if (null == cityMap) {
             cityMap = new LinkedHashMap<String, Integer>();
-            String sql = "select * from city order by pinyin";
+            String sql = "select * from city"+StaticFields.currentGradeNum+" order by pinyin";
             List<City> listCity = cDao.getBeanListHandlerRunner(sql, new City());
             for (Iterator<City> it = listCity.iterator(); it.hasNext();) {
                 City city2 = it.next();
@@ -59,10 +60,10 @@ public class CityBackingBean implements java.io.Serializable{
 
     public String add() {
         if (this.newCityName.length() > 0 && !this.newCityName.equals(new PublicFields().getTag())) {
-            if (cDao.getBeanListHandlerRunner("select * from city where locate('" + this.newCityName + "',name)>0", new City()).size() <= 0) {
+            if (cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where locate('" + this.newCityName + "',name)>0", new City()).size() <= 0) {
                 City city = new City();
                 city.setName(newCityName);
-                cDao.executUpdate("insert into city(name, userno) values('" + newCityName + "', '" + new ForCallBean().getUser().getUno() + "')");
+                cDao.executUpdate("insert into city" +StaticFields.currentGradeNum+" (name, userno) values('" + newCityName + "', '" + new ForCallBean().getUser().getUno() + "')");
                 this.ci = null;
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把\"" + this.newCityName + "\"添加到城市列表！添加成功！"));
             } else {
@@ -82,9 +83,9 @@ public class CityBackingBean implements java.io.Serializable{
     }
 
     public void save(int id, String s) {
-        City city = (City) cDao.getBeanListHandlerRunner("select * from city where id=" + id, new City()).get(0);
+        City city = (City) cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id=" + id, new City()).get(0);
         city.setName(s);
-        cDao.executUpdate("update city set name='" + s + "' , userno='" + new ForCallBean().getUser().getUno() + "' where id=" + id);
+        cDao.executUpdate("update city" +StaticFields.currentGradeNum+"  set name='" + s + "' , userno='" + new ForCallBean().getUser().getUno() + "' where id=" + id);
         this.ci = null;
 //        Iterator<City> it = this.ci.iterator();
 //        while (it.hasNext()) {
@@ -107,7 +108,7 @@ public class CityBackingBean implements java.io.Serializable{
 
     public String deleteRow(City city) {
 
-        if (cDao.executUpdate("delete from city where id=" + city.getId()) > 0) {
+        if (cDao.executUpdate("delete from city" +StaticFields.currentGradeNum+"  where id=" + city.getId()) > 0) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } else {
@@ -135,10 +136,10 @@ public class CityBackingBean implements java.io.Serializable{
      */
     public List<City> getCi() {
         if (null == this.ci && isNull == true) {
-            this.ci = cDao.getBeanListHandlerRunner("select * from city order by id", new City());
+            this.ci = cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" order by id", new City());
         }
         if (null == this.ci && isNull == false) {
-            this.ci = cDao.getBeanListHandlerRunner("select * from city where locate('" + this.searchName + "',name)>0", new City());
+            this.ci = cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where locate('" + this.searchName + "',name)>0", new City());
         }
         return this.ci;
     }

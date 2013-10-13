@@ -45,7 +45,7 @@ public class SchoolBean implements Serializable {
         String sId = context.getExternalContext().getRequestParameterMap().get("schoolId");
         deleteSchool = sId;
         alterSchool = sId;
-        nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit where id='" + sId + "'", nameofunit).get(0);
+        nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where id='" + sId + "'", nameofunit).get(0);
         nameofunit.setSchoolId(schoolId);
         return "showSchool.xhtml";
     }
@@ -58,12 +58,12 @@ public class SchoolBean implements Serializable {
             stat.executeUpdate("DROP Table PracticeNote" + deleteSchool);
             stat.executeUpdate("DROP Table StuEntRel" + deleteSchool);
             stat.executeUpdate("DROP TABLE Student" + deleteSchool);
-            nameDao.executUpdate("delete from nameofunit where id='" + deleteSchool + "'");
+            nameDao.executUpdate("delete from nameofunit" +StaticFields.currentGradeNum+"  where id='" + deleteSchool + "'");
             stat.close();
         } catch (SQLException ex) {
             Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by id", nameofunit);
+        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where parentid='000' and id!='000' order by id", nameofunit);
         readflag = true;
         return "viewSchools.xhtml";
     }
@@ -74,13 +74,13 @@ public class SchoolBean implements Serializable {
     }
 
     public String alterSchool() {
-        nameDao.executUpdate("update nameofunit set name='" + nameofunit.getName() + "',pinyin='" + nameofunit.getPinyin() + "'" + " where id='" + alterSchool + "'");
-        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by id", nameofunit);
+        nameDao.executUpdate("update nameofunit" +StaticFields.currentGradeNum+"  set name='" + nameofunit.getName() + "',pinyin='" + nameofunit.getPinyin() + "'" + " where id='" + alterSchool + "'");
+        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where parentid='000' and id!='000' order by id", nameofunit);
         return "viewSchools.xhtml";
     }
 
     public String addSchool() {
-        if (nameDao.getBeanListHandlerRunner("select * from nameofunit where id='" + schoolId + "'", nameofunit).size() > 0) {
+        if (nameDao.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where id='" + schoolId + "'", nameofunit).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该学院已经存在，请重新添加！"));
         } else {
             Statement stat;
@@ -90,7 +90,7 @@ public class SchoolBean implements Serializable {
                 stat.executeUpdate("create table CheckRecords" +StaticFields.currentGradeNum+ schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" +StaticFields.currentGradeNum+schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
                 stat.executeUpdate("Create Table PracticeNote" +StaticFields.currentGradeNum+ schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" +StaticFields.currentGradeNum+ schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise(ID),PositionId Integer references Position(ID))");
                 stat.executeUpdate("Create Table StuEntRel" +StaticFields.currentGradeNum+ schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" +StaticFields.currentGradeNum+ schoolId + "(uno),EnterID Integer references Enterprise(Id))");
-                nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + loginUser.getUno() + "')");
+                nameDao.executUpdate("insert into nameofunit" +StaticFields.currentGradeNum+" (id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + loginUser.getUno() + "')");
                 stat.close();
             } catch (SQLException ex) {
                 Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +122,7 @@ public class SchoolBean implements Serializable {
      */
     public List<Nameofunit> getNameofunitList() {
         if (nameofunitList == null) {
-            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by id", nameofunit);
+            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where parentid='000' and id!='000' order by id", nameofunit);
         }
         return nameofunitList;
     }

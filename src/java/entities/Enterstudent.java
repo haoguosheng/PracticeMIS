@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -26,12 +27,8 @@ public class Enterstudent implements Serializable {
     private Position position;
     private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
     private SQLTool<Enterstudent> entStuDao = new SQLTool<Enterstudent>();
-    private SQLTool<Practicenote> practiceNoteDao = new SQLTool<Practicenote>();
-    private SQLTool<Stuentrel> stuEntRelDao = new SQLTool<Stuentrel>();
     private SQLTool<Position> pDao = new SQLTool<Position>();
     private List<Enterstudent> entStuList;
-    private List<Practicenote> practicenoteList;
-    private List<Stuentrel> stuEntRelList;
 
     public Enterstudent() {
     }
@@ -101,7 +98,7 @@ public class Enterstudent implements Serializable {
      */
     public Enterprise getEnterprise() {
         if (enterprise == null) {
-            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + enterid, new Enterprise()).get(0);
+            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where id=" + enterid, new Enterprise()).get(0);
         }
         return enterprise;
     }
@@ -118,7 +115,7 @@ public class Enterstudent implements Serializable {
      */
     public Position getPosition() {
         if (position == null) {
-            position = pDao.getBeanListHandlerRunner("select * from position where id=" + positionid, new Position()).get(0);
+            position = pDao.getBeanListHandlerRunner("select * from position"+StaticFields.currentGradeNum+" where id=" + positionid, new Position()).get(0);
         }
         return position;
     }
@@ -135,7 +132,7 @@ public class Enterstudent implements Serializable {
      */
     public List<Enterstudent> getEntStuList() {
         if (null == this.entStuList) {
-            this.entStuList = this.entStuDao.getBeanListHandlerRunner("select * from Enterstudent where enterid=" + this.id, this);
+            this.entStuList = this.entStuDao.getBeanListHandlerRunner("select * from Enterstudent"+StaticFields.currentGradeNum+" where enterid=" + this.id, this);
         }
         return entStuList;
     }
@@ -145,39 +142,5 @@ public class Enterstudent implements Serializable {
      */
     public void setEntStuList(List<Enterstudent> entStuList) {
         this.entStuList = entStuList;
-    }
-
-    /**
-     * @return the practicenoteList
-     */
-    public List<Practicenote> getPracticenoteList() {
-        if (null == this.practicenoteList) {
-            this.practicenoteList = this.practiceNoteDao.getBeanListHandlerRunner("select * from Practicenote where enterid=" + this.id, new Practicenote());
-        }
-        return practicenoteList;
-    }
-
-    /**
-     * @param practicenoteList the practicenoteList to set
-     */
-    public void setPracticenoteList(List<Practicenote> practicenoteList) {
-        this.practicenoteList = practicenoteList;
-    }
-
-    /**
-     * @return the stuEntRelList
-     */
-    public List<Stuentrel> getStuEntRelList() {
-        if (null == this.stuEntRelList) {
-            this.stuEntRelList = this.stuEntRelDao.getBeanListHandlerRunner("select * from Stuentrel where enterid=" + this.id, new Stuentrel());
-        }
-        return stuEntRelList;
-    }
-
-    /**
-     * @param stuEntRelList the stuEntRelList to set
-     */
-    public void setStuEntRelList(List<Stuentrel> stuEntRelList) {
-        this.stuEntRelList = stuEntRelList;
     }
 }

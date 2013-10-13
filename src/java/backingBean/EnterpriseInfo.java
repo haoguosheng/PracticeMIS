@@ -42,15 +42,15 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public synchronized String addEnterprise() {
         User myUser = new ForCallBean().getUser();
-        if (epDao.getBeanListHandlerRunner("select * from Enterprise where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
+        if (epDao.getBeanListHandlerRunner("select * from Enterprise"+StaticFields.currentGradeNum+" where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
             this.enterprise.setUserno(new ForCallBean().getUser().getUno());
-            epDao.executUpdate("insert into enterprise(name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
+            epDao.executUpdate("insert into enterprise" +StaticFields.currentGradeNum+" (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
             this.entStu.setPositionid(this.positionId);
-            this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise").get(0)));
+            this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" +StaticFields.currentGradeNum).get(0)));
             esDao.executUpdate("insert into enterstudent" +StaticFields.currentGradeNum+ myUser.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
                     + this.entStu.getEnterid() + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
@@ -69,7 +69,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     public void setEnterpriseid(int enterpriseid) {
         this.enterpriseid = enterpriseid;
         if (enterpriseid != 0) {
-            this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise where id=" + this.enterpriseid, enterprise).get(0);
+            this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where id=" + this.enterpriseid, enterprise).get(0);
         }
     }
 
@@ -79,8 +79,8 @@ public class EnterpriseInfo implements java.io.Serializable {
     public LinkedHashMap<String, Integer> getEnterMap() {
         this.enterMap.clear();
         if (cityId != 0) {
-            City temCity = cDao.getBeanListHandlerRunner("select * from city where id=" + cityId, new City()).get(0);
-            List<Enterprise> lw = epDao.getBeanListHandlerRunner("select * from enterprise where cityid=" + temCity.getId(), enterprise);
+            City temCity = cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id=" + cityId, new City()).get(0);
+            List<Enterprise> lw = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where cityid=" + temCity.getId(), enterprise);
             Iterator<Enterprise> itt = lw.iterator();
             while (itt.hasNext()) {
                 Enterprise ent = itt.next();
@@ -112,7 +112,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         if (isNull) {
             this.ep = epDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise());
         } else if (!isNull) {
-            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise where locate('" + this.searchName + "',name)>0", enterprise);
+            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise"+StaticFields.currentGradeNum+" where locate('" + this.searchName + "',name)>0", enterprise);
         }
         return this.ep;
     }
@@ -161,22 +161,13 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public void savaEnter(int id, String enName, int cid) {
-        this.epDao.executUpdate("update enterprise set name='" + enName + "', cityid=" + cid + " where id=" + id);
-//        Iterator<Enterprise> it=this.ep.iterator();
-//        while(it.hasNext()){
-//            Enterprise temCity=it.next();
-//            if(temCity.getId()==id){
-//                temCity.setName(enName);
-//                temCity.setCity(city);
-//                break;
-//            }
-//        }
+        this.epDao.executUpdate("update enterprise" +StaticFields.currentGradeNum+"  set name='" + enName + "', cityid=" + cid + " where id=" + id);
         this.ep = null;
     }
 
     public String deleteNeed(int id) {
         try {
-            this.esDao.executUpdate("delete from enterstudent where id=" + id);
+            this.esDao.executUpdate("delete from enterstudent" +StaticFields.currentGradeNum+"  where id=" + id);
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } catch (Exception e) {
@@ -189,7 +180,7 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public void deleteRow(Enterprise en) throws Exception {
 //        try {
-           if( this.epDao.executUpdate("delete from enterprise where id=" + en.getId())>0)
+           if( this.epDao.executUpdate("delete from enterprise" +StaticFields.currentGradeNum+"  where id=" + en.getId())>0)
            {
                FacesContext context = FacesContext.getCurrentInstance();
                context.addMessage("globalMessages", new FacesMessage("删除成功"));
@@ -217,7 +208,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public void saveNeed(int id, String payment, String requirment, int num, String other, int positionId) {
-        this.esDao.executUpdate("update enterstudent set payment='" + payment + "', Requirement='" + requirment
+        this.esDao.executUpdate("update enterstudent" +StaticFields.currentGradeNum+"  set payment='" + payment + "', Requirement='" + requirment
                 + "',Other='" + other + "',Studnum=" + num + ", positionid=" + positionId
                 + " where id=" + id);
     }

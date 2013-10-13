@@ -167,9 +167,9 @@ public class SubmitReport implements Serializable {
                 }
             } else {
                 for (int i = 0; i < ent.size(); i++) {
-                    List<Enterstudent> reqStu = entersDao.getBeanListHandlerRunner("select * from enterstudent where enterId=" + ent.get(i).getEnterid(), entStu);
+                    List<Enterstudent> reqStu = entersDao.getBeanListHandlerRunner("select * from enterstudent"+StaticFields.currentGradeNum+" where enterId=" + ent.get(i).getEnterid(), entStu);
                     for (int j = 0; j < reqStu.size(); j++) {
-                        Position tempP = posDao.getBeanListHandlerRunner("select * from position where id=" + reqStu.get(i).getPositionid(), position).get(0);
+                        Position tempP = posDao.getBeanListHandlerRunner("select * from position"+StaticFields.currentGradeNum+" where id=" + reqStu.get(i).getPositionid(), position).get(0);
                         this.positionMap.put(tempP.getName(), tempP.getId());
                     }
                 }

@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -94,7 +95,7 @@ public class Resourceinfo implements Serializable {
      */
     public Resourceinfo getParResourceinfo() {
         if (parResourceinfo == null) {
-            parResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo where id=" + parentid, new Resourceinfo()).get(0);
+            parResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo" +StaticFields.currentGradeNum+"  where id=" + parentid, new Resourceinfo()).get(0);
         }
         return parResourceinfo;
     }
@@ -111,7 +112,7 @@ public class Resourceinfo implements Serializable {
      */
     public List<Resourceinfo> getChildResourceinfo() {
         if (childResourceinfo == null) {
-            childResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo where parentid=" + id, new Resourceinfo());
+            childResourceinfo = resDao.getBeanListHandlerRunner("select * from resourceinfo" +StaticFields.currentGradeNum+"  where parentid=" + id, new Resourceinfo());
         }
         return childResourceinfo;
     }

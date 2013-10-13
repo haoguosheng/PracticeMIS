@@ -70,7 +70,7 @@ public class Position implements Serializable {
      */
     public List<Enterstudent> getEnterStudList() {
         if (enterStudList == null) {
-            enterStudList = esDao.getBeanListHandlerRunner("select * from enterstudent where positionId=" + id, new Enterstudent());
+            enterStudList = esDao.getBeanListHandlerRunner("select * from enterstudent" +StaticFields.currentGradeNum+"  where positionId=" + id, new Enterstudent());
         }
         return enterStudList;
     }

@@ -43,7 +43,7 @@ public class StuSeeCheckRecord implements Serializable {
         String schoolId = UserAnalysis.getSchoolId(stuno);
         checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "' and teachno='" + teachno + "'", getCheckrecord()).get(0);
         checkrecord.setSchoolId(schoolId);
-        city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "'))", city).get(0);
+        city = cityDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id in (select cityId from enterprise"+StaticFields.currentGradeNum+" where id in (select enterid from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "'))", city).get(0);
         student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", student).get(0);
         student.setSchoolId(schoolId);
         return "stuSeeCheckRecord.xhtml";

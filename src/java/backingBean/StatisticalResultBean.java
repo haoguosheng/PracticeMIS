@@ -42,7 +42,7 @@ public class StatisticalResultBean implements Serializable {
             teacherMap = new LinkedHashMap<String, String>();
             switch (this.getLoginUser().getRoleinfo().getCanseeall()) {
                 case 0: {
-                    List<User> userList = userDao.getBeanListHandlerRunner("select * from teacherinfo where roleid != 2", new User());
+                    List<User> userList = userDao.getBeanListHandlerRunner("select * from teacherinfo"+StaticFields.currentGradeNum+" where roleid != 2", new User());
                     for (Iterator<User> it = userList.iterator(); it.hasNext();) {
                         User tempUser = it.next();
                         teacherMap.put(tempUser.getName(), tempUser.getUno());

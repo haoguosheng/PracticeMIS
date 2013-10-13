@@ -10,12 +10,13 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                 <section style="border: solid blue" >
+                    <B><h:outputText value="#{msgs.dataYearSelect}" style="word-wrap: normal"/></B>
                     <h:outputText value="#{msgs.currentGradeTip}"/>
                 </section>
                 <h:form>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.currentGrade}"/>
-                        <h:inputText value="#{systemSetupBena.cureentGrade}"/>
+                        <h:inputText value="#{systemSetupBena.cureentGrade}" validator=""/>
                         <h:commandButton action="#{systemSetupBena.systemSetup()}" value="#{msgs.mysetup}"/>
                     </h:panelGrid>
                 </h:form>

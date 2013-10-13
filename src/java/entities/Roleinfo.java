@@ -95,7 +95,7 @@ public class Roleinfo implements Serializable {
      */
     public List<User> getTeachertList() {
         if (teachertList == null) {
-            teachertList = userDao.getBeanListHandlerRunner("select * from teacherinfo where roleid=" + id, new User());
+            teachertList = userDao.getBeanListHandlerRunner("select * from teacherinfo" +StaticFields.currentGradeNum+"  where roleid=" + id, new User());
         }
         return teachertList;
     }
