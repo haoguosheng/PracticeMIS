@@ -36,9 +36,9 @@ public class UserinfoBean implements java.io.Serializable {
     private LinkedHashMap<String, String> studentMap;
     private User myUser;
     private Part excelFile;
-    private List<User>student;
+    private List<User> student;
     private String schoolId;
-   
+
     public UserinfoBean() {
     }
 
@@ -128,9 +128,9 @@ public class UserinfoBean implements java.io.Serializable {
                     try {
                         this.userDao.executUpdate(sqlString);
                     } catch (Exception e) {
-                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了"+i+"行，但仍然导入出错了，请检查excel是否存在问题！"));
-                    }finally{
-                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了"+i+"行，导入完成！"));
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了" + i + "行，但仍然导入出错了，请检查excel是否存在问题！"));
+                    } finally {
+                        FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("共导入了" + i + "行，导入完成！"));
                         book.close();
                     }
                 }
@@ -147,7 +147,7 @@ public class UserinfoBean implements java.io.Serializable {
      * @return the student
      */
     public List<User> getStudent() {
-        System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@"+this.schoolId);
+        System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@" + this.schoolId);
         return student;
     }
 
@@ -157,21 +157,22 @@ public class UserinfoBean implements java.io.Serializable {
     public void setStudent(List<User> student) {
         this.student = student;
     }
-    
-    public void save(String nuo,String nameofunit,String parNameofunit ){
-        
+
+    public void save(String uno, String nameofunitid) {
+        this.userDao.executUpdate("update student" + getUser().getSchoolId() + " set nameofunitId='"+ nameofunitid + "' where uno='" + uno+"'");
     }
-    public void delete(User user){
-        
+
+    public void delete(User user) {
     }
-  public void check(String cc){
+
+    public void check(String cc) {
         this.setSchoolId(cc);
-     
-  }
+
+    }
 
     /**
-     * @return the schoolId
-//     */
+     * @return the schoolId //
+     */
     public String getSchoolId() {
         return schoolId;
     }
@@ -180,9 +181,8 @@ public class UserinfoBean implements java.io.Serializable {
      * @param schoolId the schoolId to set
      */
     public void setSchoolId(String schoolId) {
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+schoolId);
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + schoolId);
         this.schoolId = schoolId;
-          student=userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where nameofunitid in(select id from nameofunit where parentid='"+schoolId+"')", myUser);
+        student = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where nameofunitid ='" + schoolId + "'", getUser());
     }
- 
 }
