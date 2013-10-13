@@ -4,6 +4,7 @@
  */
 package backingBean;
 
+import entities.Nameofunit;
 import entities.User;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,9 @@ public class UserinfoBean implements java.io.Serializable {
     private LinkedHashMap<String, String> studentMap;
     private User myUser;
     private Part excelFile;
-
+    private List<User>student;
+    private String schoolId;
+   
     public UserinfoBean() {
     }
 
@@ -139,4 +142,47 @@ public class UserinfoBean implements java.io.Serializable {
         }
         return null;
     }
+
+    /**
+     * @return the student
+     */
+    public List<User> getStudent() {
+        System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@"+this.schoolId);
+        return student;
+    }
+
+    /**
+     * @param student the student to set
+     */
+    public void setStudent(List<User> student) {
+        this.student = student;
+    }
+    
+    public void save(String nuo,String nameofunit,String parNameofunit ){
+        
+    }
+    public void delete(User user){
+        
+    }
+  public void check(String cc){
+        this.setSchoolId(cc);
+     
+  }
+
+    /**
+     * @return the schoolId
+//     */
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    /**
+     * @param schoolId the schoolId to set
+     */
+    public void setSchoolId(String schoolId) {
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+schoolId);
+        this.schoolId = schoolId;
+          student=userDao.getBeanListHandlerRunner("select * from student" + schoolId + " where nameofunitid in(select id from nameofunit where parentid='"+schoolId+"')", myUser);
+    }
+ 
 }

@@ -1,14 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-    </head>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <script type="text/javascript"/>
+    <h:head >
+    </h:head>
     <body>
-        <div>TODO write content</div>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="companyInfo">
+                    <h:form id="myForm">
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <h:panelGrid columns="2" >
+                            <h:outputLabel value="#{msgs.selectSchool}"/>
+                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" onchange="document.getElementById('myForm:myClick').click();">
+                                <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
+                                <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                        <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
+                        <h:commandButton action="#{userinfoBean.check(schoolId)}"  style="display:none" id="myClick"/>
+                        <h1><h:outputText value="学生信息列表"></h:outputText></h1>
+                        <h:dataTable id ="stu" value="#{userinfoBean.student}" var="ci"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                     >
+                            <h:column> 
+                                <f:facet name="header">#{msgs.cityName}</f:facet>
+                                <h:outputText value="#{ci.name}"/>  
+                            </h:column>  
+                            <h:column> 
+                                <f:facet name="header">#{msgs.cityName}</f:facet>
+                                <h:outputText value="#{ci.uno}"/>  
+                            </h:column>
+                            <h:column> 
+                                <f:facet name="header">#{msgs.cityName}</f:facet>
+                                <h:inputText value="#{ci.nameofunit.name}"/>  
+                            </h:column>
+                            <h:column> 
+                                <f:facet name="header">#{msgs.cityName}</f:facet>
+                                <h:inputText value="#{ci.nameofunit.parNameofunit.name}"/>  
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.alter}</f:facet>
+                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.save(ci.uno,ci.nameofunit.name,ci.nameofunit.parNameofunit.name)}"/>
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{msgs.delete}</f:facet>
+                                <h:commandButton value="#{msgs.delete}" action="#{userinfoBean.deleteRow(ci)}"/>
+                            </h:column>
+
+                        </h:dataTable>
+
+
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
     </body>
 </html>
