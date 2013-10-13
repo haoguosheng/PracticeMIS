@@ -12,22 +12,19 @@
                 <h:messages   style="color: red" id="latestMessage"/>
                 <h:form>
                 <h:panelGrid columns="2">
-                        <h:outputLabel value="#{msgs.schoolNum}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.id}"  readonly="true">
-                                <f:validateLength maximum="3" minimum="3"/>
-                            </h:inputText>
                         <h:outputLabel value="#{msgs.schoolName}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.name}" readonly="#{schoolBean.readflag}">
-                                <f:validateLength maximum="50" minimum="3"/>
-                            </h:inputText>
-                        <h:outputLabel value="#{msgs.schoolPinyin}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.pinyin}" readonly="#{schoolBean.readflag}">
-                                <f:validateLength maximum="20" minimum="3"/>
-                            </h:inputText>
-                        <h:outputLabel value="#{msgs.unit}"></h:outputLabel>
-                        <h:inputText value="#{schoolBean.nameofunit.parNameofunit.name}" readonly="true">
-                                <f:validateLength maximum="3" minimum="3"/>
-                            </h:inputText>
+                        <h:selectOneMenu value="#{classBean.schoolId}" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.schoolMap}"/>
+                            <f:ajax render="classes" event="change"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="#{msgs.selectclass}"/>
+                        <h:selectOneMenu  value="#{classBean.classId}" id="classes" required="true">
+                            <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.classMap}"/>
+                            <!--<f:ajax event="change" render="studentReport" />-->
+                        </h:selectOneMenu>
+                        
                        <h:panelGrid columns="3">
                             <h:commandButton value="#{msgs.edit}" action="#{schoolBean.editSchool()}" />
                             <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool()}"/>
