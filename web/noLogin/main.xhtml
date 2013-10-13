@@ -15,36 +15,30 @@
             </ui:define>
 
             <ui:define name="left">
-                left好精彩
+                left
             </ui:define>
 
             <ui:define name="content">
-                好精彩
-                <h1> <h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
-                <h1> <h:outputLabel style="color:red" value="asdf"/></h1>
-                <table border="1">
-                    <c:forEach items="#{newsBean.recentNewsMap}" var="news" step="3">
-                        <tr>
-                            <td>
-                                <c:forEach items="#{news}" var="n">
-                                    <h:outputLabel value="#{n.value}" />
-                                </c:forEach>
-                            </td>
-                            <td>
-                                <c:forEach items="#{news.next()}" var="n">
-                                    <h:outputLabel value="#{n.value}" />
-                                </c:forEach>
-                            </td>
-                            <td>
-                                <c:forEach items="#{news.next().next()}" var="n">
-                                    <h:outputLabel value="#{n.value}" />
-                                </c:forEach>
-                            </td>
-                        </tr>
+                <h1><h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
+                <h:form>
+                    <c:forEach items="#{newsBean.recentNewsMap.keySet()}" var="schoolId" >
+                        <table border="1" style="width:300px;height:400px;margin:20px; float:left;">
+                            <tr>
+                                <th><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                        <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                            <f:param value="#{news.id}" name="nId"/>
+                                        </h:commandLink><br/>
+                                    </c:forEach>
+                                </td>
+                            </tr>
+                        </table>
                     </c:forEach>
-                </table>
+                    </h:form>
             </ui:define>
-
             <ui:define name="bottom">
                 bottom
             </ui:define>
