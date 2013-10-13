@@ -23,7 +23,7 @@ import tools.UserAnalysis;
  */
 @ManagedBean
 @SessionScoped
-public class TeachSeeCheckRecords implements Serializable {
+public class StuSeeCheckRecord implements Serializable {
 
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<City> cityDao = new SQLTool<City>();
@@ -34,52 +34,26 @@ public class TeachSeeCheckRecords implements Serializable {
     private List<Checkrecords> submittedRecordList;
     private String checkDate;
     private User loginUser = new ForCallBean().getUser();
-    private String deleteRepDate, alterDate;
-    private boolean readflag;
 
     public String directToNote() {
-        setReadflag(true);
         FacesContext context = FacesContext.getCurrentInstance();
         checkDate = context.getExternalContext().getRequestParameterMap().get("checkDate");
         String stuno = context.getExternalContext().getRequestParameterMap().get("studentNo");
-        deleteRepDate = checkDate;
-        alterDate = checkDate;
+        String teachno = context.getExternalContext().getRequestParameterMap().get("teacherNo");
         String schoolId = UserAnalysis.getSchoolId(stuno);
-        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "'", getCheckrecord()).get(0);
+        checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "' and teachno='" + teachno + "'", getCheckrecord()).get(0);
         checkrecord.setSchoolId(schoolId);
         city = cityDao.getBeanListHandlerRunner("select * from city where id in (select cityId from enterprise where id in (select enterid from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + stuno + "'))", city).get(0);
         student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", student).get(0);
         student.setSchoolId(schoolId);
-        return "showCheckRecord.xhtml";
-    }
-
-    public String deleteSelectRecord() {
-        String s = deleteRepDate;
-        checkDao.executUpdate("delete from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
-        readflag = true;
-        return "viewCheckRecords.xhtml";
-    }
-
-    public String editSelectRecord() {
-        readflag = false;
-        return "showCheckRecord.xhtml";
-    }
-
-    public String alterSelectRecord() {
-        String s = alterDate;
-        checkDao.executUpdate("update checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " set checkcontent='" + checkrecord.getCheckcontent() + "', recommendation='" + checkrecord.getRecommendation() + "', rank='" + checkrecord.getRank() + "', remark='" + checkrecord.getRemark() + "' where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
-        return "viewCheckRecords.xhtml";
+        return "stuSeeCheckRecord.xhtml";
     }
 
     /**
      * @return the submittedRecordList
      */
     public List<Checkrecords> getSubmittedRecordList() {
-//        if (submittedRecordList == null) {
-            submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "' order by stuno", getCheckrecord());
-//        }
+        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + loginUser.getUno() + "' order by checkDate", getCheckrecord());
         for (Checkrecords c : submittedRecordList) {
             c.setSchoolId(loginUser.getSchoolId());
         }
@@ -133,20 +107,6 @@ public class TeachSeeCheckRecords implements Serializable {
      */
     public void setStudent(User student) {
         this.student = student;
-    }
-
-    /**
-     * @return the readflag
-     */
-    public boolean isReadflag() {
-        return readflag;
-    }
-
-    /**
-     * @param readflag the readflag to set
-     */
-    public void setReadflag(boolean readflag) {
-        this.readflag = readflag;
     }
 
     /**

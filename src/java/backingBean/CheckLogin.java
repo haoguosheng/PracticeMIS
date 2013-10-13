@@ -18,6 +18,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import tools.SQLTool;
+import tools.StaticFields;
 import tools.UserAnalysis;
 
 /**
@@ -57,7 +58,7 @@ public class CheckLogin implements Serializable {
                 result = false;
                 FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("错误的用户名"));
             } else {
-                String table = "student" + UserAnalysis.getSchoolId(name);
+                String table = "student"+StaticFields.currentGradeNum + UserAnalysis.getSchoolId(name);
                 String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
                 List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
                 if (userList.size() > 0) {

@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
+import tools.StaticFields;
 
 /**
  *
@@ -149,9 +150,9 @@ public class User implements Serializable {
     public List<Checkrecords> getCheckrecordsList() {
         if (checkrecordsList == null) {
             if (uno.length() == 6) {
-                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + schoolId + " where teachno='" + uno + "'", new Checkrecords());
+                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where teachno='" + uno + "'", new Checkrecords());
             } else {
-                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + schoolId + " where stuno='" + uno + "'", new Checkrecords());
+                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + uno + "'", new Checkrecords());
             }
         }
         return checkrecordsList;

@@ -2,14 +2,47 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <body>
-      <f:loadBundle var="msgs" basename="messages"/>
+        <f:loadBundle var="msgs" basename="messages"/>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
-
             <ui:define name="content">
-                content
+                <section style="border:solid  blue" >
+                    备份毕业生信息是把已经毕业的学生信息从当前数据库中移出，以保持系统运行速度。<br/>
+                    还原毕业生信息则是把备份中的毕业生信息恢复到当到数据库，以便于查询与操作。
+                </section>
+                <h:form enctype="multipart/form-data">
+                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel value="#{msgs.selectSchool}"/>
+                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true">
+                            <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
+                            <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                            <f:ajax render="@all"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
+                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginBacku}" />
+                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginRestore}" />
+                    <h:dataTable id="classInclude" value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn" >
+                        <h:column> 
+                            <f:facet name="header">#{msgs.myclassName}</f:facet>
+                            <h:outputLabel value="#{classUnit.name}"/>  
+                        </h:column>    
+                        <h:column>
+                            <f:facet name="header">#{msgs.myclassCode}</f:facet>
+                            <h:outputLabel value="#{classUnit.id}" />
+                        </h:column> 
+                        <h:column>
+                            <f:facet name="header">#{msgs.inputUserName}</f:facet>
+                            <h:outputLabel value="#{classUnit.teacher.name}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
             </ui:define>
 
         </ui:composition>

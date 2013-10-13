@@ -58,15 +58,16 @@ public class NameofUnitBean implements java.io.Serializable {
 
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
-            switch (new ForCallBean().getUser().getRoleinfo().getCanseeall()) {
+            User myUser=new ForCallBean().getUser();
+            switch (myUser.getRoleinfo().getCanseeall()) {
                 case StaticFields.CanSeeAll:
                      schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeOnlySchool:
-                    
+                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + myUser.getNameofunitid() + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeSelf:
-                    
+                    schoolList=null;
                     break;
             }
            

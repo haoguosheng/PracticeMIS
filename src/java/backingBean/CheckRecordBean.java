@@ -19,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.SQLTool;
+import tools.StaticFields;
 import tools.UserAnalysis;
 
 /**
@@ -50,7 +51,7 @@ public class CheckRecordBean implements Serializable {
         tempc.add(Calendar.DAY_OF_MONTH, day - c.get(Calendar.DAY_OF_MONTH));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String s = sdf.format(tempc.getTime());
-        String sql = "select * from checkRecords" + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate='" + s + "'";
+        String sql = "select * from checkRecords" +StaticFields.currentGradeNum+ checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate='" + s + "'";
         List<Checkrecords> checkList = cDao.getBeanListHandlerRunner(sql, checkrecords);
         if (checkList.size() > 0) {//该生检查记录已经存在了
             this.checkrecords = checkList.get(0);
@@ -59,8 +60,8 @@ public class CheckRecordBean implements Serializable {
             checkrecords.setStuno(this.studentNo);
             checkrecords.setTeachno(myUser.getUno());
             checkrecords.setCheckdate(tempc.getTime());
-            String insert = "insert into checkrecords" + checkrecords.getSchoolId() + "(stuno, teachno, checkdate, checkcontent, recommendation, rank, remark) values('"
-                    + this.studentNo + "', '" + myUser.getUno() + "', " + tempc.getTime() + ", '" + checkrecords.getCheckcontent() + "', '"
+            String insert = "insert into checkrecords" +StaticFields.currentGradeNum+ checkrecords.getSchoolId() + "(stuno, teachno, checkdate, checkcontent, recommendation, rank, remark) values('"
+                    + this.studentNo + "', '" + myUser.getUno() + "', '" + s + "', '" + checkrecords.getCheckcontent() + "', '"
                     + checkrecords.getRecommendation() + "', '" + checkrecords.getRank() + "', '" + checkrecords.getRemark() + "')";
             cDao.executUpdate(insert);
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));
@@ -150,10 +151,10 @@ public class CheckRecordBean implements Serializable {
         User myUser =new ForCallBean().getUser();
         if (!"0".equals(studentNo)) {
             this.studentNo = studentNo;
-            String sql1 = "select * from student" + myUser.getSchoolId() + " where uno='" + studentNo + "'";
+            String sql1 = "select * from student" +StaticFields.currentGradeNum+myUser.getSchoolId() + " where uno='" + studentNo + "'";
             this.StudentUser = userDao.getBeanListHandlerRunner(sql1, new User()).get(0);
             this.StudentUser.setSchoolId(myUser.getSchoolId());
-            String sql2 = "select * from practicenote" + myUser.getSchoolId() + " where uno='" + studentNo + "'";
+            String sql2 = "select * from practicenote" +StaticFields.currentGradeNum+ myUser.getSchoolId() + " where stuno='" + studentNo + "'";
             this.practiceList = pDao.getBeanListHandlerRunner(sql2, new Practicenote());
             for(Practicenote p:practiceList){
                 p.setSchoolId( myUser.getSchoolId());
