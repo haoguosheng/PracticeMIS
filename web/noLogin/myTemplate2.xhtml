@@ -19,6 +19,16 @@
         <script type ="text/javascript" src="../../resources/javaScript/jquery.js"></script>
         <script type ="text/javascript" src="../../resources/javaScript/left.js"></script>
         <script type ="text/javascript" src="../../resources/javaScript/table.js"></script>
+          <script type ="text/javascript">
+            function check (nameOfId,message) {
+                var obj = document.getElementById(nameOfId);
+                if (obj.value == "null") {
+                   alert (message);
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </h:head>
 
     <h:body>

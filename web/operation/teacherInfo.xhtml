@@ -27,7 +27,7 @@
                         <h:commandButton action="#{userinfoBean.checkschool(schoolId)}"  style="display:none" id="myClick"/>
 
 
-                        <h:commandButton value="#{msgs.add}" action="#{userinfoBean.checkBool()}">
+                        <h:commandButton value="#{msgs.add}" action="#{userinfoBean.checkBool(schoolId)}">
                             <f:ajax render="bo"  event="change"/>
                         </h:commandButton>
                         <h:panelGrid   rendered="#{userinfoBean.bool}" id="bo">
@@ -65,7 +65,7 @@
                             <h:column>
                                  <f:facet name="header">#{msgs.role}</f:facet>
                                  <h:selectOneMenu value="#{ci.roleid}" id="myrile" required="true">
-                                    <f:selectItem itemLabel="#{ci.roleid}" itemValue="#{ci.roleid}" />
+                                     <f:selectItem itemLabel="#{ci.roleinfo.name}" itemValue="#{ci.roleid}" />
                                     <f:selectItems value="#{userinfoBean.roo}"/>
                                   
                                 </h:selectOneMenu>
@@ -75,15 +75,15 @@
 
                             <h:column> 
                                 <f:facet name="header">#{msgs.school}</f:facet>
-                                <h:selectOneMenu value="#{ci.nameofunit.name}" id="myschool" required="true">
-                                    <f:selectItem itemLabel="#{ci.nameofunit.name}" itemValue="#{ci.nameofunit.name}" />
+                                <h:selectOneMenu value="#{ci.nameofunit.id}" id="myschool" required="true">
+                                    <f:selectItem itemLabel="#{ci.nameofunit.name}" itemValue="#{ci.nameofunit.id}" />
                                     <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
                                     <f:ajax render="myschoolId" event="change"/>
                                 </h:selectOneMenu>
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.alter}</f:facet>
-                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.saveTeacher(ci.uno,ci.roleid,ci.nameofunit.name)}"/>
+                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.saveTeacher(ci.uno,ci.roleid,ci.nameofunit.id)}"/>
                             </h:column> 
                             <h:column>
                                 <f:facet name="header">#{msgs.delete}</f:facet>

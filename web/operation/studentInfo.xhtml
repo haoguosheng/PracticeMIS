@@ -33,7 +33,7 @@
                         <c:set value="#{nameofUnitBean.classId}" var="classId"/>
                         <h:commandButton action="#{userinfoBean.checkclass(classId)}" style="display:none" id="myClick"/>
                         
-                        <h:commandButton value="#{msgs.add}" action="#{userinfoBean.checkBool}">
+                        <h:commandButton value="#{msgs.add}" action="#{userinfoBean.checkBool(classId)}">
                             <f:ajax render="bo" event="change"/>
                         </h:commandButton>
                         <h:panelGrid   rendered="#{userinfoBean.bool}" id="bo">

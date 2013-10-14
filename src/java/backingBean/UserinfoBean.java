@@ -7,6 +7,7 @@ package backingBean;
 import entities.Checkrecords;
 import entities.Nameofunit;
 import entities.Practicenote;
+import entities.Roleinfo;
 import entities.Stuentrel;
 import entities.User;
 import java.io.IOException;
@@ -42,13 +43,14 @@ import tools.StaticFields;
 @SessionScoped
 public class UserinfoBean implements java.io.Serializable {
 
-     @ManagedProperty(value = "#{checkLogin}")
+    @ManagedProperty(value = "#{checkLogin}")
     private CheckLogin checkLogin;
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Practicenote> praDao = new SQLTool<Practicenote>();
     private SQLTool<Checkrecords> chkDao = new SQLTool<Checkrecords>();
     private SQLTool<Stuentrel> stuRelDao = new SQLTool<Stuentrel>();
     private SQLTool<Nameofunit> nameofDao = new SQLTool<Nameofunit>();
+    private SQLTool<Roleinfo> roleofDao = new SQLTool<Roleinfo>();
     private String userno;
     private int cityId;
     private LinkedHashMap<String, String> studentMap;
@@ -60,7 +62,7 @@ public class UserinfoBean implements java.io.Serializable {
     private String nameofunit;
     private String classId;
     private int ro[];
-    private LinkedHashMap<Integer, Integer> roo;
+    private LinkedHashMap<String, Integer> roo;
     private boolean bool;
 
     public UserinfoBean() {
@@ -224,7 +226,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public void saveTeacher(String uno, String roleid, String nameofunit) {
-        String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
+        //String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
         if (this.userDao.executUpdate("update teacherinfo set roleId=" + roleid + ",nameofunitId='" + nameofunit + "' where uno='" + uno + "'") > 0) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("修改成功"));
@@ -304,6 +306,7 @@ public class UserinfoBean implements java.io.Serializable {
             //String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
             if (userDao.executUpdate("insert into teacherinfo (uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',1,'" + nameofunit + "')") > 0) {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新教师成功！"));
+                teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where nameofunitid ='" + schoolId + "'", this.getCheckLogin().getUser());
                 this.bool = false;
             } else {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请选择学院！"));
@@ -398,31 +401,41 @@ public class UserinfoBean implements java.io.Serializable {
         this.bool = bool;
     }
 
-    public String checkBool() {
-        this.studentname = null;
-        this.userno = null;
-        this.nameofunit = null;
-        this.bool = true;
-        return null;
+    public String checkBool(String clId) {
+        if (clId.equals("null")) {
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请先选择学院或班级！"));
+            this.bool = false;
+        } 
+        else {
+            this.studentname = null;
+            this.userno = null;
+            this.nameofunit = null;
+            this.bool = true;
+        }
+           return null;
     }
 
     /**
      * @return the roo
      */
-    public LinkedHashMap<Integer, Integer> getRoo() {
-        if (null == roo) {
-            roo = new LinkedHashMap<Integer, Integer>();
+    public LinkedHashMap<String, Integer> getRoo() {
+
+        List<Roleinfo> role = roleofDao.getBeanListHandlerRunner("select * from roleinfo", new Roleinfo());
+        if (null != role && role.size() > 0) {
+            Iterator<Roleinfo> it = role.iterator();
+            roo = new LinkedHashMap<String, Integer>();
+            while (it.hasNext()) {
+                Roleinfo ro = it.next();
+                roo.put(ro.getName(), ro.getId());
+            }
         }
-        roo.put(1, 0);
-        roo.put(2, 1);
-        roo.put(3, 2);
         return roo;
     }
 
     /**
      * @param roo the roo to set
      */
-    public void setRoo(LinkedHashMap<Integer, Integer> roo) {
+    public void setRoo(LinkedHashMap<String, Integer> roo) {
         this.roo = roo;
     }
 

@@ -4,14 +4,17 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      >
+          
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <f:loadBundle  basename="messages" var="msgs"/>
-    <h:head></h:head>
+    <h:head>
+        
+    </h:head>
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                 <div class="select">
-                    <h:form  style="alignment-adjust: middle">
+                    <h:form prependId="false">
                         <h:messages  style="color: red" id="latestMessage"/>
                         <!--<h:messages id="myMessage"  style="color: red"  class="mymessages"/>-->
                         <h1><h:outputLabel value="#{msgs.entNeed}"/></h1>
@@ -30,14 +33,11 @@
                             </h:selectOneMenu>
                         </h:panelGrid> 
 
-
-                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}">
+                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}" onclick="return check('enterprise','请输入城市和企业')">
                             <f:ajax render="bo" event="change"/>
                         </h:commandButton>
                         <h:panelGrid   rendered="#{enterpriseInfo.bool}" id="bo">
-
                             <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}" id="add"/>
-                            
                             <h:outputLabel value="#{msgs.position}:"/>
                             <h:panelGrid columns="3">
                                 <h:selectOneMenu value="#{enterpriseInfo.positionId}" required="true" id="position">
@@ -57,13 +57,9 @@
                             <h:inputText id="stunum" value="#{enterpriseInfo.entStu.studnum}" required="true" >
                                 <f:validateLongRange minimum="0" maximum="100"/>
                             </h:inputText>
-
-
-                            <h:commandButton action="#{enterpriseInfo.addEnterpriseNeed(enterpriseInfo.enterprise.name)}" value="#{msgs.add}"/>
+                            <h:commandButton action="#{enterpriseInfo.addEnterpriseNeed(enterpriseInfo.enterprise.name)}" value="#{msgs.add}">
+                            </h:commandButton>
                         </h:panelGrid>
-
-
-
                         <h:dataTable value="#{enterpriseInfo.enterprise.enterstudentList}" var="ep"
                                      border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
                                      columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn" 
