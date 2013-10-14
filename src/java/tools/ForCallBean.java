@@ -26,21 +26,21 @@ public class ForCallBean implements java.io.Serializable {
     FacesContext context = FacesContext.getCurrentInstance();
     HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
     HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-    private User myUser;
-   
-    public User getUser() {
-        if (null == myUser) {
-            myUser = (User) session.getAttribute("myUser");
-            if (null == myUser) {
-                try {
-                    response.sendRedirect("login.xhtml");
-                } catch (IOException ex) {
-                    Logger.getLogger(EnterpriseInfo.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        return myUser;
-    }
+//    private User myUser;
+//   
+//    public User getUser() {
+//        if (null == myUser) {
+//            myUser = (User) session.getAttribute("myUser");
+//            if (null == myUser) {
+//                try {
+//                    response.sendRedirect("login.xhtml");
+//                } catch (IOException ex) {
+//                    Logger.getLogger(EnterpriseInfo.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }
+//        return myUser;
+//    }
 
     public Integer getReason() {
         return (Integer) session.getAttribute("reason");

@@ -16,9 +16,9 @@
                     <h:panelGrid columns="1">
                         <h:panelGrid columns="2" class="oddRows">
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:outputLabel value="#{submitReport.user.name}"/>                     
+                            <h:outputLabel value="#{checkLogin.user.name}"/>                     
                             <h:outputLabel value="#{msgs.enterpriseName}:"/>
-                            <c:set value="#{submitReport.user.stuentrelList[0]}" var="ent" />
+                            <c:set value="#{checkLogin.user.stuentrelList[0]}" var="ent" />
                             <h:outputLabel value="#{ent.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
                             <h:selectOneMenu value="#{submitReport.positionId}" >
@@ -43,7 +43,7 @@
                         </h:panelGrid>
                         <h:panelGrid columns="1">
                             <h:outputLabel value="#{msgs.practiceContent}（字数在500~2000字内）:" />
-                            <h:inputTextarea value="#{submitReport.practiceNote.detail}" rows="20" cols="60" >
+                            <h:inputTextarea value="#{submitReport.practiceNote.detail}" rows="20" cols="60" required="true">
                                 <f:validateLength maximum="2000" minimum="500"/>
                             </h:inputTextarea>
                             <h:commandButton action="#{submitReport.submitPracNote()}" value="#{msgs.submit}"/>

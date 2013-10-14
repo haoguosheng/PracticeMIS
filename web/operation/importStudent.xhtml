@@ -24,7 +24,7 @@
                     <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h:panelGrid columns="2" >
                         <h:outputLabel value="#{msgs.selectSchool}"/>
-                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true">
+                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId">
                             <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                             <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
                             <f:ajax render="@all"/>

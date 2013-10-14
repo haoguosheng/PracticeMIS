@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -25,10 +26,11 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class ClassBean implements Serializable {
-
+    @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
     private Nameofunit nameofunit = new Nameofunit();
-    private User loginUser = new ForCallBean().getUser();
+    private User loginUser = getCheckLogin().getUser();
     private String schoolId, classId;
     private String pinyin;
     private String newClass;
@@ -38,27 +40,33 @@ public class ClassBean implements Serializable {
     public String deleteClass() {
         FacesContext context = FacesContext.getCurrentInstance();
         String s = context.getExternalContext().getRequestParameterMap().get("cId");
-        nameDao.executUpdate("delete from nameofunit where id='" + s + "'");
+        if(nameDao.executUpdate("delete from nameofunit where id='" + s + "'") > 0){
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
+        }else{
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除班级失败！"));
+        }
         classList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='" + StaticFields.currentGradeNum + schoolId + "' order by name", nameofunit);
-        return null;
+        return "viewClasses.xhtml";
     }
 
     public String addClass() {
         if (nameDao.getBeanListHandlerRunner("select * from nameofunit where name='" + newClass + "'", nameofunit).size() > 0) {
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该班级已经存在，请重新添加！"));
-        } else if (schoolId.length() == 3) {
-            if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
-                classId="";
-                newClass="";
-                pinyin="";
-            } else {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
-            }
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败！请输入正确的班级编号，班级名称！"));
         } else {
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
+            if ((schoolId != null && schoolId != "") && (newClass != null && newClass != "") && (pinyin != null && pinyin != "")) {
+                if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
+                    classId = "";
+                    newClass = "";
+                    pinyin = "";
+                } else {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
+                }
+            } else {
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加失败，请选择你要添加班级所在学院！"));
+            }
         }
-        return null;
+        return "viewClasses.xhtml";
     }
 
     /**
@@ -170,5 +178,18 @@ public class ClassBean implements Serializable {
      */
     public void setNewClass(String newClass) {
         this.newClass = newClass;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

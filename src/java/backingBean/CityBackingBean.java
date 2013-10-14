@@ -11,6 +11,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
 import tools.PublicFields;
@@ -23,9 +25,11 @@ import tools.StaticFields;
  * @author myPC
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class CityBackingBean implements java.io.Serializable{
 
+     @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<City> cDao = new SQLTool<City>();
     private LinkedHashMap<String, Integer> cityMap;
     private String newCityName = new PublicFields().getTag();
@@ -63,7 +67,7 @@ public class CityBackingBean implements java.io.Serializable{
             if (cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where locate('" + this.newCityName + "',name)>0", new City()).size() <= 0) {
                 City city = new City();
                 city.setName(newCityName);
-                cDao.executUpdate("insert into city" +StaticFields.currentGradeNum+" (name, userno) values('" + newCityName + "', '" + new ForCallBean().getUser().getUno() + "')");
+                cDao.executUpdate("insert into city" +StaticFields.currentGradeNum+" (name, userno) values('" + newCityName + "', '" + this.getCheckLogin().getUser().getUno() + "')");
                 this.ci = null;
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把\"" + this.newCityName + "\"添加到城市列表！添加成功！"));
             } else {
@@ -85,7 +89,7 @@ public class CityBackingBean implements java.io.Serializable{
     public void save(int id, String s) {
         City city = (City) cDao.getBeanListHandlerRunner("select * from city"+StaticFields.currentGradeNum+" where id=" + id, new City()).get(0);
         city.setName(s);
-        cDao.executUpdate("update city" +StaticFields.currentGradeNum+"  set name='" + s + "' , userno='" + new ForCallBean().getUser().getUno() + "' where id=" + id);
+        cDao.executUpdate("update city" +StaticFields.currentGradeNum+"  set name='" + s + "' , userno='" + this.getCheckLogin().getUser().getUno() + "' where id=" + id);
         this.ci = null;
 //        Iterator<City> it = this.ci.iterator();
 //        while (it.hasNext()) {
@@ -198,5 +202,19 @@ public class CityBackingBean implements java.io.Serializable{
      */
     public void setPaginator(RepeatPaginator paginator) {
         this.paginator = paginator;
+    }
+
+    /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
@@ -41,6 +42,8 @@ import tools.StaticFields;
 @SessionScoped
 public class UserinfoBean implements java.io.Serializable {
 
+     @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<User> userDao = new SQLTool<User>();
     private SQLTool<Practicenote> praDao = new SQLTool<Practicenote>();
     private SQLTool<Checkrecords> chkDao = new SQLTool<Checkrecords>();
@@ -49,7 +52,6 @@ public class UserinfoBean implements java.io.Serializable {
     private String userno;
     private int cityId;
     private LinkedHashMap<String, String> studentMap;
-    private User myUser;
     private Part excelFile;
     private List<User> student;
     private List<User> teacher;
@@ -65,13 +67,13 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public LinkedHashMap<String, String> getStudentMap() {
-        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + StaticFields.currentGradeNum + getUser().getSchoolId() + " where ENTERID in (select id from enterprise" + StaticFields.currentGradeNum + " where cityid=" + cityId + "))", getUser());
+        List<User> usrList = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + " where UNO in (select stuno from stuentrel" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + " where ENTERID in (select id from enterprise" + StaticFields.currentGradeNum + " where cityid=" + cityId + "))", this.getCheckLogin().getUser());
         if (null != usrList && usrList.size() > 0) {
             Iterator<User> it = usrList.iterator();
             studentMap = new LinkedHashMap<String, String>();
             while (it.hasNext()) {
                 User tem = it.next();
-                tem.setSchoolId(myUser.getSchoolId());
+                tem.setSchoolId(this.getCheckLogin().getUser().getSchoolId());
                 studentMap.put(tem.getName(), tem.getUno());
             }
             return studentMap;
@@ -82,16 +84,9 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public String submit() {
-        userDao.executUpdate("update student" + StaticFields.currentGradeNum + getUser().getSchoolId() + " set password='" + getUser().getPassword() + "', email='" + getUser().getEmail() + "', name='" + getUser().getName() + "', phone='" + getUser().getPhone() + "', roleId=" + getUser().getRoleid() + ", nameofunitid='" + getUser().getNameofunitid() + "' where uno='" + getUser().getUno() + "'");
+        userDao.executUpdate("update student" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + " set password='" + this.getCheckLogin().getUser().getPassword() + "', email='" + this.getCheckLogin().getUser().getEmail() + "', name='" + this.getCheckLogin().getUser().getName() + "', phone='" + this.getCheckLogin().getUser().getPhone() + "', roleId=" + this.getCheckLogin().getUser().getRoleid() + ", nameofunitid='" + this.getCheckLogin().getUser().getNameofunitid() + "' where uno='" + this.getCheckLogin().getUser().getUno() + "'");
         FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
         return null;
-    }
-
-    public User getUser() {
-        if (null == myUser) {
-            this.myUser = new ForCallBean().getUser();
-        }
-        return myUser;
     }
 
     public String backupStu(String schoolId, String gradeNum) {
@@ -221,7 +216,7 @@ public class UserinfoBean implements java.io.Serializable {
 
     public void save(String uno, String nameofunit) {
         //String id = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
-        if (this.userDao.executUpdate("update student" + getUser().getSchoolId() + " set nameofunitId='" + nameofunit + "' where uno='" + uno + "'") > 0) {
+        if (this.userDao.executUpdate("update student" + this.getCheckLogin().getUser().getSchoolId() + " set nameofunitId='" + nameofunit + "' where uno='" + uno + "'") > 0) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("修改成功"));
         }
@@ -238,7 +233,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
 
     public String deleteRow(User user) {
-        if (userDao.executUpdate("delete from student" + getUser().getSchoolId() + " where uno='" + user.getUno() + "'") > 0) {
+        if (userDao.executUpdate("delete from student" + this.getCheckLogin().getUser().getSchoolId() + " where uno='" + user.getUno() + "'") > 0) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage("globalMessages", new FacesMessage("删除成功"));
         } else {
@@ -283,26 +278,27 @@ public class UserinfoBean implements java.io.Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
-        teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where nameofunitid ='" + schoolId + "'", getUser());
+        teacher = userDao.getBeanListHandlerRunner("select * from teacherinfo where nameofunitid ='" + schoolId + "'", this.getCheckLogin().getUser());
     }
 
     public String addStudent() {
-        if (userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where uno='" + userno + "'", getUser()).size() > 0) {
+        if (userDao.getBeanListHandlerRunner("select * from student" + this.getCheckLogin().getUser().getSchoolId() + " where uno='" + userno + "'", this.getCheckLogin().getUser()).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该学生已经存在，请重新添加！"));
         } else {
             // String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
-            if (userDao.executUpdate("insert into student" + getUser().getSchoolId() + "(uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',2,'" + nameofunit + "')") > 0) {
+            if (userDao.executUpdate("insert into student" + this.getCheckLogin().getUser().getSchoolId() + "(uno, password,name, roleid, nameofunitid) values('" + userno + "', '111111','" + studentname + "',2,'" + nameofunit + "')") > 0) {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学生成功！"));
+                student = userDao.getBeanListHandlerRunner("select * from student" + this.getCheckLogin().getUser().getSchoolId() + " where nameofunitid ='" + classId + "'", this.getCheckLogin().getUser());
                 this.bool = false;
             } else {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请选择班级！"));
             }
         }
-        return null;
+        return "studentInfo.xhtml";
     }
 
     public String addTeacher() {
-        if (userDao.getBeanListHandlerRunner("select * from teacherinfo  where uno='" + userno + "'", getUser()).size() > 0) {
+        if (userDao.getBeanListHandlerRunner("select * from teacherinfo  where uno='" + userno + "'", this.getCheckLogin().getUser()).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该教师已经存在，请重新添加！"));
         } else {
             //String nameofunitId = nameofDao.getBeanListHandlerRunner("select * from nameofunit where name='" + nameofunit + "'", new Nameofunit()).get(0).getId();
@@ -370,7 +366,7 @@ public class UserinfoBean implements java.io.Serializable {
      */
     public void setClassId(String classId) {
         this.classId = classId;
-        student = userDao.getBeanListHandlerRunner("select * from student" + getUser().getSchoolId() + " where nameofunitid ='" + classId + "'", getUser());
+        student = userDao.getBeanListHandlerRunner("select * from student" + this.getCheckLogin().getUser().getSchoolId() + " where nameofunitid ='" + classId + "'", this.getCheckLogin().getUser());
     }
 
     /**
@@ -428,5 +424,19 @@ public class UserinfoBean implements java.io.Serializable {
      */
     public void setRoo(LinkedHashMap<Integer, Integer> roo) {
         this.roo = roo;
+    }
+
+    /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

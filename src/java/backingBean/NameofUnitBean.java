@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import tools.ForCallBean;
 import tools.SQLTool;
@@ -23,6 +24,8 @@ import tools.StaticFields;
 @SessionScoped
 public class NameofUnitBean implements java.io.Serializable {
 
+     @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private LinkedHashMap<String, String> classNameMap, schoolMap;
     private List<Nameofunit> classList, schoolList;
     private SQLTool<Nameofunit> nameDAO = new SQLTool<Nameofunit>();
@@ -58,13 +61,12 @@ public class NameofUnitBean implements java.io.Serializable {
 
     public List<Nameofunit> getSchoolList() {
         if (null == schoolList) {
-            User myUser=new ForCallBean().getUser();
-            switch (myUser.getRoleinfo().getCanseeall()) {
+            switch (this.getCheckLogin().getUser().getRoleinfo().getCanseeall()) {
                 case StaticFields.CanSeeAll:
                      schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit where  parentid='" + StaticFields.universityId + "' and id!='000' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeOnlySchool:
-                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where  parentid='" + myUser.getNameofunitid() + "' order by pinyin", unit);
+                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit"+StaticFields.currentGradeNum+" where  parentid='" + this.getCheckLogin().getUser().getNameofunitid() + "' order by pinyin", unit);
                     break;
                 case StaticFields.CanSeeSelf:
                     schoolList=null;
@@ -120,5 +122,19 @@ public class NameofUnitBean implements java.io.Serializable {
             }
         }
         return schoolMap;
+    }
+
+    /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

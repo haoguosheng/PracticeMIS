@@ -10,6 +10,7 @@ import entities.User;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -24,7 +25,8 @@ import tools.UserAnalysis;
 @ManagedBean
 @SessionScoped
 public class StuSeeCheckRecord implements Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
     private SQLTool<City> cityDao = new SQLTool<City>();
     private SQLTool<User> userDao = new SQLTool<User>();
@@ -33,7 +35,6 @@ public class StuSeeCheckRecord implements Serializable {
     private User student = new User();
     private List<Checkrecords> submittedRecordList;
     private String checkDate;
-    private User loginUser = new ForCallBean().getUser();
 
     public String directToNote() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -53,9 +54,9 @@ public class StuSeeCheckRecord implements Serializable {
      * @return the submittedRecordList
      */
     public List<Checkrecords> getSubmittedRecordList() {
-        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ loginUser.getSchoolId() + " where stuno='" + loginUser.getUno() + "' order by checkDate", getCheckrecord());
+        submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+  this.checkLogin.getUser().getSchoolId() + " where stuno='" + this.checkLogin.getUser().getUno() + "' order by checkDate", getCheckrecord());
         for (Checkrecords c : submittedRecordList) {
-            c.setSchoolId(loginUser.getSchoolId());
+            c.setSchoolId( this.checkLogin.getUser().getSchoolId());
         }
         return submittedRecordList;
     }
@@ -121,5 +122,18 @@ public class StuSeeCheckRecord implements Serializable {
      */
     public void setCheckDate(String checkDate) {
         this.checkDate = checkDate;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

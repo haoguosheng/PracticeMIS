@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import tools.ForCallBean;
@@ -20,7 +21,8 @@ import tools.StaticFields;
 @ManagedBean
 @ViewScoped
 public class NewsBean implements Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<News> newsDao = new SQLTool<News>();
     private News news = new News();
     private List<News> recentNews = new ArrayList<News>();
@@ -28,7 +30,7 @@ public class NewsBean implements Serializable {
     public String addNews() {
         if (this.news.getContent().trim().length() >= 0) {
             this.news.setInputdate(Calendar.getInstance().getTime());
-            this.news.setUserno(new ForCallBean().getUser().getUno());
+            this.news.setUserno(this.checkLogin.getUser().getUno());
             newsDao.executUpdate("insert into news" +StaticFields.currentGradeNum+" (content, inputDate, userno) values('" + this.news.getContent() + "', " + this.news.getInputdate() + ", '" + this.news.getUserno() + "'");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage("添加成功，您可以继续添加"));
             this.news = new News();
@@ -63,5 +65,18 @@ public class NewsBean implements Serializable {
             this.recentNews = newsDao.getBeanListHandlerRunner(sqlString, this.news);
         }
         return recentNews;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

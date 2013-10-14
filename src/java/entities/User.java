@@ -44,7 +44,7 @@ public class User implements Serializable {
     private SQLTool<Position> positionDao = new SQLTool<Position>();
     private SQLTool<City> cityDao = new SQLTool<City>();
     private SQLTool<Roleinfo> roleDao = new SQLTool<Roleinfo>();
-  
+
     public User() {
     }
 
@@ -93,7 +93,7 @@ public class User implements Serializable {
     }
 
     public int getRoleid() {
-           return roleid;
+        return roleid;
     }
 
     public void setRoleid(int roleid) {

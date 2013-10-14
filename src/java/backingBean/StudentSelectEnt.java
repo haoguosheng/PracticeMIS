@@ -7,13 +7,12 @@ package backingBean;
 import entities.Enterprise;
 import entities.Stuentrel;
 import entities.User;
-import java.util.LinkedList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 import tools.ForCallBean;
 import tools.SQLTool;
 import tools.StaticFields;
@@ -25,7 +24,8 @@ import tools.StaticFields;
 @ManagedBean
 @SessionScoped
 public class StudentSelectEnt implements java.io.Serializable {
-
+  @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Stuentrel> seDao = new SQLTool<Stuentrel>();
     private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
     private User myUser;
@@ -52,7 +52,7 @@ public class StudentSelectEnt implements java.io.Serializable {
             new ForCallBean().setReason(0);
         }
         if (null == this.myUser) {
-            this.myUser = new ForCallBean().getUser();
+            this.myUser = checkLogin.getUser();
         }
         return myUser;
     }
@@ -110,5 +110,18 @@ public class StudentSelectEnt implements java.io.Serializable {
      */
     public Enterprise getEnterprise() {
         return enterprise;
+    }
+        /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
 }

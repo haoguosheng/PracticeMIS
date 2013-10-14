@@ -8,6 +8,7 @@ import entities.*;
 import java.util.*;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import tools.ForCallBean;
@@ -23,6 +24,8 @@ import tools.StaticFields;
 @SessionScoped
 public class EnterpriseInfo implements java.io.Serializable {
 
+    @ManagedProperty(value = "#{checkLogin}")
+    private CheckLogin checkLogin;
     private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
     private SQLTool<City> cDao = new SQLTool<City>();
     private SQLTool<Enterstudent> esDao = new SQLTool<Enterstudent>();
@@ -42,17 +45,16 @@ public class EnterpriseInfo implements java.io.Serializable {
     private boolean bool;
 
     public synchronized String addEnterprise1() {
-        User myUser = new ForCallBean().getUser();
         if (epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
-            this.enterprise.setUserno(new ForCallBean().getUser().getUno());
+            this.enterprise.setUserno(this.getCheckLogin().getUser().getUno());
             epDao.executUpdate("insert into enterprise" + StaticFields.currentGradeNum + " (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
             this.entStu.setPositionid(this.positionId);
             this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
-            esDao.executUpdate("insert into enterstudent" + StaticFields.currentGradeNum + myUser.getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
+            esDao.executUpdate("insert into enterstudent" + StaticFields.currentGradeNum + this.getCheckLogin().getUser().getSchoolId() + "(enterid, requirement, payment, other, studnum, positionid) values("
                     + this.entStu.getEnterid() + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
             FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();
@@ -64,8 +66,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public synchronized String addEnterpriseNeed(String enterName) {
-        User myUser = new ForCallBean().getUser();
-        this.enterprise.setUserno(new ForCallBean().getUser().getUno());
+        this.enterprise.setUserno(this.getCheckLogin().getUser().getUno());
         this.entStu.setPositionid(this.positionId);
         this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
         int enterId=epDao.getBeanListHandlerRunner("select * from enterprise where name='"+enterName+"'", enterprise).get(0).getId();
@@ -81,11 +82,10 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public synchronized String addEnterprise() {
-        User myUser = new ForCallBean().getUser();
         if (epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'", enterprise).size() > 0) {//已经存在这个公司了
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
-            this.enterprise.setUserno(new ForCallBean().getUser().getUno());
+            this.enterprise.setUserno(this.getCheckLogin().getUser().getUno());
             epDao.executUpdate("insert into enterprise" + StaticFields.currentGradeNum + " (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
                     + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
                     + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
@@ -346,6 +346,20 @@ public class EnterpriseInfo implements java.io.Serializable {
     public String checkBool() {
         this.bool = true;
         return null;
+    }
+
+    /**
+     * @return the checkLogin
+     */
+    public CheckLogin getCheckLogin() {
+        return checkLogin;
+    }
+
+    /**
+     * @param checkLogin the checkLogin to set
+     */
+    public void setCheckLogin(CheckLogin checkLogin) {
+        this.checkLogin = checkLogin;
     }
     /**
      * @return the use
