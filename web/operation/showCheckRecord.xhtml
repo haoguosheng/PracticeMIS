@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages  style="color: red" id="latestMessage"/>
+                <h:form >
+                    <h:panelGrid columns="2" id="myEntireForm">
+                        <h:outputLabel value="#{msgs.city}" />
+                        <h:outputLabel value="#{teachSeeCheckRecords.city.name}"/>
+                        <h:outputLabel value="#{msgs.name}"/>
+                        <h:outputLabel value="#{teachSeeCheckRecords.student.name}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.time}" />
+                        <h:outputLabel value="#{teachSeeCheckRecords.checkDate}"/>
+                        <h:outputLabel value="#{msgs.content}" />
+                        <h:inputTextarea value="#{teachSeeCheckRecords.checkrecord.checkcontent}"  rows="10" cols="60" readonly="#{teachSeeCheckRecords.readflag}"/>
+                        <h:outputLabel value="#{msgs.recommendation}" />
+                        <h:inputTextarea value="#{teachSeeCheckRecords.checkrecord.recommendation}"  rows="10"  cols="60" readonly="#{teachSeeCheckRecords.readflag}"/>
+                        <h:outputLabel value="#{msgs.rank}" />
+                        <h:selectOneMenu value="#{teachSeeCheckRecords.checkrecord.rank}" id="rank"   disabled="#{teachSeeCheckRecords.readflag}">
+                            <f:selectItems  value="#{checkRecordBean.rankMap}"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel value="#{msgs.remark}" />
+                        <h:inputTextarea value="#{teachSeeCheckRecords.checkrecord.remark}"  rows="10" cols="60" readonly="#{teachSeeCheckRecords.readflag}"/>
+                        <h:panelGrid columns="3">
+                            <h:commandButton value="#{msgs.edit}" action="#{teachSeeCheckRecords.editSelectRecord()}" />
+                            <h:commandButton value="#{msgs.alter}" action="#{teachSeeCheckRecords.alterSelectRecord()}"/>
+                            <h:commandButton value="#{msgs.delete}" action="#{teachSeeCheckRecords.deleteSelectRecord()}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

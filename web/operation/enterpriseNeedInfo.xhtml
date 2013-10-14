@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="select">
+                    <h:form  style="alignment-adjust: middle">
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <!--<h:messages id="myMessage"  style="color: red"  class="mymessages"/>-->
+                        <h1><h:outputLabel value="#{msgs.entNeed}"/></h1>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="#{msgs.selcteCity}"/>
+                            <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selcteCity}" />
+                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                <f:ajax render="enterprise" event="change"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{msgs.selectEnt}"/>
+                            <h:selectOneMenu  value="#{enterpriseInfo.enterpriseid}" id="enterprise" required="true">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
+                                <f:selectItems value="#{enterpriseInfo.enterMap}"/>
+                                <f:ajax render="enterDetail add" event="change"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid> 
+
+
+                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}">
+                            <f:ajax render="bo" event="change"/>
+                        </h:commandButton>
+                        <h:panelGrid   rendered="#{enterpriseInfo.bool}" id="bo">
+
+                            <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}" id="add"/>
+                            
+                            <h:outputLabel value="#{msgs.position}:"/>
+                            <h:panelGrid columns="3">
+                                <h:selectOneMenu value="#{enterpriseInfo.positionId}" required="true" id="position">
+                                    <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                                </h:selectOneMenu>
+                                <h:inputText value="#{positionBackingBean.newPosition}" id="newposition1"/>
+                                <h:commandButton value="#{msgs.newPosition}" >
+                                </h:commandButton>
+                            </h:panelGrid>
+                            <h:outputLabel value="#{msgs.other}:"/>
+                            <h:inputTextarea value="#{enterpriseInfo.entStu.other}" />
+                            <h:outputLabel value="#{msgs.require}:" for="requirement" />
+                            <h:inputTextarea id="requirement" value="#{enterpriseInfo.entStu.requirement}" required="true" />
+                            <h:outputLabel value="#{msgs.payment}:" for="payement" />
+                            <h:inputTextarea id="payement" value="#{enterpriseInfo.entStu.payment}" required="true" />
+                            <h:outputLabel value="#{msgs.stuNum}:" for="stunum" />
+                            <h:inputText id="stunum" value="#{enterpriseInfo.entStu.studnum}" required="true" >
+                                <f:validateLongRange minimum="0" maximum="100"/>
+                            </h:inputText>
+
+
+                            <h:commandButton action="#{enterpriseInfo.addEnterpriseNeed(enterpriseInfo.enterprise.name)}" value="#{msgs.add}"/>
+                        </h:panelGrid>
+
+
+
+                        <h:dataTable value="#{enterpriseInfo.enterprise.enterstudentList}" var="ep"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn" 
+                                     id="enterDetail">
+                            <h:column>
+                                <f:facet name="header">#{msgs.enterName}</f:facet>
+                                <h:inputText value="#{enterpriseInfo.enterprise.name}" id="name"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.payment}</f:facet>
+                                <h:inputText value="#{ep.payment}" id="payment"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.require}</f:facet>
+                                <h:inputText value="#{ep.requirement}" id="requirement"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.stuNum}</f:facet>
+                                <h:inputText value="#{ep.studnum}" id="studnum"/>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{msgs.position}</f:facet>
+                                <h:selectOneMenu value="#{ep.position.id}" required="true" id="position" >
+                                    <f:selectItem  itemValue="#{ep.position.id}" itemLabel="#{ep.position.name}" />
+                                    <f:selectItems value="#{positionBackingBean.positionMap}"/>
+
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.other}</f:facet>
+                                <h:inputText value="#{ep.other}" id="other"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.alter}</f:facet>
+                                <h:commandButton     value="#{msgs.alter}"  action ="#{enterpriseInfo.saveNeed(ep.id,ep.payment,ep.requirement,ep.studnum,ep.other,ep.position.id)}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.delete}</f:facet>
+                                <h:commandButton value="#{msgs.delete}" action="#{enterpriseInfo.deleteNeed(ep.id)}"/>
+                            </h:column>
+                        </h:dataTable> 
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
