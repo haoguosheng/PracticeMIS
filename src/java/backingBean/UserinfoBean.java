@@ -4,11 +4,8 @@
  */
 package backingBean;
 
-import entities.Checkrecords;
 import entities.Nameofunit;
-import entities.Practicenote;
 import entities.Roleinfo;
-import entities.Stuentrel;
 import entities.User;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,9 +43,6 @@ public class UserinfoBean implements java.io.Serializable {
     @Inject
     private CheckLogin checkLogin;
     private SQLTool<User> userDao1;
-    private SQLTool<Practicenote> praDao;
-    private SQLTool<Checkrecords> chkDao1;
-    private SQLTool<Stuentrel> stuRelDao1;
     private SQLTool<Nameofunit> nameofDao1;
     private SQLTool<Roleinfo> roleofDao1;
     private String userno;
@@ -68,9 +62,6 @@ public class UserinfoBean implements java.io.Serializable {
     @PostConstruct
     public void init() {
         userDao1 = new SQLTool<>();
-        praDao = new SQLTool<>();
-        chkDao1 = new SQLTool<>();
-        stuRelDao1 = new SQLTool<>();
         nameofDao1 = new SQLTool<>();
         roleofDao1 = new SQLTool<>();
     }
@@ -99,37 +90,6 @@ public class UserinfoBean implements java.io.Serializable {
     public String submit() {
         userDao1.executUpdate("update student" + StaticFields.currentGradeNum + getCheckLoginUser().getSchoolId() + " set password='" + getCheckLoginUser().getPassword() + "', email='" + getCheckLoginUser().getEmail() + "', name='" + getCheckLoginUser().getName() + "', phone='" + getCheckLoginUser().getPhone() + "', roleId=" + getCheckLoginUser().getRoleid() + ", nameofunitid='" + getCheckLoginUser().getNameofunitid() + "' where uno='" + getCheckLoginUser().getUno() + "'");
         // FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("修改成功！"));
-        return null;
-    }
-
-    public String backupStu(String schoolId, String gradeNum) {
-        if (null != schoolId) {
-            //备份学生学号的前2位等于传入的参数：gradeNum
-            //数据先取出，再插入新表
-            //先取所学号作为外键的表，再取学生表；
-            String practicNoteSelectString = "select * from HGS.PRACTICENOTE" + StaticFields.currentGradeNum + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String checkSelectString = "select * from HGS.CHECKRECORDS" + StaticFields.currentGradeNum + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String stuEntRelSelectString = "select * from HGS.STUENTREL" + StaticFields.currentGradeNum + schoolId + " where substr(stuno,1,2)='" + gradeNum + "'";
-            String stuSelectString = "select * from HGS.STUDENT" + StaticFields.currentGradeNum + schoolId + " where substr(uno,1,2)='" + gradeNum + "'";
-
-            List<Practicenote> praList = praDao.getBeanListHandlerRunner(practicNoteSelectString, new Practicenote());
-            Iterator<Practicenote> it = praList.iterator();
-            while (it.hasNext()) {
-                Practicenote tem = new Practicenote();
-                //创建一个新表
-                String createPra = ("CREATE TABLE PRACTICENOTE" + gradeNum) + schoolId + " (ID INTEGER NOT NULL, DETAIL VARCHAR(2000), SUBMITDATE DATE DEFAULT date(current_date) , ENTERID INTEGER, POSITIONID INTEGER, STUNO VARCHAR(10), PRIMARY KEY (ID))";
-                praDao.executUpdate(createPra);
-                //把旧的数据插入新表
-                String insPra = "INSERT INTO HGS.PRACTICENOTE" + gradeNum + "" + schoolId + " (DETAIL, SUBMITDATE, ENTERID, POSITIONID, STUNO) VALUES ('"
-                        + tem.getDetail() + "', '" + tem.getSubmitdate() + "', " + tem.getEnterid() + "," + tem.getPositionid() + ",'" + tem.getStuno() + "')";
-                praDao.executUpdate(insPra);
-                //把旧的数据从旧表中删除
-                praDao.executUpdate(insPra);
-
-            }
-        } else {
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("请指定要备份的学生所在的学院！"));
-        }
         return null;
     }
 
