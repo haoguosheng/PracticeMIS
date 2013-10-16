@@ -87,7 +87,7 @@ public class SchoolBean implements Serializable {
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除学院失败！"));
         }
-        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by pinyin", nameofunit);
+        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by id", nameofunit);
         return "viewSchools.xhtml";
     }
 
@@ -116,7 +116,7 @@ public class SchoolBean implements Serializable {
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
         }
-        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by pinyin", nameofunit);
+        nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by id", nameofunit);
         return "viewSchools.xhtml";
     }
 
@@ -128,12 +128,12 @@ public class SchoolBean implements Serializable {
                 Statement stat;
                 try {
                     stat = ConnectionManager.getDataSource().getConnection().createStatement();
-                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofunit(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo(id) default 2)");
+                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo(id) default 2)");
                     stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
                     stat.executeUpdate("Create Table PracticeNote" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise(ID),PositionId Integer references Position(ID))");
                     stat.executeUpdate("Create Table StuEntRel" + schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),EnterID Integer references Enterprise(Id))");
                     nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + loginUser.getUno() + "')");
-                    nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' and id!='000' order by pinyin", nameofunit);
+                    nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' order by id", nameofunit);
                     stat.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,7 +165,7 @@ public class SchoolBean implements Serializable {
      */
     public List<Nameofunit> getNameofunitList() {
         if (nameofunitList == null) {
-            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by pinyin", nameofunit);
+            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by id", nameofunit);
         }
         return nameofunitList;
     }

@@ -13,7 +13,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -128,7 +127,7 @@ public class ClassBean implements Serializable {
         if (null == this.schoolMap || this.schoolMap.isEmpty()) {
             this.schoolMap = new LinkedHashMap();
         }
-        List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id!='000' order by pinyin", nameofunit);
+        List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by pinyin", nameofunit);
         for (int i = 0; i < unit.size(); i++) {
             Nameofunit tempP = unit.get(i);
             this.schoolMap.put(tempP.getName(), tempP.getId());
