@@ -67,35 +67,40 @@ public class NameofUnitBean implements java.io.Serializable {
     }
 
     public List<Nameofunit> getSchoolList() {
-        User temUser=this.getCheckLogin().getUser();
-        if (null == schoolList || schoolList.isEmpty()) {
-            switch (temUser.getRoleinfo().getCanseeall()) {
-                case StaticFields.CanSeeAll:
-                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  parentid='" + StaticFields.universityId + "' and id!='000' order by pinyin", unit);
-                    break;
-                case StaticFields.CanSeeOnlySchool:
-                    schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  id='" + temUser.getNameofunitid() + "' order by pinyin", unit);
-                    break;
-                case StaticFields.CanSeeSelf:
-                    schoolList = null;
-                    break;
-                case StaticFields.CanSeeNothing:
-                    schoolList=null;
-                default:
-                    schoolList = null;
-            }
+            User temUser = this.getCheckLogin().getUser();
+            if (null == schoolList || schoolList.isEmpty()) {
+                switch (temUser.getRoleinfo().getCanseeall()) {
+                    case StaticFields.CanSeeAll:
+                        schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  parentid='" + StaticFields.universityId + "' and id!='000' order by pinyin", unit);
+                        break;
+                    case StaticFields.CanSeeOnlySchool:
+                        schoolList = nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where  id='" + temUser.getNameofunitid() + "' order by pinyin", unit);
+                        break;
+                    case StaticFields.CanSeeSelf:
+                        schoolList = null;
+                        break;
+                    case StaticFields.CanSeeNothing:
+                        schoolList = null;
+                    default:
+                        schoolList = null;
+                }
 
         }
         return schoolList;
     }
 
+
+    public String getSchoolNameById(String schoolId) {
+        return nameDAO.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + " where id='" + schoolId + "' ", unit).get(0).getName();
+    }
+    
     /**
      * @return the schoolId
      */
     public String getSchoolId() {
-        User temUser=this.getCheckLogin().getUser();
-        if(this.canSeeAll!=StaticFields.CanSeeNothing){//可以确定一定是教师，下面拿到的一定是学院的编号
-            this.schoolId=temUser.getNameofunitid();
+        User temUser = this.getCheckLogin().getUser();
+        if (this.canSeeAll != StaticFields.CanSeeNothing) {//可以确定一定是教师，下面拿到的一定是学院的编号
+            this.schoolId = temUser.getNameofunitid();
         }
         return schoolId;
     }
@@ -157,8 +162,8 @@ public class NameofUnitBean implements java.io.Serializable {
      * @return the canSeeAll
      */
     public int getCanSeeAll() {
-        User temUser=this.getCheckLogin().getUser();
-        this.canSeeAll=temUser.getRoleinfo().getCanseeall();
+        User temUser = this.getCheckLogin().getUser();
+        this.canSeeAll = temUser.getRoleinfo().getCanseeall();
         return canSeeAll;
     }
 

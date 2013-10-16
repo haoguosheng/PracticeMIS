@@ -8,6 +8,7 @@ import entities.News;
 import entities.User;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -28,11 +29,19 @@ public class NewsBean implements Serializable {
     private SQLTool<News> newsDao;
     private News news;
     private List<News> recentNews;
+    private LinkedHashMap<String, List<News>> recentNewsMap;
+    private News directNews;
 
     @PostConstruct
     public void init() {
         newsDao = new SQLTool<>();
         news = new News();
+    }
+
+    public String directToNews() {
+        String newsId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("nId");
+        directNews =  newsDao.getBeanListHandlerRunner("select * from news where id=" + newsId, news).get(0);
+        return "news.xhtml";
     }
 
     public String addNews() {
@@ -95,5 +104,31 @@ public class NewsBean implements Serializable {
     public List<News> getRecentNews() {
         this.recentNews = PublicFields.getRecentNewsMap().get(this.checkLogin.getUser().getNameofunitid());
         return recentNews;
+    }
+
+    public LinkedHashMap<String, List<News>> getRecentNewsMap() {
+        recentNewsMap = PublicFields.getRecentNewsMap();
+        return recentNewsMap;
+    }
+
+    /**
+     * @param recentNewsMap the recentNewsMap to set
+     */
+    public void setRecentNewsMap(LinkedHashMap<String, List<News>> recentNewsMap) {
+        this.recentNewsMap = recentNewsMap;
+    }
+
+    /**
+     * @return the directNews
+     */
+    public News getDirectNews() {
+        return directNews;
+    }
+
+    /**
+     * @param directNews the directNews to set
+     */
+    public void setDirectNews(News directNews) {
+        this.directNews = directNews;
     }
 }

@@ -17,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 /**
  *
@@ -24,7 +27,7 @@ import javax.inject.Named;
  */
 @Named
 @ApplicationScoped
-public class PublicFields implements java.io.Serializable{
+public class PublicFields implements java.io.Serializable {
 
     private String tag = "左边没有就在这里添加";
     private Calendar c = Calendar.getInstance();
@@ -39,19 +42,19 @@ public class PublicFields implements java.io.Serializable{
     private static SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
-    private static LinkedHashMap<String, List<News>>  recentNewsMap = new LinkedHashMap<>();
-    
- 
-    public static LinkedHashMap<String,List<News>> getRecentNewsMap() {
-       List<News> recentNews= getNewsList();
-        List<Nameofunit> schoolList=PublicFields.getSchoolUnitList();
+    private static LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
+   
+
+    public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
+        List<News> recentNews = getNewsList();
+        List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
         //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
         for (int i = 0; i < schoolList.size(); i++) {
-              recentNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
+            recentNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
         }
         for (int i = 0; i < recentNews.size(); i++) {
-            News tem=recentNews.get(i);
-            User user=tem.getTeacher();
+            News tem = recentNews.get(i);
+            User user = tem.getTeacher();
             recentNewsMap.get(user.getNameofunitid()).add(tem);
         }
         return recentNewsMap;
@@ -96,7 +99,7 @@ public class PublicFields implements java.io.Serializable{
         if (myunitList.isEmpty()) {
             myunitList = nameofUnitDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where parentid='" + StaticFields.universityId + "'order by pri", new Nameofunit());
         }
-        return  myunitList;
+        return myunitList;
     }
 
     /**
@@ -162,4 +165,5 @@ public class PublicFields implements java.io.Serializable{
     public void setMonth(int month) {
         this.month = month;
     }
+
 }
