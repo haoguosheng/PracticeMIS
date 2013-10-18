@@ -27,21 +27,51 @@ import javax.inject.Named;
 @ApplicationScoped
 public class PublicFields implements java.io.Serializable {
 
-    private String tag = "左边没有就在这里添加";
-    private Calendar c = Calendar.getInstance();
-    private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), currentMonth = month;
+    /**
+     * @return the teacherRole
+     */
+    public static int getTeacherRole() {
+        return teacherRole;
+    }
+
+    /**
+     * @return the adminRole
+     */
+    public static int getAdminRole() {
+        return adminRole;
+    }
+
+    /**
+     * @return the studentRole
+     */
+    public static int getStudentRole() {
+        return studentRole;
+    }
+
+    /**
+     * @return the schoolAdminRole
+     */
+    public static int getSchoolAdminRole() {
+        return schoolAdminRole;
+    }
+
+    private final String tag = "在这里添加";
+    private final Calendar c = Calendar.getInstance();
+    private final int year = c.get(Calendar.YEAR),currentMonth =c.get(Calendar.MONTH);
+    private int month = c.get(Calendar.MONTH);
     private LinkedHashMap<Integer, Integer> yearMap;
     private LinkedHashMap<Integer, Integer> monthMap;
-    private LinkedHashMap<Integer, Integer> dayMap = new LinkedHashMap<>();
+    private final LinkedHashMap<Integer, Integer> dayMap = new LinkedHashMap<>();
     private static List<String> unitIdList = new ArrayList<>();
     private static List<Nameofunit> myunitList = new LinkedList<>();
-    private static SQLTool<Resourceinfo> resDao = new SQLTool<>();
-    private static SQLTool<Nameofunit> nameofUnitDao = new SQLTool<>();
-    private static SQLTool<News> newsDao = new SQLTool<>();
+    private static final SQLTool<Resourceinfo> resDao = new SQLTool<>();
+    private static final SQLTool<Nameofunit> nameofUnitDao = new SQLTool<>();
+    private static final SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
-    private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
-    private static LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
+    private static final SQLTool<Roleinfo> roleDao = new SQLTool<>();
+    private static final LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
     private LinkedHashMap<String, Integer> roleMap = null;
+    private static final int teacherRole=2,adminRole=4,studentRole=3,schoolAdminRole=1;
 
     public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
         List<News> recentNews = getNewsList();

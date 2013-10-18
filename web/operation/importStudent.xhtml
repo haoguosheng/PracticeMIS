@@ -28,7 +28,7 @@
                         <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId">
                             <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                             <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
-                            <f:ajax render="@all"/>
+                            <f:ajax render="classInclude"/>
                         </h:selectOneMenu>
                     </h:panelGrid>
                     <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>

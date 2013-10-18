@@ -190,7 +190,7 @@ public class SchoolBean implements Serializable {
      */
     public List<Nameofunit> getNameofunitList() {
         if (nameofunitList == null) {
-            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by pinyin", nameofunit);
+            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by id", nameofunit);
         }
         return nameofunitList;
     }

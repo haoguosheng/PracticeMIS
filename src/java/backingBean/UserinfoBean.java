@@ -137,7 +137,7 @@ public class UserinfoBean implements java.io.Serializable {
                             String NAME = "'" + sheet.getCell(2, i).getContents() + "',";
                             String EMAIL = "'" + sheet.getCell(3, i).getContents() + "',";
                             String PHONE = "'" + sheet.getCell(4, i).getContents() + "',";
-                            String ROLEID = "2,";
+                            String ROLEID = PublicFields.getStudentRole()+",";
                             String sqlString = "INSERT INTO HGS.STUDENT" + StaticFields.currentGradeNum + schoolId + " (UNO, PASSWORD, NAME, EMAIL, PHONE, ROLEID, NAMEOFUNITID) VALUES (";
                             sqlString = sqlString + uno + password + NAME + EMAIL + PHONE + ROLEID + NAMEOFUNITID + ")";
                             this.userDao1.executUpdate(sqlString);
@@ -215,7 +215,7 @@ public class UserinfoBean implements java.io.Serializable {
     }
      public String saveTeacher(String uno,int roleId,String nameofUnitId) {
         int assingRole = Integer.valueOf(this.roleofDao1.getIdListHandlerRunner("select Privilege from roleinfo where id=" + roleId).get(0));
-        if (getCheckLoginUser().getRoleinfo().getPrivilege() < assingRole) {
+        if (getCheckLoginUser().getRoleinfo().getPrivilege() > assingRole) {
             FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("选择的权限不能超越了允许范围！请超级管理员授权！"));
             return null;
         }

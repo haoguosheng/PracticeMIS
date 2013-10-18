@@ -15,18 +15,14 @@
                 <div class="companyInfo">
                     <h:form id="myForm">
                         <h:messages  style="color: red" id="latestMessage"/>
-                        <h:panelGrid columns="2" >
+                        <h:panelGrid columns="3" >
                             <h:outputLabel value="#{msgs.selectSchool}"/>
-                            <h:panelGrid columns="2">
                                 <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" >
                                     <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
                                     <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
                                     <f:ajax render="mysclassId"/>
                                 </h:selectOneMenu>
                                 <h:commandButton action="#{userinfoBean.direct2BackupImport()}" value="#{msgs.batchImport}#{msgs.sutInfoList}"/>
-                            </h:panelGrid>
-                        </h:panelGrid>
-                        <h:panelGrid columns="2" >
                             <h:outputLabel value="#{msgs.selectclass}"/>
                             <h:selectOneMenu value="#{nameofUnitBean.classId}" id="mysclassId" validator="#{userinfoBean.assingValue2Classid}" >
                                 <f:selectItem itemLabel="#{msgs.selectclass}" itemValue="null" />
