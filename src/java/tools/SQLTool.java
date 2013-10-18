@@ -46,7 +46,7 @@ public class SQLTool<T> implements java.io.Serializable {
             FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("更新失败！"));
         }
         if (result <= 0) {
-            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("被影响的记录数为0，表明更改部分或全部失败！请查找原因"));
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("部分或全部操作失败！请查找原因"));
         } else {
             FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("被影响的记录数为" + result + "，表明更改部分或全部成功！"));
         }

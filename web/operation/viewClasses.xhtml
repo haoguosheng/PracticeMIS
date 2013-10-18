@@ -23,10 +23,8 @@
                     <h:panelGrid columns="8">
                         <h:outputLabel value="#{msgs.addClass}:"/>
                         <h:outputLabel value="#{msgs.classNum}"/>
-                        <h:inputText value="#{classBean.classId}">
-                            <f:validateLength maximum="3" minimum="3"/>
-                        </h:inputText>
-                        <h:outputLabel value="#{msgs.Class}#{msgs.name}"/>
+                        <h:inputText value="#{classBean.classId}" required="true"/>
+                        <h:outputLabel value="#{msgs.Class}#{msgs.NameofThing}"/>
                         <h:inputText value="#{classBean.newClass}" />
                         <h:outputLabel value="#{msgs.classPinyin}"/>
                         <h:inputText value="#{classBean.pinyin}" />

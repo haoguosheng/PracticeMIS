@@ -11,7 +11,7 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
 
-                <h1><h:outputLabel value="#{msgs.schools}:"/></h1>
+                <h1><h:outputLabel value="#{msgs.schools}:#{msgs.pinyin}#{msgs.order}"/></h1>
                 <h:messages   style="color: red" id="latestMessage"/>
 
 
@@ -19,7 +19,7 @@
                     <tr>
                         <th>#{msgs.schoolNum}</th>
                         <th>#{msgs.schoolName}</th>
-                        <th>#{msgs.schoolPinyin}</th>
+                        <th>#{msgs.school}#{msgs.pinyin}#{msgs.firstChar}</th>
                         <th>#{msgs.unit}</th>
                         <th>#{msgs.alter}</th>
                         <th>#{msgs.delete}</th>
@@ -50,17 +50,11 @@
                         <h1><h:outputLabel value="#{msgs.addSchool}"/></h1>
                         <h:panelGrid columns="2">
                             <h:outputLabel value="#{msgs.schoolNum}" />
-                            <h:inputText value="#{schoolBean.schoolId}" required="true">
-                                <f:validateLength maximum="3" minimum="3"/>
-                            </h:inputText>
+                            <h:inputText value="#{schoolBean.schoolId}" required="true"/>
                             <h:outputLabel value="#{msgs.schoolName}" />
-                            <h:inputText value="#{schoolBean.schoolName}" required="true">
-                                <f:validateLength maximum="50" minimum="3"/>
-                            </h:inputText>
-                            <h:outputLabel value="#{msgs.schoolPinyin}" />
-                            <h:inputText value="#{schoolBean.pinyin}">
-                                <f:validateLength maximum="20" minimum="3"/>
-                            </h:inputText>
+                            <h:inputText value="#{schoolBean.schoolName}" required="true"/>
+                            <h:outputLabel value="#{msgs.school}#{msgs.pinyin}#{msgs.firstChar}" />
+                            <h:inputText value="#{schoolBean.pinyin}" required="true"/>
                             <h:commandButton action="#{schoolBean.addSchool()}" value="#{msgs.add}"/>
                         </h:panelGrid>
                     </h:panelGrid>

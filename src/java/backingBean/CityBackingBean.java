@@ -83,7 +83,7 @@ public class CityBackingBean implements java.io.Serializable {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请输入城市名称,如果您点击的不是\"添加新城市\"，可以忽略本提示。"));
             }
         }
-        this.newCityName = "左边没有就在这里添加";
+        this.newCityName = "没有就在这里添加";
         paginator = null;
         this.cityMap = null;
         this.ci = null;
@@ -186,7 +186,7 @@ public class CityBackingBean implements java.io.Serializable {
     public String searchAll() {
         isNull = true;
         searchName = "请输入要选择城市";
-        newCityName = "左边没有就在这里添加";
+        newCityName = "没有就在这里添加";
         this.ci = null;
         paginator = null;
         return null;

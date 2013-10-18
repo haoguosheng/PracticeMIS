@@ -12,14 +12,12 @@ import entities.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 /**
  *
@@ -43,7 +41,7 @@ public class PublicFields implements java.io.Serializable {
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static SQLTool<Roleinfo> roleDao = new SQLTool<>();
     private static LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
-   
+    private LinkedHashMap<String, Integer> roleMap = null;
 
     public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
         List<News> recentNews = getNewsList();
@@ -166,4 +164,21 @@ public class PublicFields implements java.io.Serializable {
         this.month = month;
     }
 
+    /**
+     * @return the roleMap
+     */
+    public LinkedHashMap<String, Integer> getRoleMap() {
+        if (null == this.roleMap || this.roleMap.isEmpty()) {
+            List<Roleinfo> role = roleDao.getBeanListHandlerRunner("select * from roleinfo" + StaticFields.currentGradeNum + "", new Roleinfo());
+            if (null != role && role.size() > 0) {
+                Iterator<Roleinfo> it = role.iterator();
+                roleMap = new LinkedHashMap<>();
+                while (it.hasNext()) {
+                    Roleinfo ro1 = it.next();
+                    this.roleMap.put(ro1.getName(), ro1.getId());
+                }
+            }
+        }
+        return roleMap;
+    }
 }

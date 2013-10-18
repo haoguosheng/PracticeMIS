@@ -61,10 +61,10 @@ public class SchoolBean implements Serializable {
     public String deleteSchool() {
         FacesContext context = FacesContext.getCurrentInstance();
         String sId = context.getExternalContext().getRequestParameterMap().get("schoolId");
-        if (userDao.getBeanListHandlerRunner("select * from student" + sId, new User()).size() == 0
-                && checkDao.getBeanListHandlerRunner("select * from checkrecords" + sId, new Checkrecords()).size() == 0
-                && pDao.getBeanListHandlerRunner("select * from practicenote" + sId, new Practicenote()).size() == 0
-                && seDao.getBeanListHandlerRunner("select * from stuentrel" + sId, new Stuentrel()).size() == 0) {
+        if (userDao.getBeanListHandlerRunner("select * from student" + sId, new User()).isEmpty()
+                && checkDao.getBeanListHandlerRunner("select * from checkrecords" + sId, new Checkrecords()).isEmpty()
+                && pDao.getBeanListHandlerRunner("select * from practicenote" + sId, new Practicenote()).isEmpty()
+                && seDao.getBeanListHandlerRunner("select * from stuentrel" + sId, new Stuentrel()).isEmpty()) {
             Statement stat = null;
             try {
                 stat = ConnectionManager.getDataSource().getConnection().createStatement();
@@ -123,22 +123,47 @@ public class SchoolBean implements Serializable {
     public String addSchool() {
         if (schoolId != null && schoolName != null) {
             if (nameDao.getBeanListHandlerRunner("select * from nameofunit where id='" + schoolId + "'", nameofunit).size() > 0) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院失败！请输入正确的学院编号，学院名称！"));
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院失败！学院编号已经被使用！"));
             } else {
-                Statement stat;
+                Statement stat = null;
                 try {
                     stat = ConnectionManager.getDataSource().getConnection().createStatement();
-                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo(id) default 2)");
-                    stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
-                    stat.executeUpdate("Create Table PracticeNote" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise(ID),PositionId Integer references Position(ID))");
-                    stat.executeUpdate("Create Table StuEntRel" + schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),EnterID Integer references Enterprise(Id))");
-                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + loginUser.getUno() + "')");
-                    nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' order by id", nameofunit);
-                    stat.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception e) {
+                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据库连接出错！"));
                 }
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院成功！"));
+                try {
+                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo(id) default 2)");
+                } catch (Exception e) {
+                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
+                }
+                try {
+                    stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
+                }
+                try {
+                    stat.executeUpdate("Create Table PracticeNote" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise(ID),PositionId Integer references Position(ID))");
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
+                }
+                try {
+                    stat.executeUpdate("Create Table StuEntRel" + schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),EnterID Integer references Enterprise(Id))");
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
+                }
+                try {
+                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + getLoginUser().getUno() + "')");
+                    nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' order by id", nameofunit);
+                    schoolId="";schoolName="";pinyin="";
+                } catch (Exception ex) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院最终失败！"));
+                } finally {
+                    try {
+                        stat.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SchoolBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院失败！请输入正确的学院编号，学院名称！"));
@@ -165,7 +190,7 @@ public class SchoolBean implements Serializable {
      */
     public List<Nameofunit> getNameofunitList() {
         if (nameofunitList == null) {
-            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by id", nameofunit);
+            nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by pinyin", nameofunit);
         }
         return nameofunitList;
     }
@@ -231,5 +256,12 @@ public class SchoolBean implements Serializable {
      */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
+    }
+
+    /**
+     * @return the loginUser
+     */
+    public User getLoginUser() {
+        return this.checkLogin.getUser();
     }
 }

@@ -61,7 +61,8 @@ public class ClassBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败！请输入正确的班级编号，班级名称！"));
         } else {
             if ((schoolId != null && !schoolId.equals("")) && (newClass != null && !newClass.equals("")) && (pinyin != null &&! pinyin.equals(""))) {
-                nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')");
+                nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + getLoginUser().getUno() + "')");
+                classId="";newClass="";schoolId="";pinyin="";
 //                if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
 //                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
 //                    classId = "";
@@ -199,5 +200,12 @@ public class ClassBean implements Serializable {
      */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
+    }
+
+    /**
+     * @return the loginUser
+     */
+    public User getLoginUser() {
+        return this.checkLogin.getUser();
     }
 }

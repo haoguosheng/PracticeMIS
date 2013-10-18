@@ -55,7 +55,6 @@ public class UserinfoBean implements java.io.Serializable {
     private String studentname1;
     private String classId1;
     private int myro[];
-    private LinkedHashMap<String, Integer> roo;
     private String successStudentNums;
     private int columnNum = 6;
 
@@ -214,16 +213,13 @@ public class UserinfoBean implements java.io.Serializable {
         this.userDao1.executUpdate("update student" + StaticFields.currentGradeNum + getCheckLoginUser().getSchoolId() + " set nameofunitId='" + nameofunit + "' where uno='" + uno + "'");
 
     }
-    private String nameofunitid;
-    private int roleid;
-
-    public String saveTeacher(String uno) {
-        int assingRole = Integer.valueOf(this.roleofDao1.getIdListHandlerRunner("select Privilege from roleinfo where id=" + roleid).get(0));
+     public String saveTeacher(String uno,int roleId,String nameofUnitId) {
+        int assingRole = Integer.valueOf(this.roleofDao1.getIdListHandlerRunner("select Privilege from roleinfo where id=" + roleId).get(0));
         if (getCheckLoginUser().getRoleinfo().getPrivilege() < assingRole) {
             FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("选择的权限不能超越了允许范围！请超级管理员授权！"));
             return null;
         }
-        this.userDao1.executUpdate("update teacherinfo" + StaticFields.currentGradeNum + " set roleId=" + getRoleid() + ",nameofunitId='" + nameofunitid + "' where uno='" + uno + "'");
+        this.userDao1.executUpdate("update teacherinfo" + StaticFields.currentGradeNum + " set roleId=" + roleId+ ",nameofunitId='" + nameofUnitId + "' where uno='" + uno + "'");
         checkschool(schoolId1);
         if (uno.equals(getCheckLoginUser().getUno())) {
             try {
@@ -232,8 +228,6 @@ public class UserinfoBean implements java.io.Serializable {
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 mySession.invalidate();
                 response.sendRedirect("../login/login.xhtml");
-
-
             } catch (IOException ex) {
                 Logger.getLogger(UserinfoBean.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -401,25 +395,6 @@ public class UserinfoBean implements java.io.Serializable {
     /**
      * @return the roo
      */
-    public LinkedHashMap<String, Integer> getRoo() {
-        List<Roleinfo> role = roleofDao1.getBeanListHandlerRunner("select * from roleinfo" + StaticFields.currentGradeNum + "", new Roleinfo());
-        if (null != role && role.size() > 0) {
-            Iterator<Roleinfo> it = role.iterator();
-            roo = new LinkedHashMap<String, Integer>();
-            while (it.hasNext()) {
-                Roleinfo ro1 = it.next();
-                roo.put(ro1.getName(), ro1.getId());
-            }
-        }
-        return roo;
-    }
-
-    /**
-     * @param roo the roo to set
-     */
-    public void setRoo(LinkedHashMap<String, Integer> roo) {
-        this.roo = roo;
-    }
 
     /**
      * @return the checkLogin
@@ -435,31 +410,4 @@ public class UserinfoBean implements java.io.Serializable {
         this.checkLogin = checkLogin;
     }
 
-    /**
-     * @return the nameofunitid
-     */
-    public String getNameofunitid() {
-        return nameofunitid;
-    }
-
-    /**
-     * @param nameofunitid the nameofunitid to set
-     */
-    public void setNameofunitid(String nameofunitid) {
-        this.nameofunitid = nameofunitid;
-    }
-
-    /**
-     * @return the roleid
-     */
-    public int getRoleid() {
-        return roleid;
-    }
-
-    /**
-     * @param roleid the roleid to set
-     */
-    public void setRoleid(int roleid) {
-        this.roleid = roleid;
-    }
-}
+  }
