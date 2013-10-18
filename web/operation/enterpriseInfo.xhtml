@@ -28,7 +28,7 @@
                                     </h:selectOneMenu>
                                     <h:inputText value="#{cityBackingBean.newCityName}" id="newCity"/>
                                     <h:commandButton value="#{msgs.addNewCity}"  action="#{cityBackingBean.add()}">
-                                        <f:ajax  execute="newCity"  render="city latestMessage" />
+                                        <f:ajax  execute="newCity"  render="city" />
                                     </h:commandButton>
                                 </h:panelGrid>
                                 <h:outputLabel value="#{msgs.contactName}:"/>
@@ -42,16 +42,19 @@
                             </h:panelGrid>
 
                             <h:commandButton action="#{enterpriseInfo.addEnterprise}" value="#{msgs.add}"/>
-                        </section>
+                        </section>  
                         <h:messages  style="color: red" id="latestMessage"/>
+                    </h:form>
+
+                    <h:form>
+
                         <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
                         <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}"/>
                         <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
                         <br/>
                         <h:outputLabel value="#{msgs.enter}#{msgs.list}" />
                         <hr/>
-                        <h:dataTable rowClasses="oddRows evenRows"  value="#{enterpriseInfo.paginator.model}" var="ep"
-                                     border="1" >
+                        <h:dataTable rowClasses="oddRows evenRows"  value="#{enterpriseInfo.paginator.model}" var="ep"   border="1" >
                             <h:column>
                                 <f:facet name="header">#{msgs.enterName}</f:facet>
                                 <h:inputText value="#{ep.ent.name}"/>
@@ -61,7 +64,7 @@
                                 <h:selectOneMenu value="#{ep.cityId}">
                                     <f:selectItem  itemValue="#{ep.cityId}" itemLabel="#{ep.ent.city.name}" />
                                     <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                                    <f:ajax render="enterprise" event="change"/>
+                                    <f:ajax render="enterprise"/>
                                 </h:selectOneMenu>
                             </h:column>
                             <h:column>

@@ -35,15 +35,15 @@ public class User implements Serializable {
     private List<Position> addPositions;
     private Roleinfo roleinfo;
     private Nameofunit nameofunit;
-    private SQLTool<Stuentrel> seDao = new SQLTool<Stuentrel>();
-    private SQLTool<Practicenote> practDao = new SQLTool<Practicenote>();
-    private SQLTool<Checkrecords> checkDao = new SQLTool<Checkrecords>();
-    private SQLTool<News> newsDao = new SQLTool<News>();
-    private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
-    private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
-    private SQLTool<Position> positionDao = new SQLTool<Position>();
-    private SQLTool<City> cityDao = new SQLTool<City>();
-    private SQLTool<Roleinfo> roleDao = new SQLTool<Roleinfo>();
+    private final SQLTool<Stuentrel> seDao = new SQLTool<>();
+    private final SQLTool<Practicenote> practDao = new SQLTool<>();
+    private final SQLTool<Checkrecords> checkDao = new SQLTool<>();
+    private final SQLTool<News> newsDao = new SQLTool<>();
+    private final SQLTool<Enterprise> epDao = new SQLTool<>();
+    private final SQLTool<Nameofunit> nameDao = new SQLTool<>();
+    private final SQLTool<Position> positionDao = new SQLTool<>();
+    private final SQLTool<City> cityDao = new SQLTool<>();
+    private final SQLTool<Roleinfo> roleDao = new SQLTool<>();
 
     public User() {
     }

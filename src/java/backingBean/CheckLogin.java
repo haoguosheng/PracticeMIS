@@ -31,33 +31,40 @@ import tools.UserAnalysis;
 public class CheckLogin implements Serializable {
 
     private User user;
-    private Properties messagesPro ;
+    private Properties messagesPro;
     private String username, password, welcomeMess;
     private String rand;
     private int tryTime = 0;
     private boolean logined = false, rendered = true;
-    private int tryTimeLimitedNumber = 8;
-    private SQLTool<User> userDao ;
+    private final int tryTimeLimitedNumber = 3;
+    private SQLTool<User> userDao;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         userDao = new SQLTool<>();
         messagesPro = null;
     }
+
     private boolean isUserlegal(String name, String password) {
         boolean result;
         if (name.trim().length() == StaticFields.teacherUnoLength1) {
             String sql = "select * from teacherinfo" + StaticFields.currentGradeNum + " where uno='" + name + "' and password='" + password + "'";
-            List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
-            if (null == userList) {
-                result = false;
-            } else {
-                if (userList.size() > 0) {
-                    this.user = userList.get(0);
-                    result = true;
-                } else {
+            try {
+                List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
+                if (null == userList) {
                     result = false;
+                } else {
+                    if (userList.size() > 0) {
+                        this.user = userList.get(0);
+                        result = true;
+                    } else {
+                        result = false;
+                    }
                 }
+            } catch (Exception e) {
+                result = false;
+                FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查询出错，请联系管理员！"));
+                return result;
             }
         } else {
             if (null == UserAnalysis.getSchoolId(name)) {
@@ -67,7 +74,7 @@ public class CheckLogin implements Serializable {
                 String table = "student" + StaticFields.currentGradeNum + UserAnalysis.getSchoolId(name);
                 String sql = "select * from " + table + " where uno='" + name + "' and password='" + password + "'";
                 List<User> userList = userDao.getBeanListHandlerRunner(sql, new User());
-                if (null!=userList&&userList.size() > 0) {
+                if (null != userList && userList.size() > 0) {
                     this.user = userList.get(0);
                     result = true;
                 } else {
@@ -237,9 +244,9 @@ public class CheckLogin implements Serializable {
         //判断是学生还是教师，如果是教师，则选择Teacher表，否则选择Student表
         String tem = UserAnalysis.getTableName(this.getUser().getUno());
         if (tem.contains("studen")) {
-            userDao.executUpdate("update "+tem+ StaticFields.currentGradeNum + this.getUser().getSchoolId() + " set password = '" + this.getUser().getPassword() + "'  , email='" + this.getUser().getEmail() + "'  , name='" + this.getUser().getName() + "'  , phone='" + this.getUser().getPhone() + "'  , roleId=" + this.getUser().getRoleid() + "  , nameofunitid='" + this.getUser().getNameofunitid() + "'  where uno='" + this.getUser().getUno() + "'  ");
-        }else if(tem.contains("tea")){
-             userDao.executUpdate("update "+tem+ StaticFields.currentGradeNum  + " set password = '" + this.getUser().getPassword() + "'  , email='" + this.getUser().getEmail() + "'  , name='" + this.getUser().getName() + "'  , phone='" + this.getUser().getPhone() + "'  , roleId=" + this.getUser().getRoleid() + "  , nameofunitid='" + this.getUser().getNameofunitid() + "'  where uno='" + this.getUser().getUno() + "'  ");
+            userDao.executUpdate("update " + tem + StaticFields.currentGradeNum + this.getUser().getSchoolId() + " set password = '" + this.getUser().getPassword() + "'  , email='" + this.getUser().getEmail() + "'  , name='" + this.getUser().getName() + "'  , phone='" + this.getUser().getPhone() + "'  , roleId=" + this.getUser().getRoleid() + "  , nameofunitid='" + this.getUser().getNameofunitid() + "'  where uno='" + this.getUser().getUno() + "'  ");
+        } else if (tem.contains("tea")) {
+            userDao.executUpdate("update " + tem + StaticFields.currentGradeNum + " set password = '" + this.getUser().getPassword() + "'  , email='" + this.getUser().getEmail() + "'  , name='" + this.getUser().getName() + "'  , phone='" + this.getUser().getPhone() + "'  , roleId=" + this.getUser().getRoleid() + "  , nameofunitid='" + this.getUser().getNameofunitid() + "'  where uno='" + this.getUser().getUno() + "'  ");
         }
         return null;
     }

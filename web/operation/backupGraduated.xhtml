@@ -15,7 +15,6 @@
                     还原毕业生信息则是把备份中的毕业生信息恢复到当到数据库，以便于查询与操作。
                 </section>
                 <h:form enctype="multipart/form-data">
-                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="#{msgs.selectYear}"/>
                         <h:selectOneMenu value="#{backupBean.backupYear}" required="true">
@@ -29,13 +28,14 @@
                     <h:panelGrid columns="3" >
                         <h:outputLabel value="#{msgs.selectYear}"/>
                         <h:selectOneMenu value="#{backupBean.recoverYear}" required="true">
-                            <f:selectItem itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItem itemLabel="#{msgs.pleaseSelect}" />
                             <f:selectItems value="#{backupBean.yearMap}"/>
                             <f:selectItem itemLabel="#{msgs.backupCurrent}" itemValue="current"/>
                         </h:selectOneMenu>
                         <h:commandButton value="#{msgs.recover}" action="#{backupBean.recoverStu()}"/>
                     </h:panelGrid>
                 </h:form>
+                 <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
             </ui:define>
 
         </ui:composition>

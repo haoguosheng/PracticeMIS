@@ -6,7 +6,7 @@
       xmlns:h="http://java.sun.com/jsf/html">
     <f:loadBundle  basename="messages" var="msgs"/>
     <h:head>
-        
+
     </h:head>
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
@@ -31,20 +31,23 @@
                             </h:selectOneMenu>
                         </h:panelGrid> 
 
-                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}" onclick="return check('enterprise','请输入城市和企业')">
-                            <f:ajax render="bo" event="change"/>
+                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}" onclick="return check('enterprise', '请输入城市和企业')">
+                            <f:ajax render="addDetail"/>
                         </h:commandButton>
-                        <h:panelGrid   rendered="#{enterpriseInfo.bool}" id="bo">
+                        <h:panelGrid   rendered="#{enterpriseInfo.bool}" id="addDetail" >
                             <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}" id="add"/>
                             <h:outputLabel value="#{msgs.position}:"/>
+
                             <h:panelGrid columns="3">
                                 <h:selectOneMenu value="#{enterpriseInfo.positionId}" required="true" id="position">
                                     <f:selectItems value="#{positionBackingBean.positionMap}"/>
                                 </h:selectOneMenu>
                                 <h:inputText value="#{positionBackingBean.newPosition}" id="newposition1"/>
-                                <h:commandButton value="#{msgs.newPosition}" >
+                                <h:commandButton value="#{msgs.newPosition}" action="#{positionBackingBean.newPosition}">
+                                    <f:ajax execute="newposition1" render="position"/>
                                 </h:commandButton>
                             </h:panelGrid>
+                            
                             <h:outputLabel value="#{msgs.other}:"/>
                             <h:inputTextarea value="#{enterpriseInfo.entStu.other}" />
                             <h:outputLabel value="#{msgs.require}:" for="requirement" />

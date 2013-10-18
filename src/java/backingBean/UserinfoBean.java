@@ -209,8 +209,8 @@ public class UserinfoBean implements java.io.Serializable {
         return student1;
     }
 
-    public void save(String uno, String nameofunit) {
-        this.userDao1.executUpdate("update student" + StaticFields.currentGradeNum + getCheckLoginUser().getSchoolId() + " set nameofunitId='" + nameofunit + "' where uno='" + uno + "'");
+    public void save(String uno, String nameofunitId) {
+        this.userDao1.executUpdate("update student" + StaticFields.currentGradeNum + getCheckLoginUser().getSchoolId() + " set nameofunitId='" + nameofunitId + "' where uno='" + uno + "'");
 
     }
      public String saveTeacher(String uno,int roleId,String nameofUnitId) {

@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,7 +34,7 @@ public class PositionBackingBean implements java.io.Serializable {
 
     @PostConstruct
     public void init(){
-         pDao = new SQLTool<Position>();
+         pDao = new SQLTool<>();
          newPosition = new PublicFields().getTag();
          position=new Position();
     }
@@ -43,8 +42,7 @@ public class PositionBackingBean implements java.io.Serializable {
         return newPosition;
     }
 
-    public void setNewPosition(String newPosition) {
-        this.newPosition = newPosition.trim();
+    public void setNewPosition() {
         if (this.newPosition.length() > 0 && !this.newPosition.equals(new PublicFields().getTag())) {
             if (pDao.getBeanListHandlerRunner("select * from Position"+StaticFields.currentGradeNum+" where locate('" + this.newPosition + "',name)>0", position).size() <= 0) {
                 Position myposition = new Position();
@@ -52,11 +50,7 @@ public class PositionBackingBean implements java.io.Serializable {
                 myposition.setUserno(this.checkLogin.getUser().getUno());
                 pDao.executUpdate("insert into position" +StaticFields.currentGradeNum+" (name, userno) values('" + myposition.getName() + "', '" + myposition.getUserno() + "')");
                 this.positionMap = null;
-              //  FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已经把" + this.newPosition + "添加到左边列表框，请选择！"));
             }
-//            else {
-//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.newPosition + "已经存在类似的职位了！请从左边选择！"));
-//            }
         } else {
             if (!this.newPosition.equals(new PublicFields().getTag())) {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请输入职位名称,如果您点击的不是\"添加新职位\"，可以忽略本提示。"));

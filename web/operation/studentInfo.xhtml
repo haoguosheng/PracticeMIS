@@ -46,15 +46,14 @@
                             </h:column>
                             <h:column> 
                                 <f:facet name="header">#{msgs.unitNamein}</f:facet>
-                                <h:inputText value="#{ci.nameofunit.name}"/>  
-                            </h:column>
-                            <h:column> 
-                                <f:facet name="header">#{msgs.school}</f:facet>
-                                <h:outputText value="#{ci.nameofunit.parNameofunit.name}"/>  
+                                <h:selectOneMenu value="#{ci.nameofunitid}">
+                                    <f:selectItem itemLabel="#{ci.nameofunit.name}" itemValue="#{ci.nameofunitid}"/>
+                                    <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
+                                </h:selectOneMenu>
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.alter}</f:facet>
-                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.save(ci.uno,ci.nameofunit.name)}"/>
+                                <h:commandButton value="#{msgs.alter}" action="#{userinfoBean.save(ci.uno,ci.nameofunitid)}"/>
                             </h:column> 
                             <h:column>
                                 <f:facet name="header">#{msgs.delete}</f:facet>

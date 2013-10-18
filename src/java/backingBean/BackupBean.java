@@ -79,41 +79,43 @@ public class BackupBean implements Serializable {
     }
 
     public String backupStu() {
-        for (HttpSession s : MySessionListener.getAllSession()) {
-            if (!FacesContext.getCurrentInstance().getExternalContext().getSessionId(true).equals(s.getId())) {
-                s.invalidate();
-            }
-        }
-        FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("系统正在维护中……"));
-        List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
         Statement stat = null;
         try {
-            stat = ConnectionManager.getDataSource().getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("select tablename from sys.systables");
-            List<String> temp = new LinkedList<>();
-            while (rs.next()) {
-                temp.add(rs.getString("tablename"));
-            }
-            if (temp.contains("NameOfUnit" + backupYear)) {
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该年毕业的学生实习信息已经备份！"));
-            } else {
-                stat.executeUpdate("Create Table NameOfUnit" + backupYear + "(Id char(3) not null primary key,Name varchar(50) not null,ParentId char(3) references nameofunit" + backupYear + "(id),Pinyin varchar(20),Pri Integer not null default 0,Userno varchar(20))");
-                stat.executeUpdate("Create table RESOURCEINFO" + backupYear + "(id integer not null primary key,NAME VARCHAR(100),PARENTID INTEGER references RESOURCEINFO" + backupYear + "(id),REFAS VARCHAR(100),COMMENT VARCHAR(500),RECOMMENDROLE VARCHAR(20),MENUORDER INTEGER)");
-                stat.executeUpdate("Create table Roleinfo" + backupYear + "(id integer not null primary key,RESOUCEIDS VARCHAR(1000),NAME VARCHAR(20),PRIVILEGE INTEGER,CANSEEALL INTEGER)");
-                stat.executeUpdate("Create table city" + backupYear + "(id integer not null primary key,NAME VARCHAR(20),PINYIN VARCHAR(50),USERNO VARCHAR(10))");
-                stat.executeUpdate("Create table enterprise" + backupYear + "(id integer not null primary key,NAME VARCHAR(100),ENTERURL VARCHAR(50),CONTACTNAME VARCHAR(20),CONTACTTELEPHONE VARCHAR(20),CONTACTADDRESS VARCHAR(100),USERNO VARCHAR(10),CITYID INTEGER references city" + backupYear + "(id))");
-                stat.executeUpdate("Create table position" + backupYear + "(id integer not null primary key,NAME VARCHAR(500),PINYIN VARCHAR(50),USERNO VARCHAR(10))");
-                stat.executeUpdate("Create table enterstudent" + backupYear + "(Id integer not null primary key,EnterId Integer not null references Enterprise" + backupYear + "(Id),Requierment Varchar(1000),Payment Varchar(500),Other Varchar(1000),StudNum Integer,PositionId Integer references Position" + backupYear + "(Id))");
-                stat.executeUpdate("Create Table TeacherInfo" + backupYear + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofUnit" + backupYear + "(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo" + backupYear + "(id))");
-                stat.executeUpdate("Create table news" + backupYear + "(id integer not null primary key,CONTENT VARCHAR(1000),INPUTDATE DATE,USERNO VARCHAR(10) references teacherinfo" + backupYear + "(uno),NEWSTITLE VARCHAR(50) DEFAULT '最新消息' NOT NULL)");
-                for (int i = 0; i < schoolList.size(); i++) {
-                    stat.executeUpdate("Create Table Student" + backupYear + schoolList.get(i).getId() + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofunit" + backupYear + "(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo" + backupYear + "(id) default 2)");
-                    stat.executeUpdate("Create table CheckRecords" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,stuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),teachNo varchar(10) references TeacherInfo" + backupYear + "(uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
-                    stat.executeUpdate("Create Table PracticeNote" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,StuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise" + backupYear + "(ID),PositionId Integer references Position" + backupYear + "(ID))");
-                    stat.executeUpdate("Create Table StuEntRel" + backupYear + schoolList.get(i).getId() + "(Id Integer not null primary key,StuNo VARCHAR(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),EnterID Integer references Enterprise" + backupYear + "(Id))");
+            String lastTwoNumber = backupYear.trim().substring(2, 4);
+//判断数据是否存在
+            if (userDao.getBeanListHandlerRunner("select * from Student" + StaticFields.currentGradeNum + "026 where locate('" + lastTwoNumber + "',uno)=1", new User()).size() > 0) {
+                this.invalidatorOthers();
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("系统正在维护中……"));
+                List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
+                stat = ConnectionManager.getDataSource().getConnection().createStatement();
+                ResultSet rs = stat.executeQuery("select tablename from sys.systables");
+                List<String> temp = new LinkedList<>();
+                while (rs.next()) {
+                    temp.add(rs.getString("tablename"));
                 }
-                this.copyDatetoNewTables(schoolList);
-                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("学生实习信息备份成功！"));
+                if (temp.contains("NameOfUnit" + backupYear)) {
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("该年毕业的学生实习信息已经备份！"));
+                } else {
+                    stat.executeUpdate("Create Table NameOfUnit" + backupYear + "(Id char(3) not null primary key,Name varchar(50) not null,ParentId char(3) references nameofunit" + backupYear + "(id),Pinyin varchar(20),Pri Integer not null default 0,Userno varchar(20))");
+                    stat.executeUpdate("Create table RESOURCEINFO" + backupYear + "(id integer not null primary key,NAME VARCHAR(100),PARENTID INTEGER references RESOURCEINFO" + backupYear + "(id),REFAS VARCHAR(100),COMMENT VARCHAR(500),RECOMMENDROLE VARCHAR(20),MENUORDER INTEGER)");
+                    stat.executeUpdate("Create table Roleinfo" + backupYear + "(id integer not null primary key,RESOUCEIDS VARCHAR(1000),NAME VARCHAR(20),PRIVILEGE INTEGER,CANSEEALL INTEGER)");
+                    stat.executeUpdate("Create table city" + backupYear + "(id integer not null primary key,NAME VARCHAR(20),PINYIN VARCHAR(50),USERNO VARCHAR(10))");
+                    stat.executeUpdate("Create table enterprise" + backupYear + "(id integer not null primary key,NAME VARCHAR(100),ENTERURL VARCHAR(50),CONTACTNAME VARCHAR(20),CONTACTTELEPHONE VARCHAR(20),CONTACTADDRESS VARCHAR(100),USERNO VARCHAR(10),CITYID INTEGER references city" + backupYear + "(id))");
+                    stat.executeUpdate("Create table position" + backupYear + "(id integer not null primary key,NAME VARCHAR(500),PINYIN VARCHAR(50),USERNO VARCHAR(10))");
+                    stat.executeUpdate("Create table enterstudent" + backupYear + "(Id integer not null primary key,EnterId Integer not null references Enterprise" + backupYear + "(Id),Requierment Varchar(1000),Payment Varchar(500),Other Varchar(1000),StudNum Integer,PositionId Integer references Position" + backupYear + "(Id))");
+                    stat.executeUpdate("Create Table TeacherInfo" + backupYear + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofUnit" + backupYear + "(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo" + backupYear + "(id))");
+                    stat.executeUpdate("Create table news" + backupYear + "(id integer not null primary key,CONTENT VARCHAR(1000),INPUTDATE DATE,USERNO VARCHAR(10) references teacherinfo" + backupYear + "(uno),NEWSTITLE VARCHAR(50) DEFAULT '最新消息' NOT NULL)");
+                    for (int i = 0; i < schoolList.size(); i++) {
+                        stat.executeUpdate("Create Table Student" + backupYear + schoolList.get(i).getId() + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofunit" + backupYear + "(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo" + backupYear + "(id) default 2)");
+                        stat.executeUpdate("Create table CheckRecords" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,stuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),teachNo varchar(10) references TeacherInfo" + backupYear + "(uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
+                        stat.executeUpdate("Create Table PracticeNote" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,StuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise" + backupYear + "(ID),PositionId Integer references Position" + backupYear + "(ID))");
+                        stat.executeUpdate("Create Table StuEntRel" + backupYear + schoolList.get(i).getId() + "(Id Integer not null primary key,StuNo VARCHAR(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),EnterID Integer references Enterprise" + backupYear + "(Id))");
+                    }
+                    this.copyDatetoNewTables(schoolList);
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据备份成功！"));
+                }
+            } else {//数据不存在
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("不存在要备份的数据！"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BackupBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,28 +132,16 @@ public class BackupBean implements Serializable {
     }
 
     private void copyDatetoNewTables(List<Nameofunit> schoolList) {
-        List<Checkrecords> checkList = null;
-        List<Practicenote> practList = null;
-        List<User> stuList = null;
-        List<Stuentrel> stuenList = null;
-        List<User> teachList = null;
-        List<Enterprise> enterList = null;
-        List<Nameofunit> unitList = null;
-        List<Resourceinfo> resList = null;
-        List<Roleinfo> roleList = null;
-        List<City> cityList = null;
-        List<Position> posiList = null;
-        List<Enterstudent> enstuList = null;
-        List<News> newsList = null;
-        unitList = unitDao.getBeanListHandlerRunner("select * from nameofunit", new Nameofunit());
-        resList = resDao.getBeanListHandlerRunner("select * from resourceinfo", new Resourceinfo());
-        roleList = roleDao.getBeanListHandlerRunner("select * from roleinfo", new Roleinfo());
-        cityList = cityDao.getBeanListHandlerRunner("select * from city", new City());
-        enterList = enterDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise());
-        posiList = posiDao.getBeanListHandlerRunner("select * from position", new Position());
-        enstuList = enstuDao.getBeanListHandlerRunner("select * from enterstudent", new Enterstudent());
-        teachList = userDao.getBeanListHandlerRunner("select * from teacherinfo", new User());
-        newsList = newsDao.getBeanListHandlerRunner("select * from news", new News());
+
+        List<Nameofunit> unitList = unitDao.getBeanListHandlerRunner("select * from nameofunit", new Nameofunit());
+        List<Resourceinfo> resList = resDao.getBeanListHandlerRunner("select * from resourceinfo", new Resourceinfo());
+        List<Roleinfo> roleList = roleDao.getBeanListHandlerRunner("select * from roleinfo", new Roleinfo());
+        List<City> cityList = cityDao.getBeanListHandlerRunner("select * from city", new City());
+        List<Enterprise> enterList = enterDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise());
+        List<Position> posiList = posiDao.getBeanListHandlerRunner("select * from position", new Position());
+        List<Enterstudent> enstuList = enstuDao.getBeanListHandlerRunner("select * from enterstudent", new Enterstudent());
+        List<User> teachList = userDao.getBeanListHandlerRunner("select * from teacherinfo", new User());
+        List<News> newsList = newsDao.getBeanListHandlerRunner("select * from news", new News());
         for (Nameofunit n : unitList) {
             unitDao.executUpdate("insert into nameofunit" + backupYear + "(id, name, parentid, pinyin, pri, userno) values('" + n.getId() + "','" + n.getName() + "','" + n.getParentid() + "','" + n.getPinyin() + "'," + n.getPri() + ",'" + n.getUserno() + "')");
         }
@@ -162,10 +152,10 @@ public class BackupBean implements Serializable {
             roleDao.executUpdate("insert into roleinfo" + backupYear + "(id, resouceids, name, privilege, canseeall) values(" + r.getId() + ",'" + r.getResouceids() + "','" + r.getName() + "'," + r.getPrivilege() + "," + r.getCanseeall() + ")");
         }
         for (City c : cityList) {
-            cityDao.executUpdate("insert into city" + backupYear + "(id, name, pinyin, userno) values(" + c.getId() + ",'" + c.getName() + "','" + c.getPinyin() + "','" + c.getPinyin() + "','" + c.getUserno() + "')");
+            cityDao.executUpdate("insert into city" + backupYear + "(id, name, pinyin, userno) values(" + c.getId() + ",'" + c.getName() + "','" + c.getPinyin() + "','" + c.getUserno() + "')");
         }
         for (Enterprise e : enterList) {
-            enterDao.executUpdate("insert into enterprise" + backupYear + "(id, name, enterurl, contactname, contacttelephone, contactaddress, userno, cityid) values(" + e.getId() + ",'" + e.getName() + "','" + e.getEnterurl() + "','" + e.getContactname() + "','" + e.getContactname() + "','" + e.getContacttelephone() + "','" + e.getContactaddress() + "','" + e.getUserno() + "'," + e.getCityId() + ")");
+            enterDao.executUpdate("insert into enterprise" + backupYear + "(id, name, enterurl, contactname, contacttelephone, contactaddress, userno, cityid) values(" + e.getId() + ",'" + e.getName() + "','" + e.getEnterurl() + "','" + e.getContactname() + "','" + e.getContacttelephone() + "','" + e.getContactaddress() + "','" + e.getUserno() + "'," + e.getCityId() + ")");
         }
         for (Position p : posiList) {
             posiDao.executUpdate("insert into position" + backupYear + "(id, name, pinyin, userno) values(" + p.getId() + ",'" + p.getName() + "','" + p.getPinyin() + "','" + p.getUserno() + "')");
@@ -174,29 +164,28 @@ public class BackupBean implements Serializable {
             enstuDao.executUpdate("insert into enterstudent" + backupYear + "(id, enterid, payment, other, studnum, positionid, requirement) values(" + e.getId() + "," + e.getEnterid() + ",'" + e.getPayment() + "','" + e.getOther() + "'," + e.getStudnum() + "," + e.getPositionid() + ",'" + e.getRequirement() + "')");
         }
         for (User t : teachList) {
-            userDao.executUpdate("insert into teachinfo" + backupYear + "(uno, password, name ,email, phone, roleid, nameofunitid) vlaues('" + t.getUno() + "','" + t.getPassword() + "','" + t.getName() + "','" + t.getEmail() + "','" + t.getPhone() + "'," + t.getRoleid() + ",'" + t.getNameofunitid() + "')");
+            userDao.executUpdate("insert into teachinfo" + backupYear + "(uno, password, name ,email, phone, roleid, nameofunitid) values('" + t.getUno() + "','" + t.getPassword() + "','" + t.getName() + "','" + t.getEmail() + "','" + t.getPhone() + "'," + t.getRoleid() + ",'" + t.getNameofunitid() + "')");
         }
         for (News n : newsList) {
             newsDao.executUpdate("insert into news" + backupYear + "(id, content, inputdate, userno, newstitle) values(" + n.getId() + ",'" + n.getContent() + "','" + n.getInputdate() + "','" + n.getUserno() + "','" + n.getNewsTitle() + "')");
         }
         String likeuno = backupYear.substring(2, 4);
-        String sId  = null;
         for (int i = 0; i < schoolList.size(); i++) {
-            sId = schoolList.get(i).getId();
+            String sId = schoolList.get(i).getId();
 
-            stuList = userDao.getBeanListHandlerRunner("select * from student" + sId + " where locate('"+likeuno+"',uno)=1", new User());
+            List<User> stuList = userDao.getBeanListHandlerRunner("select * from student" + sId + " where locate('" + likeuno + "',uno)=1", new User());
             for (User s : stuList) {
-                userDao.executUpdate("insert into student" + backupYear + sId + "(uno, password, name ,email, phone, roleid, nameofunitid) vlaues('" + s.getUno() + "','" + s.getPassword() + "','" + s.getName() + "','" + s.getEmail() + "','" + s.getPhone() + "'," + s.getRoleid() + ",'" + s.getNameofunitid() + "')");
+                userDao.executUpdate("insert into student" + backupYear + sId + "(uno, password, name ,email, phone, roleid, nameofunitid) values('" + s.getUno() + "','" + s.getPassword() + "','" + s.getName() + "','" + s.getEmail() + "','" + s.getPhone() + "'," + s.getRoleid() + ",'" + s.getNameofunitid() + "')");
             }
-            checkList = chkDao.getBeanListHandlerRunner("select * from checkrecords" + sId + " where locate('"+likeuno+"',stuno)=1", new Checkrecords());
+            List<Checkrecords> checkList = chkDao.getBeanListHandlerRunner("select * from checkrecords" + sId + " where locate('" + likeuno + "',stuno)=1", new Checkrecords());
             for (Checkrecords c : checkList) {
                 chkDao.executUpdate("insert into checkrecords" + backupYear + sId + "(checkdate, checkcontent, recommendation, rank, remark, stuno, teachno) values('" + c.getCheckdate() + "','" + c.getCheckcontent() + "','" + c.getRecommendation() + "','" + c.getRank() + "','" + c.getRemark() + "','" + c.getStuno() + "','" + c.getTeachno() + "')");
             }
-            practList = praDao.getBeanListHandlerRunner("select * from practicenote" + sId + " where locate('"+likeuno+"',stuno)=1", new Practicenote());
+            List<Practicenote> practList = praDao.getBeanListHandlerRunner("select * from practicenote" + sId + " where locate('" + likeuno + "',stuno)=1", new Practicenote());
             for (Practicenote p : practList) {
                 praDao.executUpdate("insert into practicenote" + backupYear + sId + "(detail, submitdate, enterid, positionid, stuno) values('" + p.getDetail() + "','" + p.getSubmitdate() + "'," + p.getEnterid() + "," + p.getPositionid() + ",'" + p.getStuno() + "')");
             }
-            stuenList = stuRelDao.getBeanListHandlerRunner("select * from stuentrel" + sId + " where locate('"+likeuno+"',stuno)=1", new Stuentrel());
+            List<Stuentrel> stuenList = stuRelDao.getBeanListHandlerRunner("select * from stuentrel" + sId + " where locate('" + likeuno + "',stuno)=1", new Stuentrel());
             for (Stuentrel s : stuenList) {
                 stuRelDao.executUpdate("insert into stuentrel" + backupYear + sId + "(stuno, enterid) values('" + s.getStuno() + "'," + s.getEnterid());
             }
@@ -206,23 +195,35 @@ public class BackupBean implements Serializable {
     public String recoverStu() {
         if ("current".equals(recoverYear)) {
             StaticFields.currentGradeNum = "";
+            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("已恢复到当前数据。"));
+            return "/login/login";
         } else {
-            StaticFields.currentGradeNum = recoverYear;
-            for (HttpSession s : MySessionListener.getAllSession()) {
-                if (!FacesContext.getCurrentInstance().getExternalContext().getSessionId(true).equals(s.getId())) {
-                    s.invalidate();
-                }
+            //验证数据是否存在
+            if (userDao.getBeanListHandlerRunner("select * from Student" + StaticFields.currentGradeNum + "026 where locate('" + recoverYear.trim().substring(2) + "',uno)=1", new User()).size() > 0) {
+                invalidatorOthers();
+                StaticFields.currentGradeNum = recoverYear;
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("完成恢复.当前数据是" + StaticFields.currentGradeNum + "年的数据！您必须知道正确的登录用户名和密码！"));
+                return "/login/login";
+            } else {
+                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(recoverYear + "年的数据不存在！无法恢复！"));
+                return null;
             }
-            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("系统正在维护中……"));
         }
-        return null;
+    }
+
+    private void invalidatorOthers() {
+        for (HttpSession s : MySessionListener.getAllSession()) {
+            if (!FacesContext.getCurrentInstance().getExternalContext().getSessionId(true).equals(s.getId())) {
+                s.invalidate();
+            }
+        }
     }
 
     public LinkedHashMap<String, String> getYearMap() {
         if (null == yearMap) {
-            yearMap = new LinkedHashMap<String, String>();
+            yearMap = new LinkedHashMap<>();
             Calendar c = Calendar.getInstance();
-            for (int i = 2010; i <= c.get(Calendar.YEAR); i++) {
+            for (int i = 2009; i <= c.get(Calendar.YEAR) - 4; i++) {
                 yearMap.put(i + "", i + "");
             }
         }
