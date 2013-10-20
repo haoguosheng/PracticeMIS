@@ -25,9 +25,9 @@ public class Enterstudent implements Serializable {
     private int enterid;
     private Enterprise enterprise;
     private Position position;
-    private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
-    private SQLTool<Enterstudent> entStuDao = new SQLTool<Enterstudent>();
-    private SQLTool<Position> pDao = new SQLTool<Position>();
+    private final SQLTool<Enterprise> epDao = new SQLTool<>();
+    private final SQLTool<Enterstudent> entStuDao = new SQLTool<>();
+    private final SQLTool<Position> pDao = new SQLTool<>();
     private List<Enterstudent> entStuList;
 
     public Enterstudent() {

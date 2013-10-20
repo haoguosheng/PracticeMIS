@@ -28,8 +28,6 @@ public class EnterpriseInfo implements java.io.Serializable {
     private CheckLogin checkLogin;
     private SQLTool<Enterprise> epDao;
     private SQLTool<City> cDao;
-    private SQLTool<Enterstudent> esDao;
-    private Enterstudent entStu;
     Integer id = 0;
     private List<Enterprise> enterpriseList;
     private Enterprise enterprise;
@@ -44,27 +42,19 @@ public class EnterpriseInfo implements java.io.Serializable {
     private int searchType;
     private final int cityEnter = 1, enterAll = 2, searchEnter = 3;
     private boolean added = false;
+    private String enterurl, contactname, contacttelephone, contactaddress;
 
     @PostConstruct
     public void init() {
         epDao = new SQLTool<>();
         cDao = new SQLTool<>();
-        esDao = new SQLTool<>();
         enterprise = new Enterprise();
         enterMap = new LinkedHashMap<>();
-        entStu = new Enterstudent();
     }
 
-    public String direct2Need() {
+    public String direct2Need(int enterid) {
+        this.enterpriseid = enterid;
         return "enterpriseNeedInfo";
-    }
-
-    public synchronized String addEnterpriseNeed() {
-        this.entStu.setPositionid(this.positionId);
-        this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
-                esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
-                + this.enterpriseid + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
-        return null;
     }
 
     public synchronized String addEnterprise() {
@@ -72,16 +62,14 @@ public class EnterpriseInfo implements java.io.Serializable {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(this.enterName + ",该公司已经存在，不能再添加了"));
         } else {
             User temUser = this.getCheckLogin().getUser();
-            this.enterprise.setUserno(temUser.getUno());
             epDao.executUpdate("insert into enterprise" + StaticFields.currentGradeNum + " (name, cityid, enterurl, contactname, contacttelephone, contactaddress, userno) values('"
-                    + enterName + "', " + this.cityId + ", '" + this.enterprise.getEnterurl() + "', '" + this.enterprise.getContactname() + "', '"
-                    + this.enterprise.getContacttelephone() + "', '" + this.enterprise.getContactaddress() + "', '" + this.enterprise.getUserno() + "')");
+                    + enterName + "', " + this.cityId + ", '" + this.enterurl + "', '" + this.contactname + "', '"
+                    + this.contacttelephone + "', '" + this.contactaddress + "', '" + temUser.getUno() + "')");
             // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
-            this.enterprise = new Enterprise();
+            this.added = true;
+            //获取id，以便添加需求信息
+            this.enterpriseid = Integer.valueOf(epDao.getIdListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'").get(0));
         }
-        this.added = true;
-        //获取id，以便添加需求信息
-        this.enterpriseid = Integer.valueOf(epDao.getIdListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'").get(0));
         return null;
     }
 
@@ -131,11 +119,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.setEnterpriseList(null);
     }
 
-    public String deleteNeed(int id) {
-        this.esDao.executUpdate("delete from enterstudent" + StaticFields.currentGradeNum + "  where id=" + id);
-        this.enterprise.setEnterstudentList(null);
-        return null;
-    }
+
 
     public void deleteRow(Enterprise en) throws Exception {
         this.epDao.executUpdate("delete from enterprise" + StaticFields.currentGradeNum + "  where id=" + en.getId());
@@ -144,11 +128,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         paginator = null;
     }
 
-    public void saveNeed(int id, String payment, String requirment, int num, String other, int positionId) {
-        this.esDao.executUpdate("update enterstudent" + StaticFields.currentGradeNum + "  set payment='" + payment + "', Requirement='" + requirment
-                + "',Other='" + other + "',Studnum=" + num + ", positionid=" + positionId
-                + " where id=" + id);
-    }
 
     public List<EnterpriseCity> getEntCityList() {
         if (this.cityId == 0 && (null == this.searchName || this.searchName.trim().equals(""))) {
@@ -186,7 +165,7 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public String searchAll() {
         searchName = "请输入要选择的单位";
-        this.searchType = this.enterAll;
+        this.searchType = enterAll;
         return null;
     }
 
@@ -203,14 +182,6 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public void setPaginator(RepeatPaginator paginator) {
         this.paginator = paginator;
-    }
-
-    public Enterstudent getEntStu() {
-        return entStu;
-    }
-
-    public void setEntStu(Enterstudent entStu) {
-        this.entStu = entStu;
     }
 
     public int getPositionId() {
@@ -245,10 +216,10 @@ public class EnterpriseInfo implements java.io.Serializable {
     public Enterprise getEnterprise() {
         if (this.enterpriseid != 0) {
             this.enterprise = epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
-            return enterprise;
         } else {
-            return null;
+            this.enterprise = new Enterprise();
         }
+        return enterprise;
     }
 
     /**
@@ -281,5 +252,61 @@ public class EnterpriseInfo implements java.io.Serializable {
      */
     public boolean isAdded() {
         return added;
+    }
+
+    /**
+     * @return the enterurl
+     */
+    public String getEnterurl() {
+        return enterurl;
+    }
+
+    /**
+     * @param enterurl the enterurl to set
+     */
+    public void setEnterurl(String enterurl) {
+        this.enterurl = enterurl;
+    }
+
+    /**
+     * @return the contactname
+     */
+    public String getContactname() {
+        return contactname;
+    }
+
+    /**
+     * @param contactname the contactname to set
+     */
+    public void setContactname(String contactname) {
+        this.contactname = contactname;
+    }
+
+    /**
+     * @return the contacttelephone
+     */
+    public String getContacttelephone() {
+        return contacttelephone;
+    }
+
+    /**
+     * @param contacttelephone the contacttelephone to set
+     */
+    public void setContacttelephone(String contacttelephone) {
+        this.contacttelephone = contacttelephone;
+    }
+
+    /**
+     * @return the contactaddress
+     */
+    public String getContactaddress() {
+        return contactaddress;
+    }
+
+    /**
+     * @param contactaddress the contactaddress to set
+     */
+    public void setContactaddress(String contactaddress) {
+        this.contactaddress = contactaddress;
     }
 }

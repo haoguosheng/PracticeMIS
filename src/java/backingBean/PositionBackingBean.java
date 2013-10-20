@@ -42,8 +42,12 @@ public class PositionBackingBean implements java.io.Serializable {
         return newPosition;
     }
 
-    public void setNewPosition() {
-        if (this.newPosition.length() > 0 && !this.newPosition.equals(new PublicFields().getTag())) {
+    public void setNewPosition(String newPosition) {
+        this.newPosition=newPosition;
+       
+    }
+    public String  saveNewPosition(){
+         if (this.newPosition.length() > 0 && !this.newPosition.equals(new PublicFields().getTag())) {
             if (pDao.getBeanListHandlerRunner("select * from Position"+StaticFields.currentGradeNum+" where locate('" + this.newPosition + "',name)>0", position).size() <= 0) {
                 Position myposition = new Position();
                 myposition.setName(newPosition);
@@ -56,6 +60,7 @@ public class PositionBackingBean implements java.io.Serializable {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请输入职位名称,如果您点击的不是\"添加新职位\"，可以忽略本提示。"));
             }
         }
+        return null;
     }
 
     public LinkedHashMap<String, Integer> getPositionMap() {

@@ -55,9 +55,9 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.add}#{msgs.entNeed}</f:facet>
-                                <h:commandButton action="#{enterpriseInfo.direct2Need}" value="#{msgs.add}#{msgs.entNeed}"   rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
+                                <h:commandButton action="#{enterpriseInfo.direct2Need(ep.ent.id)}" value="#{msgs.add}#{msgs.entNeed}"   rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
                             </h:column>
-                           
+
                         </h:dataTable>
 
                         <h:commandButton value="&lt; 上一页" action="#{enterpriseInfo.paginator.prev}"/>

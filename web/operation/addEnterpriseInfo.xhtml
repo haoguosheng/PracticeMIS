@@ -20,7 +20,7 @@
                                 <h:outputLabel value="#{msgs.enterName}:" for="name" />
                                 <h:inputText id="name" value="#{enterpriseInfo.enterName}" required="true"/>
                                 <h:outputLabel value="#{msgs.myurl}:" for="enterurl"/>
-                                <h:inputText id="enterurl" value="#{enterpriseInfo.enterprise.enterurl}" required="true"/>
+                                <h:inputText id="enterurl" value="#{enterpriseInfo.enterurl}" required="true"/>
                                 <h:outputLabel value="#{msgs.city}:" for="city" />
                                 <h:panelGrid columns="4">
                                     <h:selectOneMenu id="city"  value="#{enterpriseInfo.cityId}" required="true">
@@ -32,13 +32,13 @@
                                     </h:commandButton>
                                 </h:panelGrid>
                                 <h:outputLabel value="#{msgs.contactName}:"/>
-                                <h:inputText id="contactName" value="#{enterpriseInfo.enterprise.contactname}" required="true"/>
+                                <h:inputText id="contactName" value="#{enterpriseInfo.contactname}" required="true"/>
                                 <h:outputLabel value="#{msgs.contactTelephone}:" id="telephone"/>
-                                <h:inputText id="contactTelephone" value="#{enterpriseInfo.enterprise.contacttelephone}">
+                                <h:inputText id="contactTelephone" value="#{enterpriseInfo.contacttelephone}">
                                     <f:validateRegex for="telephone" pattern="((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)" />
                                 </h:inputText>
                                 <h:outputLabel value="#{msgs.contactAddrss}:"/>
-                                <h:inputText id="contactAddress" value="#{enterpriseInfo.enterprise.contactaddress}" required="true"/>
+                                <h:inputText id="contactAddress" value="#{enterpriseInfo.contactaddress}" required="true"/>
                             </h:panelGrid>
                             <h:commandButton action="#{enterpriseInfo.addEnterprise}" value="#{msgs.add}"/>
                             <h:commandLink action="#{enterpriseInfo.direct2Need}" value="#{msgs.add}#{msgs.entNeed}" rendered="#{enterpriseInfo.added}"/>
