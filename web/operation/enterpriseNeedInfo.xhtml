@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <f:loadBundle  basename="messages" var="msgs"/>
     <h:head>
 
@@ -37,7 +38,8 @@
                             <h:inputText value="#{enterpriseStuBean.studnum}" required="true" >
                                 <f:validateLongRange minimum="0" maximum="100"/>
                             </h:inputText>
-                            <h:commandButton action="#{enterpriseStuBean.addEnterpriseNeed()}" value="#{msgs.add}"/>
+                            <c:set value="#{enterpriseInfo.enterprise.id}" var="enterId"/>
+                            <h:commandButton action="#{enterpriseStuBean.addEnterpriseNeed(enterId)}" value="#{msgs.add}"/>
                         </h:panelGrid>
                         <h:dataTable value="#{enterpriseStuBean.enterStudList}" var="epStu"
                                  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 

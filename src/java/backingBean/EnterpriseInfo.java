@@ -52,8 +52,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         enterMap = new LinkedHashMap<>();
     }
 
-    public String direct2Need(int enterid) {
-        this.enterpriseid = enterid;
+    public String direct2Need() {
         return "enterpriseNeedInfo";
     }
 

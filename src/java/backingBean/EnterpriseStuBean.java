@@ -9,7 +9,6 @@ import entities.Enterstudent;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import tools.SQLTool;
 import tools.StaticFields;
@@ -22,8 +21,6 @@ import tools.StaticFields;
 @SessionScoped
 public class EnterpriseStuBean implements java.io.Serializable {
 
-    @Inject
-    private EnterpriseInfo enterprise;
     private Enterstudent entStu;
     private SQLTool<Enterstudent> esDao;
     private Integer id;
@@ -38,12 +35,12 @@ public class EnterpriseStuBean implements java.io.Serializable {
     @PostConstruct
     public void init() {
         esDao = new SQLTool<>();
-        this.enterid = enterprise.getEnterpriseid();
     }
 
-    public synchronized String addEnterpriseNeed() {
+    public synchronized String addEnterpriseNeed(int enterid) {
+        this.enterid=enterid;
         esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
-                + this.enterid + ", '" + this.requirement + "', '" + this.payment + "', '" + this.other + "', " + this.studnum + ", " + this.positionid + ")");
+                + enterid + ", '" + this.requirement + "', '" + this.payment + "', '" + this.other + "', " + this.studnum + ", " + this.positionid + ")");
         return null;
     }
 
