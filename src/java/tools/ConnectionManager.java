@@ -33,11 +33,7 @@ public class ConnectionManager {
                 dataSource = (DataSource) ctx.lookup("jdbc/EnterpriseInfo");//这里要注意JNDI名称的大小写问题
                 conn = dataSource.getConnection();
             } catch (NameNotFoundException nfe) {
-                nfe.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (NamingException e) {
-                e.printStackTrace();
+            } catch (SQLException | NamingException e) {
             }
         }
         return conn;

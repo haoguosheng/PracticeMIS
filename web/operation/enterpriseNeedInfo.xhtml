@@ -14,30 +14,9 @@
                 <div class="select">
                     <h:form prependId="false">
                         <h:messages  style="color: red" id="latestMessage"/>
-                        <!--<h:messages id="myMessage"  style="color: red"  class="mymessages"/>-->
-                        <h1><h:outputLabel value="#{msgs.entNeed}"/></h1>
-                        <h:panelGrid columns="2">
-                            <h:outputText value="#{msgs.selectCity}"/>
-                            <h:selectOneMenu value="#{enterpriseInfo.cityId}">
-                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
-                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                                <f:ajax render="enterprise" event="change"/>
-                            </h:selectOneMenu>
-                            <h:outputLabel value="#{msgs.selectEnt}"/>
-                            <h:selectOneMenu  value="#{enterpriseInfo.enterpriseid}" id="enterprise" required="true">
-                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
-                                <f:selectItems value="#{enterpriseInfo.enterMap}"/>
-                                <f:ajax render="enterDetail add" event="change"/>
-                            </h:selectOneMenu>
-                        </h:panelGrid> 
-
-                        <h:commandButton value="#{msgs.add}" action="#{enterpriseInfo.checkBool()}" onclick="return check('enterprise', '请输入城市和企业')">
-                            <f:ajax render="addDetail"/>
-                        </h:commandButton>
-                        <h:panelGrid   rendered="#{enterpriseInfo.bool}" id="addDetail" >
-                            <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}" id="add"/>
+                         <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}"/>
+                        <h:panelGrid  columns="2">
                             <h:outputLabel value="#{msgs.position}:"/>
-
                             <h:panelGrid columns="3">
                                 <h:selectOneMenu value="#{enterpriseInfo.positionId}" required="true" id="position">
                                     <f:selectItems value="#{positionBackingBean.positionMap}"/>
@@ -58,7 +37,7 @@
                             <h:inputText id="stunum" value="#{enterpriseInfo.entStu.studnum}" required="true" >
                                 <f:validateLongRange minimum="0" maximum="100"/>
                             </h:inputText>
-                            <h:commandButton action="#{enterpriseInfo.addEnterpriseNeed(enterpriseInfo.enterprise.name)}" value="#{msgs.add}">
+                            <h:commandButton action="#{enterpriseInfo.addEnterpriseNeed}" value="#{msgs.add}">
                             </h:commandButton>
                         </h:panelGrid>
                         <h:dataTable value="#{enterpriseInfo.enterprise.enterstudentList}" var="ep"

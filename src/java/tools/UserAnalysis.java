@@ -15,12 +15,12 @@ import java.util.List;
  */
 public class UserAnalysis implements java.io.Serializable{
 
-    private static SQLTool<User> userDao = new SQLTool<User>();
-    private static User csUser = new User();
-    private static SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
-    private static Nameofunit csNameofUnit = new Nameofunit();
-    private static SQLTool<Roleinfo> roleDao = new SQLTool<Roleinfo>();
-    private static Roleinfo csRoleinfo = new Roleinfo();
+    private static final SQLTool<User> userDao = new SQLTool<>();
+    private static final User csUser = new User();
+    private static final SQLTool<Nameofunit> nameDao = new SQLTool<>();
+    private static final Nameofunit csNameofUnit = new Nameofunit();
+    private static final SQLTool<Roleinfo> roleDao = new SQLTool<>();
+    private static final Roleinfo csRoleinfo = new Roleinfo();
 
     public static String getSchoolId(String uno) {
         String schoolId;

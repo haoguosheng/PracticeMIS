@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -29,10 +30,11 @@ public class Enterprise implements Serializable {
     private List<Enterstudent> enterstudentList;
     private List<Practicenote> practicenoteList;
     private List<Stuentrel> stuentrelList;
-    private SQLTool<City> cityDao = new SQLTool<City>();
-    private SQLTool<Enterstudent> esDao = new SQLTool<Enterstudent>();
-    private SQLTool<Practicenote> practDao = new SQLTool<Practicenote>();
-    private SQLTool<Stuentrel> selDao = new SQLTool<Stuentrel>();
+    private final SQLTool<City> cityDao = new SQLTool<>();
+    private final SQLTool<Enterstudent> esDao = new SQLTool<>();
+    private final SQLTool<Practicenote> practDao = new SQLTool<>();
+    private final SQLTool<Stuentrel> selDao = new SQLTool<>();
+    private final SQLTool<User> userDao = new SQLTool<>();
     private User myUser;
 
     public Enterprise() {
@@ -154,8 +156,8 @@ public class Enterprise implements Serializable {
      * @return the city
      */
     public City getCity() {
-        if (city == null&&cityId!=0) {
-            city = cityDao.getBeanListHandlerRunner("select * from city"+new StaticFields().currentGradeNum+" where id=" + cityId, new City()).get(0);
+        if (city == null && cityId != 0) {
+            city = cityDao.getBeanListHandlerRunner("select * from city" + new StaticFields().currentGradeNum + " where id=" + cityId, new City()).get(0);
         }
         return city;
     }
@@ -172,7 +174,7 @@ public class Enterprise implements Serializable {
      */
     public List<Enterstudent> getEnterstudentList() {
         if (enterstudentList == null) {
-            enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent"+StaticFields.currentGradeNum+" where enterid=" + id, new Enterstudent());
+            enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where enterid=" + id, new Enterstudent());
         }
         return enterstudentList;
     }
@@ -189,7 +191,7 @@ public class Enterprise implements Serializable {
      */
     public List<Practicenote> getPracticenoteList() {
         if (practicenoteList == null) {
-            practicenoteList = practDao.getBeanListHandlerRunner("select * from practicenote" +StaticFields.currentGradeNum+ schoolId + " where enterid=" + id, new Practicenote());
+            practicenoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + schoolId + " where enterid=" + id, new Practicenote());
         }
         return practicenoteList;
     }
@@ -206,7 +208,7 @@ public class Enterprise implements Serializable {
      */
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
-            stuentrelList = selDao.getBeanListHandlerRunner("select * from stuentrel" +StaticFields.currentGradeNum+ schoolId + " where enterid=" + id, new Stuentrel());
+            stuentrelList = selDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + schoolId + " where enterid=" + id, new Stuentrel());
             for (Stuentrel s : stuentrelList) {
                 s.setSchoolId(schoolId);
             }
@@ -239,6 +241,15 @@ public class Enterprise implements Serializable {
      * @return the myUser
      */
     public User getMyUser() {
+        while (null == myUser) {
+            String temTeaOrStu = UserAnalysis.getTableName(this.getUserno());
+            if (temTeaOrStu.contains("studen")) {
+                 String temSchoolId=UserAnalysis.getSchoolId(this.getUserno());
+               this.myUser= userDao.getBeanListHandlerRunner("select * from "+ temTeaOrStu + StaticFields.currentGradeNum +temSchoolId+ " where  uno='" + this.getUserno() + "'", new User()).get(0);
+            } else if (temTeaOrStu.contains("tea")) {
+                 this.myUser= userDao.getBeanListHandlerRunner("select * from "+ temTeaOrStu + StaticFields.currentGradeNum+ " where  uno='" + this.getUserno() + "'", new User()).get(0);
+            }
+        }
         return myUser;
     }
 

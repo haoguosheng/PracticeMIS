@@ -31,7 +31,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     private SQLTool<Enterstudent> esDao;
     private Enterstudent entStu;
     Integer id = 0;
-    private List<Enterprise> ep;
+    private List<Enterprise> enterpriseList;
     private Enterprise enterprise;
     private int cityId, positionId;
     private int enterpriseid;
@@ -40,9 +40,10 @@ public class EnterpriseInfo implements java.io.Serializable {
     private String enterName;
     private List<EnterpriseCity> entCityList;
     private String searchName;
-    private static boolean isNull;
     private RepeatPaginator paginator;
-    private boolean bool;
+    private int searchType;
+    private final int cityEnter = 1, enterAll = 2, searchEnter = 3;
+    private boolean added = false;
 
     @PostConstruct
     public void init() {
@@ -51,24 +52,18 @@ public class EnterpriseInfo implements java.io.Serializable {
         esDao = new SQLTool<>();
         enterprise = new Enterprise();
         enterMap = new LinkedHashMap<>();
-        isNull = true;
         entStu = new Enterstudent();
     }
 
-    public synchronized String addEnterpriseNeed(String enterName) {
-        User temUser = this.getCheckLogin().getUser();
-        this.enterprise.setUserno(temUser.getUno());
+    public String direct2Need() {
+        return "enterpriseNeedInfo";
+    }
+
+    public synchronized String addEnterpriseNeed() {
         this.entStu.setPositionid(this.positionId);
         this.entStu.setEnterid(Integer.parseInt(epDao.getIdListHandlerRunner("select max(id) from enterprise" + StaticFields.currentGradeNum).get(0)));
-        int enterId = epDao.getBeanListHandlerRunner("select * from enterprise where name='" + enterName + "'", enterprise).get(0).getId();
-        esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
-                + enterId + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
-        //FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(enterName+ "添加成功，您可以继续添加"));
-        this.enterprise = new Enterprise();
-        this.ep = null;
-        this.entCityList = null;
-        paginator = null;
-        this.bool = false;
+                esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
+                + this.enterpriseid + ", '" + this.entStu.getRequirement() + "', '" + this.entStu.getPayment() + "', '" + this.entStu.getOther() + "', " + this.entStu.getStudnum() + ", " + this.entStu.getPositionid() + ")");
         return null;
     }
 
@@ -84,20 +79,18 @@ public class EnterpriseInfo implements java.io.Serializable {
             // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.enterprise = new Enterprise();
         }
-        this.ep = null;
-        this.entCityList = null;
-        paginator = null;
-        this.bool = false;
+        this.added = true;
+        //获取id，以便添加需求信息
+        this.enterpriseid = Integer.valueOf(epDao.getIdListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'").get(0));
         return null;
     }
 
-    public void setEnterpriseid(int enterpriseid) {
-        this.enterpriseid = enterpriseid;
-        if (enterpriseid != 0) {
-            this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
-        }
-    }
-
+//    public void setEnterpriseid(int enterpriseid) {
+//        this.enterpriseid = enterpriseid;
+//        if (enterpriseid != 0) {
+//            this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
+//        }
+//    }
     public LinkedHashMap<String, Integer> getEnterMap() {
         this.enterMap.clear();
         if (cityId != 0) {
@@ -112,14 +105,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         return this.enterMap;
     }
 
-    public List<Enterprise> getEp() {
-        if (isNull) {
-            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise());
-        } else if (!isNull) {
-            this.ep = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where locate('" + this.searchName + "',name)>0", enterprise);
-        }
-        return this.ep;
-    }
     private String[] color = {"A", "B", "C", "D", "E", "F"};
     Random rand = new Random();
 
@@ -138,13 +123,12 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public int getCityId() {
-
         return cityId;
     }
 
     public void savaEnter(int id, String enName, int cid) {
         this.epDao.executUpdate("update enterprise" + StaticFields.currentGradeNum + "  set name='" + enName + "', cityid=" + cid + " where id=" + id);
-        this.ep = null;
+        this.setEnterpriseList(null);
     }
 
     public String deleteNeed(int id) {
@@ -155,7 +139,7 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public void deleteRow(Enterprise en) throws Exception {
         this.epDao.executUpdate("delete from enterprise" + StaticFields.currentGradeNum + "  where id=" + en.getId());
-        this.ep = null;
+        this.setEnterpriseList(null);
         this.entCityList = null;
         paginator = null;
     }
@@ -167,10 +151,11 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public List<EnterpriseCity> getEntCityList() {
-
-        if (null == entCityList || entCityList.isEmpty()) {
+        if (this.cityId == 0 && (null == this.searchName || this.searchName.trim().equals(""))) {
+            return new LinkedList();
+        } else {
             entCityList = new LinkedList();
-            Iterator<Enterprise> it = this.getEp().iterator();
+            Iterator<Enterprise> it = this.getEnterpriseList().iterator();
             while (it.hasNext()) {
                 Enterprise tem = it.next();
                 EnterpriseCity temec = new EnterpriseCity();
@@ -178,8 +163,8 @@ public class EnterpriseInfo implements java.io.Serializable {
                 temec.setCityId(tem.getCityId());
                 entCityList.add(temec);
             }
+            return entCityList;
         }
-        return entCityList;
     }
 
     public void setEntCityList(List<EnterpriseCity> entCityList) {
@@ -192,42 +177,32 @@ public class EnterpriseInfo implements java.io.Serializable {
 
     public void setSearchName(String searchName) {
         this.searchName = searchName;
-        this.entCityList = null;
     }
 
     public String search() {
-        paginator = null;
-        isNull = false;
-        this.entCityList = null;
-        this.ep = null;
+        this.searchType = this.searchEnter;
         return null;
     }
 
     public String searchAll() {
-        isNull = true;
         searchName = "请输入要选择的单位";
-        this.entCityList = null;
-        paginator = null;
-        this.ep = null;
+        this.searchType = this.enterAll;
         return null;
     }
 
     public RepeatPaginator getPaginator() {
-        if (paginator == null) {
-            paginator = new RepeatPaginator(this.getEntCityList(), 10);
-            paginator.init();
-        }
-        this.entCityList = null;
-        this.ep = null;
+        List<EnterpriseCity> tem = this.getEntCityList();
+        paginator = new RepeatPaginator(tem, 10);
+        paginator.init();
         return paginator;
+    }
+
+    public String toAddEnterprise() {
+        return "addEnterpriseInfo";
     }
 
     public void setPaginator(RepeatPaginator paginator) {
         this.paginator = paginator;
-    }
-
-    public boolean isBool() {
-        return bool;
     }
 
     public Enterstudent getEntStu() {
@@ -246,15 +221,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.positionId = positionId;
     }
 
-    public void setBool(boolean bool) {
-        this.bool = bool;
-    }
-
-    public String checkBool() {
-        this.bool = true;
-        return null;
-    }
-
     public CheckLogin getCheckLogin() {
         return checkLogin;
     }
@@ -268,6 +234,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public void setCityId(int cityId) {
+        this.searchType = this.cityEnter;
         this.cityId = cityId;
     }
 
@@ -276,6 +243,43 @@ public class EnterpriseInfo implements java.io.Serializable {
     }
 
     public Enterprise getEnterprise() {
-        return enterprise;
+        if (this.enterpriseid != 0) {
+            this.enterprise = epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
+            return enterprise;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return the enterpriseList
+     */
+    public List<Enterprise> getEnterpriseList() {
+        switch (searchType) {
+            case enterAll:
+                this.setEnterpriseList(epDao.getBeanListHandlerRunner("select * from enterprise", new Enterprise()));
+                break;
+            case cityEnter:
+                this.setEnterpriseList(epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where cityId=" + this.cityId, enterprise));
+                break;
+            case searchEnter:
+                this.setEnterpriseList(epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where locate('" + this.searchName + "',name)>0", enterprise));
+                break;
+        }
+        return enterpriseList;
+    }
+
+    /**
+     * @param enterpriseList the enterpriseList to set
+     */
+    public void setEnterpriseList(List<Enterprise> enterpriseList) {
+        this.enterpriseList = enterpriseList;
+    }
+
+    /**
+     * @return the added
+     */
+    public boolean isAdded() {
+        return added;
     }
 }
