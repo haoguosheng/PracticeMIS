@@ -26,9 +26,10 @@ import javax.inject.Named;
 @Named
 @ApplicationScoped
 public class PublicFields implements java.io.Serializable {
-   private final String tag = "在这里添加";
+
+    private final String tag = "在这里添加";
     private final Calendar c = Calendar.getInstance();
-    private final int year = c.get(Calendar.YEAR),currentMonth =c.get(Calendar.MONTH);
+    private final int year = c.get(Calendar.YEAR), currentMonth = c.get(Calendar.MONTH);
     private int month = c.get(Calendar.MONTH);
     private LinkedHashMap<Integer, Integer> yearMap;
     private LinkedHashMap<Integer, Integer> monthMap;
@@ -40,9 +41,11 @@ public class PublicFields implements java.io.Serializable {
     private static final SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static final SQLTool<Roleinfo> roleDao = new SQLTool<>();
-    private static  LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
+    private static LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
+    private static LinkedHashMap<String, List<News>> recentWNewsMap = new LinkedHashMap<>();
+    private static LinkedHashMap<String, List<News>> recentLNewsMap = new LinkedHashMap<>();
+    private static LinkedHashMap<String, List<News>> recentGNewsMap = new LinkedHashMap<>();
     private LinkedHashMap<String, Integer> roleMap = null;
-   
 
     public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
         List<News> recentNews = getNewsList();
@@ -57,6 +60,63 @@ public class PublicFields implements java.io.Serializable {
             recentNewsMap.get(user.getNameofunitid()).add(tem);
         }
         return recentNewsMap;
+    }
+
+    public static LinkedHashMap<String, List<News>> getRecentWNewsMap() {
+        List<News> recentNews = getNewsList();
+        List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
+        //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
+        for (int i = 0; i < schoolList.size(); i++) {
+            if (schoolList.get(i).getMytype() == 0) {
+                recentWNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
+            }
+        }
+        for (int i = 0; i < recentNews.size(); i++) {
+            News tem = recentNews.get(i);
+            User user = tem.getTeacher();
+            if (user.getNameofunit().getMytype() == 0) {
+                recentWNewsMap.get(user.getNameofunitid()).add(tem);
+            }
+        }
+        return recentWNewsMap;
+    }
+
+    public static LinkedHashMap<String, List<News>> getRecentLNewsMap() {
+        List<News> recentNews = getNewsList();
+        List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
+        //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
+        for (int i = 0; i < schoolList.size(); i++) {
+            if (schoolList.get(i).getMytype() == 1) {
+                recentLNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
+            }
+        }
+        for (int i = 0; i < recentNews.size(); i++) {
+            News tem = recentNews.get(i);
+            User user = tem.getTeacher();
+            if (user.getNameofunit().getMytype() == 1) {
+                recentLNewsMap.get(user.getNameofunitid()).add(tem);
+            }
+        }
+        return recentLNewsMap;
+    }
+
+    public static LinkedHashMap<String, List<News>> getRecentGNewsMap() {
+        List<News> recentNews = getNewsList();
+        List<Nameofunit> schoolList = PublicFields.getSchoolUnitList();
+        //unitNewsList存放每个学院的news，首先初始化，然后对所有news遍历，分别把相应的news放入其中
+        for (int i = 0; i < schoolList.size(); i++) {
+            if (schoolList.get(i).getMytype() == 2) {
+                recentGNewsMap.put(schoolList.get(i).getId(), new LinkedList<News>());
+            }
+        }
+        for (int i = 0; i < recentNews.size(); i++) {
+            News tem = recentNews.get(i);
+            User user = tem.getTeacher();
+            if (user.getNameofunit().getMytype() == 2) {
+                recentGNewsMap.get(user.getNameofunitid()).add(tem);
+            }
+        }
+        return recentGNewsMap;
     }
 
     private static void calcuListResList() {

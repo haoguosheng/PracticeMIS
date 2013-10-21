@@ -12,6 +12,7 @@ import entities.User;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,8 @@ public class SchoolBean implements Serializable {
     private String schoolId;
     private String schoolName;
     private String pinyin;
+    private String mytype;
+    private LinkedHashMap<String, Integer> mytypeMap;
 
     @PostConstruct
     public void init() {
@@ -129,12 +132,12 @@ public class SchoolBean implements Serializable {
                 try {
                     stat = ConnectionManager.getDataSource().getConnection().createStatement();
                 } catch (Exception e) {
-                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据库连接出错！"));
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据库连接出错！"));
                 }
                 try {
                     stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo(id) default 2)");
                 } catch (Exception e) {
-                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
+                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
                     stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
@@ -152,9 +155,11 @@ public class SchoolBean implements Serializable {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
-                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + getLoginUser().getUno() + "')");
+                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin,mytype, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + getMytype() + "','" + getLoginUser().getUno() + "')");
                     nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' order by id", nameofunit);
-                    schoolId="";schoolName="";pinyin="";
+                    schoolId = "";
+                    schoolName = "";
+                    pinyin = "";
                 } catch (Exception ex) {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院最终失败！"));
                 } finally {
@@ -169,6 +174,16 @@ public class SchoolBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新学院失败！请输入正确的学院编号，学院名称！"));
         }
         return "viewSchools.xhtml";
+    }
+
+    public LinkedHashMap<String, Integer> getMytypeMap() {
+        if (null == mytypeMap) {
+            mytypeMap = new LinkedHashMap<>();
+            mytypeMap.put(StaticFields.cateString[0], 0);
+            mytypeMap.put(StaticFields.cateString[1], 1);
+            mytypeMap.put(StaticFields.cateString[2], 2);
+        }
+        return mytypeMap;
     }
 
     /**
@@ -263,5 +278,19 @@ public class SchoolBean implements Serializable {
      */
     public User getLoginUser() {
         return this.checkLogin.getUser();
+    }
+
+    /**
+     * @return the mytype
+     */
+    public String getMytype() {
+        return mytype;
+    }
+
+    /**
+     * @param mytype the mytype to set
+     */
+    public void setMytype(String mytype) {
+        this.mytype = mytype;
     }
 }

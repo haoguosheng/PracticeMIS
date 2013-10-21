@@ -20,6 +20,7 @@
                         <th>#{msgs.schoolNum}</th>
                         <th>#{msgs.schoolName}</th>
                         <th>#{msgs.school}#{msgs.pinyin}#{msgs.firstChar}</th>
+                        <th>#{msgs.cate}</th>
                         <th>#{msgs.unit}</th>
                         <th>#{msgs.alter}</th>
                         <th>#{msgs.delete}</th>
@@ -30,6 +31,9 @@
                                 <td><h:outputLabel value="#{school.id}"/></td>
                                 <td><h:inputText value="#{school.name}"/></td>
                                 <td><h:inputText value="#{school.pinyin}" /></td>
+                                <td><h:selectOneMenu value="#{school.mytype}">
+                                        <f:selectItems  value="#{schoolBean.mytypeMap}"/>
+                                    </h:selectOneMenu></td>
                                 <td><h:outputLabel value="#{school.parNameofunit.name}"/></td>
                                 <td>
                                     <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool(school.id,school.name,school.pinyin)}" />
@@ -55,6 +59,10 @@
                             <h:inputText value="#{schoolBean.schoolName}" required="true"/>
                             <h:outputLabel value="#{msgs.school}#{msgs.pinyin}#{msgs.firstChar}" />
                             <h:inputText value="#{schoolBean.pinyin}" required="true"/>
+                            <h:outputLabel value="#{msgs.cate}" />
+                            <h:selectOneMenu value="#{schoolBean.mytype}">
+                                <f:selectItems  value="#{schoolBean.mytypeMap}"/>
+                            </h:selectOneMenu>
                             <h:commandButton action="#{schoolBean.addSchool()}" value="#{msgs.add}"/>
                         </h:panelGrid>
                     </h:panelGrid>

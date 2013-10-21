@@ -40,6 +40,63 @@
                              
                         </table>
                     </c:forEach>
+                    
+                    <c:forEach items="#{newsBean.recentWNewsMap.keySet()}" var="schoolId" >
+                        <table class ="tableStyle allNewsTable">
+                            <tr>
+                                <th><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></th>
+                            </tr>
+                                    
+                                    <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                       <tr>
+                                            <td>
+                                                 <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                     <f:param value="#{news.id}" name="nId"/>
+                                                 </h:commandLink>
+                                             </td>
+                                        </tr>
+                                    </c:forEach>
+                             
+                        </table>
+                    </c:forEach>
+                    
+                    <c:forEach items="#{newsBean.recentLNewsMap.keySet()}" var="schoolId" >
+                        <table class ="tableStyle allNewsTable">
+                            <tr>
+                                <th><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></th>
+                            </tr>
+                                    
+                                    <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                       <tr>
+                                            <td>
+                                                 <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                     <f:param value="#{news.id}" name="nId"/>
+                                                 </h:commandLink>
+                                             </td>
+                                        </tr>
+                                    </c:forEach>
+                             
+                        </table>
+                    </c:forEach>
+                    
+                    <c:forEach items="#{newsBean.recentGNewsMap.keySet()}" var="schoolId" >
+                        <table class ="tableStyle allNewsTable">
+                            <tr>
+                                <th><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></th>
+                            </tr>
+                                    
+                                    <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                       <tr>
+                                            <td>
+                                                 <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                     <f:param value="#{news.id}" name="nId"/>
+                                                 </h:commandLink>
+                                             </td>
+                                        </tr>
+                                    </c:forEach>
+                             
+                        </table>
+                    </c:forEach>
                     </h:form>
                 <p style ="clear:both;"></p>
                 </div>

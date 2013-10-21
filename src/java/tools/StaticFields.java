@@ -20,4 +20,5 @@ public class StaticFields {
      public static final int teacherRole=2,adminRole=4,studentRole=3,schoolAdminRole=1;
     public static final int selectedEnt = 1;//学生选择的企业数目不能超过该值
     public static final String[] rankString = new String[]{"优秀", "良好", "及格", "不及格"};
+    public static final String[] cateString = new String[]{"文科", "理科", "工科"};
 }
