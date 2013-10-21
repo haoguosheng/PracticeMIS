@@ -21,13 +21,14 @@ public class Nameofunit implements Serializable {
     private String parentid;
     private String pinyin;
     private int pri;
+    private int mytype;
     private String userno;
     private String schoolId;
     private List<User> userList;
     private Nameofunit parNameofunit;
     private List<Nameofunit> childnameofunits;
-    private SQLTool<User> userDao = new SQLTool<User>();
-    private SQLTool<Nameofunit> nameDao = new SQLTool<Nameofunit>();
+    private final SQLTool<User> userDao = new SQLTool<>();
+    private final SQLTool<Nameofunit> nameDao = new SQLTool<>();
     private User teacher;
 
     public Nameofunit() {
@@ -91,9 +92,6 @@ public class Nameofunit implements Serializable {
         this.parentid = parentid;
     }
 
-    /**
-     * @return the userList
-     */
     public List<User> getUserList() {
         if (userList == null) {
             if (userno.length() == 6) {
@@ -105,16 +103,10 @@ public class Nameofunit implements Serializable {
         return userList;
     }
 
-    /**
-     * @param userList the userList to set
-     */
     public void setUserList(List<User> userList) {
         this.userList = userList;
     }
 
-    /**
-     * @return the parNameofunit
-     */
     public Nameofunit getParNameofunit() {
         if (parNameofunit == null) {
             parNameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+" where id='" + parentid + "'", new Nameofunit()).get(0);
@@ -122,16 +114,10 @@ public class Nameofunit implements Serializable {
         return parNameofunit;
     }
 
-    /**
-     * @param parNameofunit the parNameofunit to set
-     */
     public void setParNameofunit(Nameofunit parNameofunit) {
         this.parNameofunit = parNameofunit;
     }
 
-    /**
-     * @return the childnameofunits
-     */
     public List<Nameofunit> getChildnameofunits() {
         if (childnameofunits == null) {
             childnameofunits = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+"  where parentid='" + id + "'", new Nameofunit());
@@ -139,34 +125,31 @@ public class Nameofunit implements Serializable {
         return childnameofunits;
     }
 
-    /**
-     * @param childnameofunits the childnameofunits to set
-     */
     public void setChildnameofunits(List<Nameofunit> childnameofunits) {
         this.childnameofunits = childnameofunits;
     }
 
-    /**
-     * @return the schoolId
-     */
+
     public String getSchoolId() {
         return schoolId;
     }
 
-    /**
-     * @param schoolId the schoolId to set
-     */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
     }
 
-    /**
-     * @return the teacher
-     */
     public User getTeacher() {
         if(null==teacher){
             teacher=userDao.getBeanListHandlerRunner("select * from teacherinfo" +StaticFields.currentGradeNum+"  where uno='"+this.getUserno()+"'", new User()).get(0);
         }
         return teacher;
+    }
+
+    public int getMytype() {
+        return mytype;
+    }
+
+    public void setMytype(int mytype) {
+        this.mytype = mytype;
     }
 }
