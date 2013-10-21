@@ -13,7 +13,7 @@
                     <h:panelGrid columns="1">
                         <h:panelGrid columns="2">
                             <h:outputLabel value="#{msgs.selectTeacher}" />
-                            <h:selectOneMenu value="#{statisticalResultBean.teacherNo}" required="true">
+                            <h:selectOneMenu value="#{checkRecordBean.teacherNo}" required="true">
                                 <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
                                 <f:selectItems value="#{userinfoBean.teacherMap}"/>
                                 <f:selectItem itemValue="unRecord" itemLabel="#{msgs.checkNoRecordStudents}" />
@@ -37,7 +37,7 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.rank}</f:facet>
-                                    #{statisticalResultBean.rankString[checkRecord.rank]}
+                                    #{checkRecord.rankName}
                             </h:column>
                         </h:dataTable>
                     </h:panelGrid>

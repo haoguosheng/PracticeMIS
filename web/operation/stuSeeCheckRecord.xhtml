@@ -12,24 +12,22 @@
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form >
                     <h:panelGrid columns="2" id="myEntireForm">
-                        <h:outputLabel value="#{msgs.city}" />
-                        <h:outputLabel value="#{stuSeeCheckRecord.city.name}"/>
                         <h:outputLabel value="#{msgs.name}"/>
-                        <h:outputLabel value="#{stuSeeCheckRecord.student.name}"/>
+                        <h:outputLabel value="#{checkRecordBean.detailCheckrecords.student.name}"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputLabel value="#{msgs.time}" />
-                        <h:outputLabel value="#{stuSeeCheckRecord.checkDate}"/>
+                        <h:outputLabel value="#{checkRecordBean.detailCheckrecords.checkdate}"/>
                         <h:outputLabel value="#{msgs.content}" />
-                        <h:inputTextarea value="#{stuSeeCheckRecord.checkrecord.checkcontent}"  rows="10" cols="60" readonly="true"/>
+                        <h:inputTextarea value="#{checkRecordBean.detailCheckrecords.checkcontent}"  rows="10" cols="60" readonly="true"/>
                         <h:outputLabel value="#{msgs.recommendation}" />
-                        <h:inputTextarea value="#{stuSeeCheckRecord.checkrecord.recommendation}"  rows="10"  cols="60" readonly="true"/>
+                        <h:inputTextarea value="#{checkRecordBean.detailCheckrecords.recommendation}"  rows="10"  cols="60" readonly="true"/>
                         <h:outputLabel value="#{msgs.rank}" />
-                        <h:selectOneMenu value="#{stuSeeCheckRecord.checkrecord.rank}" id="rank"   disabled="true">
+                        <h:selectOneMenu value="#{checkRecordBean.detailCheckrecords.rank}" id="rank"   disabled="true">
                             <f:selectItems  value="#{checkRecordBean.rankMap}"/>
                         </h:selectOneMenu>
                         <h:outputLabel value="#{msgs.remark}" />
-                        <h:inputTextarea value="#{stuSeeCheckRecord.checkrecord.remark}"  rows="10" cols="60" readonly="true"/>
+                        <h:inputTextarea value="#{checkRecordBean.detailCheckrecords.remark}"  rows="10" cols="60" readonly="true"/>
                     </h:panelGrid>
                 </h:form>
             </ui:define>

@@ -36,6 +36,7 @@ public class CheckRecordBean implements Serializable {
     @Inject
     private CheckLogin checkLogin;
     private Checkrecords checkrecords = new Checkrecords();
+    private Checkrecords detailCheckrecords = new Checkrecords();
     private final Calendar c = Calendar.getInstance();
     private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH);
     private final int currentMonth = month;
@@ -98,7 +99,7 @@ public class CheckRecordBean implements Serializable {
         checkList = new ArrayList<>();
         if (user.getRoleid() == StaticFields.studentRole) {//学生
             Stuentrel stutem = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + user.getSchoolId() + " where  stuno ='" + user.getUno() + "'", new Stuentrel()).get(0);
-            checkList=(ArrayList)checkDao.getBeanListHandlerRunner("select * from HGS.CHECKRECORDS"+UserAnalysis.getSchoolId(stutem.getStuno())+" where stuno='"+stutem.getStuno()+"'", checkrecords);
+            checkList = (ArrayList) checkDao.getBeanListHandlerRunner("select * from HGS.CHECKRECORDS" + UserAnalysis.getSchoolId(stutem.getStuno()) + " where stuno='" + stutem.getStuno() + "'", checkrecords);
         } else {//非学生
             if (null != getTeacherNo()) {
                 switch (getTeacherNo()) {
@@ -129,6 +130,7 @@ public class CheckRecordBean implements Serializable {
                     }
                     break;
                     case "null": {
+                        
                     }
                     break;
                     default: {//某一教师在查询
@@ -146,6 +148,11 @@ public class CheckRecordBean implements Serializable {
             }
         }
         return checkList;
+    }
+
+    public String seeDetail(int id) {
+        setDetailCheckrecords(checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + getCheckLogin().getUser().getSchoolId() + " where id = " + id, new Checkrecords()).get(0));
+        return "stuSeeCheckRecord.xhtml";
     }
 
     public LinkedHashMap<String, Integer> getRankMap() {
@@ -170,9 +177,6 @@ public class CheckRecordBean implements Serializable {
         return dayMap;
     }
 
-   public String seeDetail(){
-       return "viewChecks";
-   }
     public void setYear(int year) {
         this.year = year;
     }
@@ -296,4 +300,21 @@ public class CheckRecordBean implements Serializable {
     public void setTeacherNo(String teacherNo) {
         this.teacherNo = teacherNo;
     }
+
+    /**
+     * @return the detailCheckrecords
+     */
+    public Checkrecords getDetailCheckrecords() {
+        return detailCheckrecords;
+    }
+
+    /**
+     * @param detailCheckrecords the detailCheckrecords to set
+     */
+    public void setDetailCheckrecords(Checkrecords detailCheckrecords) {
+        this.detailCheckrecords = detailCheckrecords;
+    }
+
+       
+    
 }

@@ -28,6 +28,7 @@ public class Checkrecords implements Serializable {
     private User teacher;
     private User student;
     private String schoolId;
+    private String rankName;
     private final SQLTool<User> userDao = new SQLTool<>();
 
     public Checkrecords() {
@@ -137,5 +138,14 @@ public class Checkrecords implements Serializable {
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
     }
+
+    /**
+     * @return the rankName
+     */
+    public String getRankName() {
+        return StaticFields.rankString[Integer.parseInt(this.getRank())];
+    }
+
+  
     
 }

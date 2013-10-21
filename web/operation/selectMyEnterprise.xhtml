@@ -11,16 +11,15 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
-                <div class="select">
-
-                    <h1>#{msgs.already}#{msgs.selectEnter}</h1>
-                    <section style="border: solid red">
+                <div class="pageContent">
+                    <h1 class ="tableTitle">#{msgs.already}#{msgs.selectEnter}</h1>
+                    <section>
                         <h:form>
-                            <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter" rowClasses="oddRows,evenRows"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" >
+                            <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter"   styleClass="tableStyle" >
                                 <c:set value="#{selectedEnter.enterprise.id}" var="enterId"/>
                                 <h:column>
                                     <f:facet name="header"></f:facet>
-                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(enterId)}" value="#{msgs.delete}"/>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(enterId)}" value="#{msgs.delete}" class="submit"/>
                                 </h:column>                        
                                 <h:column>
                                     <f:facet name="header">#{msgs.city}</f:facet>
@@ -32,7 +31,7 @@
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
-                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(enterId)}" var="user">
+                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(enterId)}" var="user" class="tableTitle">
                                         <h:column>
                                             <f:facet name="header">#{msgs.name}</f:facet>
                                                 #{user.student.name}
@@ -53,8 +52,8 @@
                     <hr/>
                     <h:form  style="alignment-adjust: middle">
                         <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
-                        <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
-                        <h:panelGrid columns="2">
+                        <h1 class="tableTitless"><h:outputLabel value="#{msgs.selectEnter}"/></h1>
+                        <h:panelGrid columns="2" class="tableStyle">
                             <h:outputText value="#{msgs.selectCity}"/>
                             <h:selectOneMenu value="#{enterpriseInfo.cityId}">
                                 <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
@@ -70,8 +69,7 @@
                         </h:panelGrid> 
 
                         <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
-                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn" 
+                                     border="1" styleClass="tableStyle" headerClass="tableHeaderClass" 
                                      >
                             <h:column>
                                 <f:facet name="header">#{msgs.enterName}</f:facet>
@@ -98,7 +96,7 @@
                                 <h:outputLabel value="#{ep.other}" id="other"/>
                             </h:column>
                         </h:dataTable> 
-                        <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}"/>
+                        <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}" class="submit"/>
                         <h:outputLabel value="#{msgs.already}#{msgs.myselect}#{msgs.enter}！" rendered="#{studentSelectEnt.enter4SameStu.size()>0}"/>
                     </h:form>
                 </div>
