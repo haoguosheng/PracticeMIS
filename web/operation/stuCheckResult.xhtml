@@ -10,7 +10,7 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                 <h:form>
-                    <h:dataTable value="#{statisticalResultBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
+                    <h:dataTable value="#{checkRecordBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
                         <f:facet name="caption">#{msgs.scoresQuery}</f:facet>
                         <h:column>
                             <f:facet name="header">#{msgs.userno}</f:facet>
@@ -27,6 +27,10 @@
                         <h:column>
                             <f:facet name="header">#{msgs.checkTeacher}</f:facet>
                                 #{checkRecord.teacher.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{msgs.detail}</f:facet>
+                            <h:commandLink value="#{msgs.detail}" action="#{checkRecordBean.seeDetail(checkRecord.checkdate,checkRecord.stuno,checkRecord.teachno)}"/>
                         </h:column>
                     </h:dataTable>
                 </h:form>

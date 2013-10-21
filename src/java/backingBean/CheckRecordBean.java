@@ -6,9 +6,11 @@ package backingBean;
 
 import entities.Checkrecords;
 import entities.Practicenote;
+import entities.Stuentrel;
 import entities.User;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -34,23 +36,28 @@ public class CheckRecordBean implements Serializable {
     @Inject
     private CheckLogin checkLogin;
     private Checkrecords checkrecords = new Checkrecords();
-    private Calendar c = Calendar.getInstance();
-    private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH), currentMonth = month;
+    private final Calendar c = Calendar.getInstance();
+    private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH);
+    private final int currentMonth = month;
     private LinkedHashMap<String, Integer> rankMap;
     private String studentNo;
     private User StudentUser;
+    private String teacherNo;
     private LinkedHashMap<Integer, Integer> dayMap;
     private List<Practicenote> practiceList;
+    private ArrayList<Checkrecords> checkList;
     private SQLTool<User> userDao;
-    private SQLTool<Checkrecords> cDao;
+    private SQLTool<Checkrecords> checkDao;
     private SQLTool<Practicenote> pDao;
+    private SQLTool<Stuentrel> stuentrelDao;
 
     @PostConstruct
     public void init() {
         checkrecords = new Checkrecords();
         userDao = new SQLTool<>();
-        cDao = new SQLTool<>();
+        checkDao = new SQLTool<>();
         pDao = new SQLTool<>();
+        stuentrelDao = new SQLTool<>();
         dayMap = new LinkedHashMap<>();
         practiceList = new LinkedList<>();
     }
@@ -65,9 +72,9 @@ public class CheckRecordBean implements Serializable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String s = sdf.format(tempc.getTime());
         String sql = "select * from checkRecords" + StaticFields.currentGradeNum + checkrecords.getSchoolId() + " where stuno='" + this.studentNo + "' and checkdate='" + s + "'";
-        List<Checkrecords> checkList = cDao.getBeanListHandlerRunner(sql, checkrecords);
-        if (checkList.size() > 0) {//该生检查记录已经存在了
-            this.checkrecords = checkList.get(0);
+        List<Checkrecords> checkListTme = checkDao.getBeanListHandlerRunner(sql, checkrecords);
+        if (checkListTme.size() > 0) {//该生检查记录已经存在了
+            this.checkrecords = checkListTme.get(0);
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage(UserAnalysis.getRoleName(this.studentNo) + "的检查记录已经存在，不能再添加了"));
         } else {
             checkrecords.setStuno(this.studentNo);
@@ -76,7 +83,7 @@ public class CheckRecordBean implements Serializable {
             String insert = "insert into checkrecords" + StaticFields.currentGradeNum + checkrecords.getSchoolId() + "(stuno, teachno, checkdate, checkcontent, recommendation, rank, remark) values('"
                     + this.studentNo + "', '" + myUser.getUno() + "', '" + s + "', '" + checkrecords.getCheckcontent() + "', '"
                     + checkrecords.getRecommendation() + "', '" + checkrecords.getRank() + "', '" + checkrecords.getRemark() + "')";
-            cDao.executUpdate(insert);
+            checkDao.executUpdate(insert);
             //          FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加成功，您可以继续添加"));
             this.checkrecords = new Checkrecords();
             this.setYear(c.get(Calendar.YEAR));
@@ -86,13 +93,68 @@ public class CheckRecordBean implements Serializable {
         return null;
     }
 
+    public ArrayList<Checkrecords> getCheckList() {
+        User user = this.checkLogin.getUser();
+        checkList = new ArrayList<>();
+        if (user.getRoleid() == StaticFields.studentRole) {//学生
+            Stuentrel stutem = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + user.getSchoolId() + " where  stuno ='" + user.getUno() + "'", new Stuentrel()).get(0);
+            checkList=(ArrayList)checkDao.getBeanListHandlerRunner("select * from HGS.CHECKRECORDS"+UserAnalysis.getSchoolId(stutem.getStuno())+" where stuno='"+stutem.getStuno()+"'", checkrecords);
+        } else {//非学生
+            if (null != getTeacherNo()) {
+                switch (getTeacherNo()) {
+                    case "unRecord": {//查询未检查的学生
+                        List<Stuentrel> stuList = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + this.checkLogin.getUser().getSchoolId() + " where  stuno not in ( select stuno from checkrecords" + StaticFields.currentGradeNum + this.checkLogin.getUser().getSchoolId() + ")", new Stuentrel());
+                        for (Stuentrel tempuser : stuList) {
+                            Checkrecords checkTme = new Checkrecords();
+                            checkTme.setStuno(tempuser.getStuno());
+                            checkList.add(checkTme);
+                        }
+                        for (Checkrecords s : checkList) {
+                            s.setSchoolId(this.checkLogin.getUser().getSchoolId());
+                        }
+                    }
+                    break;
+                    case "all": {
+                        checkList = new ArrayList<>();
+                        if (user.getRoleinfo().getCanseeall() == StaticFields.CanSeeOnlySchool) {
+                            checkList = new ArrayList<>();
+                            List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + this.checkLogin.getUser().getSchoolId(), new Checkrecords());
+                            for (Checkrecords Checkrecord : tempList) {
+                                checkList.add(Checkrecord);
+                            }
+                            for (Checkrecords s : checkList) {
+                                s.setSchoolId(this.checkLogin.getUser().getSchoolId());
+                            }
+                        }
+                    }
+                    break;
+                    case "null": {
+                    }
+                    break;
+                    default: {//某一教师在查询
+                        checkList = new ArrayList<>();
+                        List<Checkrecords> tempList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + user.getSchoolId() + " where teachNo = '" + getTeacherNo() + "'", new Checkrecords());
+                        for (Checkrecords Checkrecord : tempList) {
+                            checkList.add(Checkrecord);
+                        }
+                        for (Checkrecords s : checkList) {
+                            s.setSchoolId(this.checkLogin.getUser().getSchoolId());
+                        }
+                    }
+                }
+
+            }
+        }
+        return checkList;
+    }
+
     public LinkedHashMap<String, Integer> getRankMap() {
         if (null == rankMap) {
-            rankMap = new LinkedHashMap<String, Integer>();
-            rankMap.put("优秀", 0);
-            rankMap.put("良好", 1);
-            rankMap.put("及格", 2);
-            rankMap.put("不及格", 3);
+            rankMap = new LinkedHashMap<>();
+            rankMap.put(StaticFields.rankString[0], 0);
+            rankMap.put(StaticFields.rankString[1], 1);
+            rankMap.put(StaticFields.rankString[2], 2);
+            rankMap.put(StaticFields.rankString[3], 3);
         }
         return rankMap;
     }
@@ -108,9 +170,9 @@ public class CheckRecordBean implements Serializable {
         return dayMap;
     }
 
-    /**
-     * @param year the year to set
-     */
+   public String seeDetail(){
+       return "viewChecks";
+   }
     public void setYear(int year) {
         this.year = year;
     }
@@ -175,7 +237,7 @@ public class CheckRecordBean implements Serializable {
         } else {
             this.studentNo = "0";
             this.StudentUser = null;
-            this.practiceList = new LinkedList<Practicenote>();
+            this.practiceList = new LinkedList<>();
         }
     }
 
@@ -219,5 +281,19 @@ public class CheckRecordBean implements Serializable {
      */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
+    }
+
+    /**
+     * @return the teacherNo
+     */
+    public String getTeacherNo() {
+        return teacherNo;
+    }
+
+    /**
+     * @param teacherNo the teacherNo to set
+     */
+    public void setTeacherNo(String teacherNo) {
+        this.teacherNo = teacherNo;
     }
 }

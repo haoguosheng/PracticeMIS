@@ -29,6 +29,7 @@
 		font-weight:normal;
 		cursor:pointer;
 		line-height:35px;
+                font-size:13px;
 		border-bottom:1px dashed #ccc;
 		background:url(../../resources/images/left_bg_add.gif) no-repeat 8% 48%;
 	

@@ -4,63 +4,103 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      >
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <f:loadBundle  basename="messages" var="msgs"/>
     <h:head></h:head>
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
                 <div class="select">
-                <h:form  style="alignment-adjust: middle">
-                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
-                    <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="#{msgs.selectCity}"/>
-                        <h:selectOneMenu value="#{enterpriseInfo.cityId}">
-                            <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
-                            <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                            <f:ajax render="enterprise" event="change"/>
-                        </h:selectOneMenu>
-                        <h:outputLabel value="#{msgs.selectEnt}"/>
-                        <h:selectOneMenu  value="#{studentSelectEnt.enterpriseid}" id="enterprise" required="true">
-                            <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
-                            <f:selectItems value="#{enterpriseInfo.enterMap}"/>
-                            <f:ajax render="enterDetail" event="change"/>
-                        </h:selectOneMenu>
-                    </h:panelGrid> 
-                    
-                    
-                    <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
-                                 border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
-                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn" 
-                                 >
-                        <h:column>
-                            <f:facet name="header">#{msgs.enterName}</f:facet>
-                            <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">#{msgs.payment}</f:facet>
-                            <h:outputLabel value=" #{ep.payment}" id="payment"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">#{msgs.require}</f:facet>
-                            <h:outputLabel value="#{ep.requirement}" id="requirement"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">#{msgs.stuNum}</f:facet>
-                            <h:outputLabel value="#{ep.studnum}" id="studnum"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">#{msgs.position}</f:facet>
-                            <h:outputLabel value="#{ep.position.name}" id="position"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">#{msgs.other}</f:facet>
-                            <h:outputLabel value="#{ep.other}" id="other"/>
-                        </h:column>
-                    </h:dataTable> 
-                    <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" id="myselect" />
-                </h:form>
+
+                    <h1>#{msgs.already}#{msgs.selectEnter}</h1>
+                    <section style="border: solid red">
+                        <h:form>
+                            <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter" rowClasses="oddRows,evenRows"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" >
+                                <c:set value="#{selectedEnter.enterprise.id}" var="enterId"/>
+                                <h:column>
+                                    <f:facet name="header"></f:facet>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(enterId)}" value="#{msgs.delete}"/>
+                                </h:column>                        
+                                <h:column>
+                                    <f:facet name="header">#{msgs.city}</f:facet>
+                                        #{selectedEnter.enterprise.city.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.enterName}</f:facet>
+                                        #{selectedEnter.enterprise.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
+                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(enterId)}" var="user">
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.name}</f:facet>
+                                                #{user.student.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.unitNamein}</f:facet>
+                                                #{user.student.nameofunit.parNameofunit.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.phone}</f:facet>
+                                                #{user.student.phone}
+                                        </h:column>
+                                    </h:dataTable>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </section>   
+                    <hr/>
+                    <h:form  style="alignment-adjust: middle">
+                        <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                        <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="#{msgs.selectCity}"/>
+                            <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
+                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                <f:ajax render="enterprise" event="change"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{msgs.selectEnt}"/>
+                            <h:selectOneMenu  value="#{studentSelectEnt.enterpriseid}" id="enterprise">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
+                                <f:selectItems value="#{enterpriseInfo.enterMap}"/>
+                                <f:ajax render="enterDetail" event="change"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid> 
+
+                        <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn" 
+                                     >
+                            <h:column>
+                                <f:facet name="header">#{msgs.enterName}</f:facet>
+                                <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.payment}</f:facet>
+                                <h:outputLabel value=" #{ep.payment}" id="payment"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.require}</f:facet>
+                                <h:outputLabel value="#{ep.requirement}" id="requirement"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.stuNum}</f:facet>
+                                <h:outputLabel value="#{ep.studnum}" id="studnum"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.position}</f:facet>
+                                <h:outputLabel value="#{ep.position.name}" id="position"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.other}</f:facet>
+                                <h:outputLabel value="#{ep.other}" id="other"/>
+                            </h:column>
+                        </h:dataTable> 
+                        <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}"/>
+                        <h:outputLabel value="#{msgs.already}#{msgs.myselect}#{msgs.enter}！" rendered="#{studentSelectEnt.enter4SameStu.size()>0}"/>
+                    </h:form>
                 </div>
             </ui:define>
         </ui:composition>

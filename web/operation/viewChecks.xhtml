@@ -10,10 +10,10 @@
         <f:loadBundle var="msgs" basename="messages"/>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
-                <h1><h:outputLabel value="#{msgs.viewTeachChecks}"/></h1>
+                <h1><h:outputLabel value="#{msgs.viewCheckRecords}"/></h1>
                 <h:messages   style="color: red" id="latestMessage"/>
                 <h:form id="myForm">
-                    <h:outputLabel value="#{msgs.submittedChecks}:"/>
+                    <h:outputLabel value="#{msgs.submittedCheckRecords}:"/>
                     <h:panelGrid columns="1" rendered="#{stuSeeCheckRecord.submittedRecordList.size()>0}">
                         <c:forEach items="#{stuSeeCheckRecord.submittedRecordList}" var="submitted">
                             <h:commandLink action="#{stuSeeCheckRecord.directToNote()}" value="#{submitted.teacher.name} #{submitted.checkdate.year+1900}年#{submitted.checkdate.month+1}月#{submitted.checkdate.date}日">

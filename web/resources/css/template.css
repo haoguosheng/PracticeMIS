@@ -1,23 +1,9 @@
-* {
-	margin:0px;
-	padding:0px;
-	font-size:13px;
-}
-ul {
-	list-style:none;
-}
-
-body {
-   background-color:#F0F6FA;
-}
 #template_main {
 	width:auto;
 	border:1px solid #ccc;
         
 }
-table {
-	border-collapse: collapse;
-}
+
 .layout{
 	border:1px solid #5AA1DB;
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,15 +31,14 @@ public class StudentSelectEnt implements java.io.Serializable {
     private SQLTool<Enterprise> epDao;
     private User myUser;
     private List<Stuentrel> stuForSameEnt, enter4SameStu;//选择同一企业的学生和同一学生选择的不同企业
-    private int selectedEnt = 1;//学生选择的企业数目不能超过该值
     private int enterpriseid;
     private Enterprise enterprise;
     private Stuentrel stuEntRel;
 
     @PostConstruct
     public void init() {
-        seDao = new SQLTool<Stuentrel>();
-        epDao = new SQLTool<Enterprise>();
+        seDao = new SQLTool<>();
+        epDao = new SQLTool<>();
         stuEntRel = new Stuentrel();
     }
 
@@ -53,7 +51,7 @@ public class StudentSelectEnt implements java.io.Serializable {
 //        } else {
 //            FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("删除失败"));
         }
-        return "viewSelectedEnt";
+        return null;
     }
 
     public User getUser() {
@@ -81,12 +79,12 @@ public class StudentSelectEnt implements java.io.Serializable {
 
     public String userAddEnter() {
         if (this.getEnterpriseid() != 0) {
-            if (seDao.getBeanListHandlerRunner("select * from STUENTREL" + StaticFields.currentGradeNum + this.getUser().getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", new Stuentrel()).size() < this.selectedEnt) {
+            if (seDao.getBeanListHandlerRunner("select * from STUENTREL" + StaticFields.currentGradeNum + this.getUser().getSchoolId() + " where stuno='" + this.getUser().getUno() + "'", new Stuentrel()).size() < StaticFields.selectedEnt) {
                 Stuentrel stu = new Stuentrel();
                 this.seDao.executUpdate("insert into stuentrel" + StaticFields.currentGradeNum + this.getUser().getSchoolId() + "(enterID,stuno) values(" + this.enterprise.getId() + ", '" + this.getUser().getUno() + "')");
                 //  FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("实习单位选择成功！"));
             } else {
-                FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("已经选择" + this.selectedEnt + "个实习企业，不能再次选择！"));
+                FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("已经选择" + StaticFields.selectedEnt + "个实习企业，不能再次选择！"));
             }
         } else {
             FacesContext.getCurrentInstance().addMessage("myMessage", new FacesMessage("请先选择实习单位"));

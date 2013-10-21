@@ -15,13 +15,18 @@
                             <h:outputLabel value="#{msgs.selectTeacher}" />
                             <h:selectOneMenu value="#{statisticalResultBean.teacherNo}" required="true">
                                 <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
-                                <f:selectItems value="#{statisticalResultBean.teacherMap}"/>
+                                <f:selectItems value="#{userinfoBean.teacherMap}"/>
                                 <f:selectItem itemValue="unRecord" itemLabel="#{msgs.checkNoRecordStudents}" />
-                                <f:ajax render="student" event="change"/>
+                                <f:selectItem itemValue="all" itemLabel="#{msgs.all}" />
+                                <f:ajax render="student"/>
                             </h:selectOneMenu>
                         </h:panelGrid>
-                        <h:dataTable value="#{statisticalResultBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
+                        <h:dataTable value="#{checkRecordBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
                             <f:facet name="caption">#{msgs.scoresQuery}</f:facet>
+                                                       <h:column>
+                                <f:facet name="header">#{msgs.myclassName}</f:facet>
+                                    #{checkRecord.student.nameofunit.name}
+                            </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.userno}</f:facet>
                                     #{checkRecord.stuno}

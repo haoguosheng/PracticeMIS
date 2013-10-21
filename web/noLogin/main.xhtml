@@ -19,25 +19,30 @@
             </ui:define>
 
             <ui:define name="content">
-                <h1><h:outputLabel style="color:red" value="#{msgs.newsInfo}"/></h1>
+                <div class="pageContent allNews">
+                 <h1 class ="tableTitle"><h:outputLabel value="#{msgs.newsInfo}"/></h1>
                 <h:form>
                     <c:forEach items="#{newsBean.recentNewsMap.keySet()}" var="schoolId" >
-                        <table border="1" style="width:300px;height:400px;margin:20px; float:left;">
+                        <table class ="tableStyle allNewsTable">
                             <tr>
                                 <th><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></th>
                             </tr>
-                            <tr>
-                                <td>
+                                    
                                     <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
-                                        <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
-                                            <f:param value="#{news.id}" name="nId"/>
-                                        </h:commandLink><br/>
+                                       <tr>
+                                            <td>
+                                                 <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                     <f:param value="#{news.id}" name="nId"/>
+                                                 </h:commandLink>
+                                             </td>
+                                        </tr>
                                     </c:forEach>
-                                </td>
-                            </tr>
+                             
                         </table>
                     </c:forEach>
                     </h:form>
+                <p style ="clear:both;"></p>
+                </div>
             </ui:define>
             <ui:define name="bottom">
                 bottom

@@ -26,11 +26,12 @@ import tools.StaticFields;
 @Named
 @SessionScoped
 public class ClassBean implements Serializable {
-     @Inject
-   private  CheckLogin checkLogin;
-    private SQLTool<Nameofunit> nameDao ;
+
+    @Inject
+    private CheckLogin checkLogin;
+    private SQLTool<Nameofunit> nameDao;
     private Nameofunit nameofunit;
-    private User loginUser ;
+    private User loginUser;
     private String schoolId, classId;
     private String pinyin;
     private String newClass;
@@ -38,11 +39,12 @@ public class ClassBean implements Serializable {
     private List<Nameofunit> classList;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         nameDao = new SQLTool<>();
         loginUser = getCheckLogin().getUser();
-         nameofunit = new Nameofunit();
+        nameofunit = new Nameofunit();
     }
+
     public String deleteClass() {
         FacesContext context = FacesContext.getCurrentInstance();
         String s = context.getExternalContext().getRequestParameterMap().get("cId");
@@ -60,17 +62,12 @@ public class ClassBean implements Serializable {
         if (nameDao.getBeanListHandlerRunner("select * from nameofunit where name='" + newClass + "'", nameofunit).size() > 0) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败！请输入正确的班级编号，班级名称！"));
         } else {
-            if ((schoolId != null && !schoolId.equals("")) && (newClass != null && !newClass.equals("")) && (pinyin != null &&! pinyin.equals(""))) {
+            if ((schoolId != null && !schoolId.equals("")) && (newClass != null && !newClass.equals("")) && (pinyin != null && !pinyin.equals(""))) {
                 nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + getLoginUser().getUno() + "')");
-                classId="";newClass="";schoolId="";pinyin="";
-//                if (nameDao.executUpdate("insert into nameofunit(id, name, parentid, pinyin, userno) values('" + classId + "', '" + newClass + "', '" + schoolId + "', '" + pinyin + "','" + loginUser.getUno() + "')") > 0) {
-//                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级成功！"));
-//                    classId = "";
-//                    newClass = "";
-//                    pinyin = "";
-//                } else {
-//                    FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加新班级失败，请重新添加！"));
-//                }
+                classId = "";
+                newClass = "";
+                schoolId = "";
+                pinyin = "";
             } else {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("添加失败，请选择你要添加班级所在学院！"));
             }
@@ -128,11 +125,31 @@ public class ClassBean implements Serializable {
         if (null == this.schoolMap || this.schoolMap.isEmpty()) {
             this.schoolMap = new LinkedHashMap();
         }
-        List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by pinyin", nameofunit);
-        for (int i = 0; i < unit.size(); i++) {
-            Nameofunit tempP = unit.get(i);
-            this.schoolMap.put(tempP.getName(), tempP.getId());
+        switch (getLoginUser().getRoleinfo().getCanseeall()) {
+            case StaticFields.CanSeeAll: {
+                List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' order by pinyin", nameofunit);
+                for (int i = 0; i < unit.size(); i++) {
+                    Nameofunit tempP = unit.get(i);
+                    this.schoolMap.put(tempP.getName(), tempP.getId());
+                }
+            }
+            break;
+            case StaticFields.CanSeeNothing: {
+            }
+            break;
+            case StaticFields.CanSeeOnlySchool: {
+                List<Nameofunit> unit = nameDao.getBeanListHandlerRunner("select * from nameofunit where parentid='000' and id='" + this.getLoginUser().getSchoolId() + "' order by pinyin", nameofunit);
+                for (int i = 0; i < unit.size(); i++) {
+                    Nameofunit tempP = unit.get(i);
+                    this.schoolMap.put(tempP.getName(), tempP.getId());
+                }
+            }
+            break;
+            case StaticFields.CanSeeSelf: {
+            }
+            break;
         }
+
         return schoolMap;
     }
 
@@ -188,7 +205,8 @@ public class ClassBean implements Serializable {
     public void setNewClass(String newClass) {
         this.newClass = newClass;
     }
-        /**
+
+    /**
      * @return the checkLogin
      */
     public CheckLogin getCheckLogin() {

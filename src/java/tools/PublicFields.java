@@ -26,36 +26,7 @@ import javax.inject.Named;
 @Named
 @ApplicationScoped
 public class PublicFields implements java.io.Serializable {
-
-    /**
-     * @return the teacherRole
-     */
-    public static int getTeacherRole() {
-        return teacherRole;
-    }
-
-    /**
-     * @return the adminRole
-     */
-    public static int getAdminRole() {
-        return adminRole;
-    }
-
-    /**
-     * @return the studentRole
-     */
-    public static int getStudentRole() {
-        return studentRole;
-    }
-
-    /**
-     * @return the schoolAdminRole
-     */
-    public static int getSchoolAdminRole() {
-        return schoolAdminRole;
-    }
-
-    private final String tag = "在这里添加";
+   private final String tag = "在这里添加";
     private final Calendar c = Calendar.getInstance();
     private final int year = c.get(Calendar.YEAR),currentMonth =c.get(Calendar.MONTH);
     private int month = c.get(Calendar.MONTH);
@@ -69,9 +40,9 @@ public class PublicFields implements java.io.Serializable {
     private static final SQLTool<News> newsDao = new SQLTool<>();
     private static LinkedHashMap<Integer, HashMap<Resourceinfo, List<Resourceinfo>>> ReslistMap;//每个角色对应的功能菜单
     private static final SQLTool<Roleinfo> roleDao = new SQLTool<>();
-    private static final LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
+    private static  LinkedHashMap<String, List<News>> recentNewsMap = new LinkedHashMap<>();
     private LinkedHashMap<String, Integer> roleMap = null;
-    private static final int teacherRole=2,adminRole=4,studentRole=3,schoolAdminRole=1;
+   
 
     public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
         List<News> recentNews = getNewsList();

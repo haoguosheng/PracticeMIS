@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Checkrecords implements Serializable {
     private User teacher;
     private User student;
     private String schoolId;
-    private SQLTool<User> userDao = new SQLTool<User>();
+    private final SQLTool<User> userDao = new SQLTool<>();
 
     public Checkrecords() {
     }
@@ -113,6 +114,7 @@ public class Checkrecords implements Serializable {
 
     public User getStudent() {
         if(student == null){
+            this.schoolId=UserAnalysis.getSchoolId(stuno);
             student = userDao.getBeanListHandlerRunner("select * from student"+StaticFields.currentGradeNum+ schoolId +" where uno='" + stuno + "'", new User()).get(0);
         }
         return student;
