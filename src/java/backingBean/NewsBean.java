@@ -71,16 +71,21 @@ public class NewsBean implements Serializable {
         return null;
     }
 
+    public LinkedHashMap<String, List<News>> getRecentNewsMap() {
+        recentNewsMap = PublicFields.getRecentNewsMap();
+        return recentNewsMap;
+    }
+
     public LinkedHashMap<String, List<News>> getRecentWNewsMap() {
         recentWNewsMap = PublicFields.getRecentWNewsMap();
         return recentWNewsMap;
     }
-    
+
     public LinkedHashMap<String, List<News>> getRecentLNewsMap() {
         recentLNewsMap = PublicFields.getRecentLNewsMap();
         return recentLNewsMap;
     }
-    
+
     public LinkedHashMap<String, List<News>> getRecentGNewsMap() {
         recentGNewsMap = PublicFields.getRecentGNewsMap();
         return recentGNewsMap;
@@ -125,18 +130,6 @@ public class NewsBean implements Serializable {
     public List<News> getRecentNews() {
         this.recentNews = PublicFields.getRecentNewsMap().get(this.checkLogin.getUser().getNameofunitid());
         return recentNews;
-    }
-
-    public LinkedHashMap<String, List<News>> getRecentNewsMap() {
-        recentNewsMap = PublicFields.getRecentNewsMap();
-        return recentNewsMap;
-    }
-
-    /**
-     * @param recentNewsMap the recentNewsMap to set
-     */
-    public void setRecentNewsMap(LinkedHashMap<String, List<News>> recentNewsMap) {
-        this.recentNewsMap = recentNewsMap;
     }
 
     /**
