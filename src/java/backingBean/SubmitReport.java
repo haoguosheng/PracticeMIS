@@ -4,17 +4,20 @@
  */
 package backingBean;
 
+import entities.Enterstudent;
+import entities.Position;
 import entities.Practicenote;
 import entities.Stuentrel;
 import entities.User;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +27,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -33,33 +37,36 @@ import tools.StaticFields;
  */
 @Named
 @SessionScoped
-public class PracticeNoteBB implements Serializable {
+public class SubmitReport implements Serializable {
 
     @Inject
     private CheckLogin checkLogin;
     private SQLTool<Practicenote> practDao;
+    private SQLTool<Position> posDao;
     private SQLTool<Stuentrel> seDao;
+    private SQLTool<Enterstudent> entersDao;
     private SQLTool<User> userDao;
     private int positionId;
     private List<Practicenote> submittedNoteList;
     private Practicenote practiceNote = new Practicenote();
+//    private boolean inputed; //检查本击是否已经提交
     private User studentUser;
     private String studentUserno;
-    private final Calendar c = Calendar.getInstance();
-    private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH);
-    private final int currentMonth = month;
+    private Calendar c = Calendar.getInstance();
+    private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH), currentMonth = month;
     private LinkedHashMap<Integer, Integer> dayMap = new LinkedHashMap<>();
     private Stuentrel stuEnRel;
-    private int stuEnRelId;
     private String deleteRepDate, alterDate;
     private boolean readflag;
 
     @PostConstruct
     public void init() {
         practDao = new SQLTool<>();
+        posDao = new SQLTool<>();
         seDao = new SQLTool<>();
+        entersDao = new SQLTool<>();
         userDao = new SQLTool<>();
-        setStuEnRel(new Stuentrel());
+        stuEnRel = new Stuentrel();
     }
 
     public void submitPracNote() {
@@ -72,14 +79,16 @@ public class PracticeNoteBB implements Serializable {
         if (tempc.after(Calendar.getInstance())) {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("实习日期不能超过今天"));
         } else {
-            Iterator<Practicenote> it = this.getSubmittedNoteList().iterator();
-            while (it.hasNext()) {
-                Date submitDate = it.next().getSubmitdate();
-                Calendar myTem = (Calendar) tempc.clone();
-                myTem.setTime(submitDate);
-                if (week == myTem.get(Calendar.WEEK_OF_YEAR)) {
-                    hasSubmitted = true;
-                    break;
+            if (this.getSubmittedNoteList() != null) {
+                Iterator<Practicenote> it = this.getSubmittedNoteList().iterator();
+                while (it.hasNext()) {
+                    Date submitDate = it.next().getSubmitdate();
+                    Calendar myTem = (Calendar) tempc.clone();
+                    myTem.setTime(submitDate);
+                    if (week == myTem.get(Calendar.WEEK_OF_YEAR)) {
+                        hasSubmitted = true;
+                        break;
+                    }
                 }
             }
             if (hasSubmitted) {
@@ -88,14 +97,16 @@ public class PracticeNoteBB implements Serializable {
                 practiceNote.setSubmitdate(tempc.getTime());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String s = sdf.format(tempc.getTime());
-                //注意：java.sql.Date只能读取日期("yyyy-MM-dd")
+                //注意：java.sql.PRACTICENOTE001Date只能读取日期("yyyy-MM-dd")
                 //java.sql.Date date = Date.Valuseof(s);
-                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate, studentEntId) values('" + practiceNote.getDetail() + "', '" + s + "'," + this.getStuEnRelId() + ")");
-                submittedNoteList = null;//重新生成该列表
+                practiceNote.setStudententid(Integer.parseInt(seDao.getIdListHandlerRunner("select id from stuentrel" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'").get(0)));
+                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate,  studententid) values('" + practiceNote.getDetail() + "', '" + s + "', " + practiceNote.getStudententid() + ")");
+                submittedNoteList = new LinkedList<>();//重新生成该列表
                 practiceNote = new Practicenote();
                 this.setYear(c.get(Calendar.YEAR));
                 this.setMonth(c.get(Calendar.MONTH));
                 this.setDay(c.get(Calendar.DAY_OF_MONTH));
+                // FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("提交周记成功"));
             }
         }
     }
@@ -112,18 +123,14 @@ public class PracticeNoteBB implements Serializable {
     }
 
     public List<Practicenote> getSubmittedNoteList() {
-        User user = this.checkLogin.getUser();
         if (null == submittedNoteList || submittedNoteList.isEmpty()) {
-            submittedNoteList = new ArrayList<>();
-            List<String> stuEntRelId=seDao.getIdListHandlerRunner("select id from STUENTREL"+ StaticFields.currentGradeNum + user.getSchoolId() +"  where STUNO='"+user.getUno() +"'");
-            String tem="";
-            for(String s:stuEntRelId){
-                tem+=s+",";
-            }
-            submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + user.getSchoolId() + " where studentEntId in(" + tem.substring(0,tem.length()-1)+ ")", practiceNote);
+            int id = seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'", getStuEnRel()).get(0).getId();
+            submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where studententid=" + id, new Practicenote());
         }
-        for (Practicenote s : submittedNoteList) {
-            s.setSchoolId(checkLogin.getUser().getSchoolId());
+        if (submittedNoteList != null) {
+            for (Practicenote s : submittedNoteList) {
+                s.setSchoolId(checkLogin.getUser().getSchoolId());
+            }
         }
         return submittedNoteList;
     }
@@ -145,7 +152,7 @@ public class PracticeNoteBB implements Serializable {
         try {
             requestDate = sdf.parse(strToFormat);
         } catch (ParseException ex) {
-            Logger.getLogger(PracticeNoteBB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SubmitReport.class.getName()).log(Level.SEVERE, null, ex);
         }
         Iterator<Practicenote> it = submittedNoteList.iterator();
         while (it.hasNext()) {
@@ -158,7 +165,6 @@ public class PracticeNoteBB implements Serializable {
         return "showStudentReport.xhtml";
     }
 
-   
     public String deleteSelectReport() {
         String s = deleteRepDate;
         practDao.executUpdate("delete from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "' and submitdate='" + s + "'");
@@ -181,14 +187,6 @@ public class PracticeNoteBB implements Serializable {
 
     public Practicenote getTemPraNote() {
         return temPraNote;
-    }
-
-    public void setPositionId(int positionId) {
-        this.positionId = positionId;
-    }
-
-    public int getPositionId() {
-        return this.positionId;
     }
 
     public Practicenote getPracticeNote() {
@@ -296,9 +294,7 @@ public class PracticeNoteBB implements Serializable {
      * @return the stuEnRel
      */
     public Stuentrel getStuEnRel() {
-        if(null==stuEnRel){
-            stuEnRel=seDao.getBeanListHandlerRunner("select * from Stuentrel" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where id=" + this.stuEnRelId , new Stuentrel()).get(0);
-        }
+        stuEnRel = seDao.getBeanListHandlerRunner("select * from stuentrel where stuno='"  + checkLogin.getUser().getUno(), stuEnRel).get(0);
         return stuEnRel;
     }
 
@@ -307,19 +303,5 @@ public class PracticeNoteBB implements Serializable {
      */
     public void setStuEnRel(Stuentrel stuEnRel) {
         this.stuEnRel = stuEnRel;
-    }
-
-    /**
-     * @return the stuEnRelId
-     */
-    public int getStuEnRelId() {
-        return stuEnRelId;
-    }
-
-    /**
-     * @param stuEnRelId the stuEnRelId to set
-     */
-    public void setStuEnRelId(int stuEnRelId) {
-        this.stuEnRelId = stuEnRelId;
     }
 }

@@ -5,7 +5,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import tools.SQLTool;
 import tools.StaticFields;
@@ -27,16 +27,28 @@ public class Enterstudent implements Serializable {
     private Enterprise enterprise;
     private Position position;
     private final SQLTool<Enterprise> epDao = new SQLTool<>();
+    private final SQLTool<Enterstudent> entStuDao = new SQLTool<>();
     private final SQLTool<Position> pDao = new SQLTool<>();
-    private final SQLTool<Stuentrel> seDao = new SQLTool<>();
-    private List<Stuentrel> stuEntList = new ArrayList<>();
-    private int schoolId;
+    private List<Enterstudent> entStuList;
+    private LinkedHashMap<String, Integer> positionMap;
 
     public Enterstudent() {
     }
 
     public Enterstudent(Integer id) {
         this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getRequirement() {
+        return requirement;
     }
 
     public void setRequirement(String requirement) {
@@ -83,6 +95,9 @@ public class Enterstudent implements Serializable {
         this.studnum = studnum;
     }
 
+    /**
+     * @return the enterprise
+     */
     public Enterprise getEnterprise() {
         if (enterprise == null) {
             enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where id=" + enterid, new Enterprise()).get(0);
@@ -90,10 +105,16 @@ public class Enterstudent implements Serializable {
         return enterprise;
     }
 
+    /**
+     * @param enterprise the enterprise to set
+     */
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
     }
 
+    /**
+     * @return the position
+     */
     public Position getPosition() {
         if (position == null) {
             position = pDao.getBeanListHandlerRunner("select * from position" + StaticFields.currentGradeNum + " where id=" + positionid, new Position()).get(0);
@@ -101,41 +122,44 @@ public class Enterstudent implements Serializable {
         return position;
     }
 
+    /**
+     * @param position the position to set
+     */
     public void setPosition(Position position) {
         this.position = position;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getRequirement() {
-        return requirement;
-    }
-
-    public List<Stuentrel> getStuEntList() {
-        if (null == this.stuEntList || this.stuEntList.isEmpty()) {
-            this.stuEntList = seDao.getBeanListHandlerRunner("select * from Stuentrel" + StaticFields.currentGradeNum + getSchoolId() + " where entstuid=" + this.id, new Stuentrel());
+    /**
+     * @return the entStuList
+     */
+    public List<Enterstudent> getEntStuList() {
+        if (null == this.entStuList || entStuList.isEmpty()) {
+            this.entStuList = this.entStuDao.getBeanListHandlerRunner("select * from Enterstudent" + StaticFields.currentGradeNum + " where enterid=" + this.id, this);
         }
-        return stuEntList;
+        return entStuList;
     }
 
     /**
-     * @param stuEntList the stuEntList to set
+     * @param entStuList the entStuList to set
      */
-    public void setStuEntList(List<Stuentrel> stuEntList) {
-        this.stuEntList = stuEntList;
+    public void setEntStuList(List<Enterstudent> entStuList) {
+        this.entStuList = entStuList;
     }
 
-    public int getSchoolId() {
-        return schoolId;
-    }
+    public LinkedHashMap<String, Integer> getPositionMap() {
+        List<Enterstudent> reqStu = entStuDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where id=" + this.enterid, new Enterstudent());
+        String s = "";
+        for (int j = 0; j < reqStu.size() - 1; j++) {
+            s = s + reqStu.get(j).getPositionid() + ",";
+        }
+        s = s + reqStu.get(reqStu.size() - 1).getPositionid();
+        List<Position> tempP = pDao.getBeanListHandlerRunner("select * from position" + StaticFields.currentGradeNum + " where id in(" + s + ")", new Position());
+        for (Position t : tempP) {
+            if (!this.positionMap.containsKey(t.getName())) {
+                this.positionMap.put(t.getName(), t.getId());
 
-    public void setSchoolId(int schoolId) {
-        this.schoolId = schoolId;
+            }
+        }
+        return positionMap;
     }
 }

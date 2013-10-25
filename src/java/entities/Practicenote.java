@@ -17,19 +17,12 @@ public class Practicenote implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
-    private Integer stuEntId;
     private String detail;
     private Date submitdate;
+    private Integer studententid;
     private String schoolId;
-    private Stuentrel stuEntRelation;
-    private final SQLTool<Stuentrel> stuEntRelDao = new SQLTool<>();
-
-    public Stuentrel getStuEntRelation() {
-        if (null == stuEntRelation) {
-            this.stuEntRelation = this.stuEntRelDao.getBeanListHandlerRunner("select * from Stuentrel" + StaticFields.currentGradeNum + schoolId + " where id=" + this.id, stuEntRelation).get(0);
-        }
-        return stuEntRelation;
-    }
+    private Stuentrel stuent;
+    private SQLTool<Stuentrel> seDao = new SQLTool<>();
 
     public Practicenote() {
     }
@@ -62,29 +55,46 @@ public class Practicenote implements Serializable {
         this.submitdate = submitdate;
     }
 
+    /**
+     * @return the schoolId
+     */
     public String getSchoolId() {
         return schoolId;
     }
 
+    /**
+     * @param schoolId the schoolId to set
+     */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
     }
 
-    public void setStuEntRelation(Stuentrel stuEntRelation) {
-        this.stuEntRelation = stuEntRelation;
+    /**
+     * @return the studententid
+     */
+    public Integer getStudententid() {
+        return studententid;
     }
 
     /**
-     * @return the stuEntId
+     * @param studententid the studententid to set
      */
-    public Integer getStuEntId() {
-        return stuEntId;
+    public void setStudententid(Integer studententid) {
+        this.studententid = studententid;
     }
 
     /**
-     * @param stuEntId the stuEntId to set
+     * @return the stuent
      */
-    public void setStuEntId(Integer stuEntId) {
-        this.stuEntId = stuEntId;
+    public Stuentrel getStuent() {
+        stuent = seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + schoolId + " where id=" + studententid, new Stuentrel()).get(0);
+        return stuent;
+    }
+
+    /**
+     * @param stuent the stuent to set
+     */
+    public void setStuent(Stuentrel stuent) {
+        this.stuent = stuent;
     }
 }

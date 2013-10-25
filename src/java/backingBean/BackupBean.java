@@ -109,7 +109,7 @@ public class BackupBean implements Serializable {
                         stat.executeUpdate("Create Table Student" + backupYear + schoolList.get(i).getId() + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId char(3) references nameofunit" + backupYear + "(id),Name varchar(30),Email varchar(20),Phone varchar(15),RoleId Integer references roleinfo" + backupYear + "(id) default 2)");
                         stat.executeUpdate("Create table CheckRecords" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,stuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),teachNo varchar(10) references TeacherInfo" + backupYear + "(uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
                         stat.executeUpdate("Create Table PracticeNote" + backupYear + schoolList.get(i).getId() + "(id integer not null primary key,StuNo varchar(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise" + backupYear + "(ID),PositionId Integer references Position" + backupYear + "(ID))");
-                        stat.executeUpdate("Create Table StuEntRel" + backupYear + schoolList.get(i).getId() + "(Id Integer not null primary key,StuNo VARCHAR(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),EnterID Integer references Enterprise" + backupYear + "(Id))");
+                        stat.executeUpdate("Create Table StuEntRel" + backupYear + schoolList.get(i).getId() + "(Id Integer not null primary key,StuNo VARCHAR(10) references Student" + backupYear + schoolList.get(i).getId() + "(uno),entstuid Integer references enterstudent" + backupYear + "(Id))");
                     }
                     this.copyDatetoNewTables(schoolList);
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据备份成功！"));
@@ -183,7 +183,7 @@ public class BackupBean implements Serializable {
             }
             List<Practicenote> practList = praDao.getBeanListHandlerRunner("select * from practicenote" + sId + " where locate('" + likeuno + "',stuno)=1", new Practicenote());
             for (Practicenote p : practList) {
-                praDao.executUpdate("insert into practicenote" + backupYear + sId + "(detail, submitdate, studentEntId) values('" + p.getDetail() + "','" + p.getSubmitdate() + "',"  + p.getStuEntRelation() );
+                praDao.executUpdate("insert into practicenote" + backupYear + sId + "(detail, submitdate, entstuid) values('" + p.getDetail() + "','" + p.getSubmitdate() + "'," + p.getStudententid()+ ")");
             }
             List<Stuentrel> stuenList = stuRelDao.getBeanListHandlerRunner("select * from stuentrel" + sId + " where locate('" + likeuno + "',stuno)=1", new Stuentrel());
             for (Stuentrel s : stuenList) {
