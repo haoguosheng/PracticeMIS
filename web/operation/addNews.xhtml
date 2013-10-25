@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                 <h1><h:outputLabel value="#{msgs.add}"/></h1>
+                <h:form prependId="false">
+                    <h:messages   style="color: red" id="latestMessage"/>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.title}"/>
+                        <h:inputText value="#{newsBean.news.newsTitle}"/>
+                        <h:outputLabel value="#{msgs.content}"/>
+                        <h:inputTextarea value="#{newsBean.news.content}" />
+                        <h:commandButton action="#{newsBean.addNews()}" value="#{msgs.save}" />
+                    </h:panelGrid>
+                    <h:dataTable value="#{newsBean.recentNews}" var="newsItem" border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                 >
+                        <f:facet name="caption">#{msgs.newsInfo}#{msgs.list}</f:facet>
+                        <h:column> 
+                            <f:facet name="header">#{msgs.title}</f:facet>
+                            <h:outputLabel value="#{newsItem.newsTitle}"/>  
+                        </h:column> 
+                        <h:column> 
+                            <f:facet name="header">#{msgs.content}</f:facet>
+                            <h:outputLabel value="#{newsItem.content}"/>  
+                        </h:column> 
+                        <h:column>
+                            <f:facet name="header"></f:facet>
+                            <h:commandButton value="#{msgs.delete}" action="#{newsBean.delete(newsItem.id)}"/>
+                        </h:column> 
+                    
+                    </h:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+/***
+    所有学院新闻样式
+**/
+
+.allNews {
+    width:930px;
+}
+
+.allNewsTable {
+    width:300px;
+    margin-left:10px;
+    float:left;
+}
+
+.allNewsTable th {
+    text-indent:20px;
+    text-align:left;
+    font-size:13px;
+    border-left:4px solid #ccc;
+}
+
+
+.allNewsTable td {
+   border:none;
+   height:25px;
+   text-align:left;
+   text-indent:20px;
+   line-height:25px;
+}
+
+.allNewsTable td a{
+    display:block;
+    height:25px;
+    background: url(../../resources/images/dot.jpg) no-repeat left 55%;
+}
+
+/***
+    添加新闻样式
+**/
+.addNews {
+    width:700px;
+}
+
+/**
+    个人信息维护
+**/
+.updatePerInfo {
+    width:500px;
+}
+
+/**
+城市信息维护
+**/
+
+.cityInfo {
+    width:790px;
+}
+
+/**
+学院信息维护
+**/
+
+
+
+/**
+班级信息维护
+**/
+
+
+
+/**
+教师信息维护
+**/
