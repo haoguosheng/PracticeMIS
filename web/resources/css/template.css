@@ -1,0 +1,57 @@
+#template_main {
+	width:auto;
+	border:1px solid #ccc;
+        
+}
+
+.layout{
+	border:1px solid #5AA1DB;
+}
+#content {
+	width:auto;
+	min-height:400px;
+	padding:50px;
+        background-color:#F0F6FA;
+}
+
+#top {
+	width:auto;
+	background-color:#1879CE;
+}
+
+.userInfo {
+	width:auto;
+	height:18px;
+}
+.userInfo ul {
+	list-style:none;
+}
+
+.userInfo ul li {
+	float:left;
+	width:150px;
+	text-align:center;
+	height:18px;
+	line-height:18px;
+	color:#FFF;
+}
+.nav {
+	width:auto;
+	height:45px;
+	background:url(../../resources/images/nav.gif) repeat-x left top;
+}
+
+
+
+.nav ul li a{
+	color:#fff;
+	text-decoration:none;
+}
+
+.nav ul li a:hover {
+	text-decoration:underline;
+}
+
+.classOfTable {
+    background-color:#F7E99D;
+}

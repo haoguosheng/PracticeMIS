@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages   style="color: red" id="latestMessage"/>
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msgs.schoolName}"></h:outputLabel>
+                        <h:selectOneMenu value="#{classBean.schoolId}">
+                            <f:selectItem itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{classBean.schoolMap}"/>
+                            <f:ajax render="classes"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:outputLabel value="#{msgs.addClassTip}"/>
+                    <h:panelGrid columns="8">
+                        <h:outputLabel value="#{msgs.addClass}:"/>
+                        <h:outputLabel value="#{msgs.classNum}"/>
+                        <h:inputText value="#{classBean.classId}" required="true"/>
+                        <h:outputLabel value="#{msgs.Class}#{msgs.NameofThing}"/>
+                        <h:inputText value="#{classBean.newClass}" />
+                        <h:outputLabel value="#{msgs.classPinyin}"/>
+                        <h:inputText value="#{classBean.pinyin}" />
+                        <h:commandButton value="#{msgs.add}" action="#{classBean.addClass()}"/>
+                    </h:panelGrid>
+                    <h:outputLabel value="#{mgsg.addClassTip}"/>
+                    <h:panelGrid  columns="2" id="classes">
+                        <h:dataTable  value="#{classBean.classList}" var="c">
+                            <f:facet name="caption">#{msgs.classesInSchool}</f:facet>
+                            <h:column>
+                                <f:facet name="header">#{msgs.classNum}</f:facet>
+                                <h:outputLabel value="#{c.id}"></h:outputLabel>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.selectclass}</f:facet>
+                                <h:outputLabel value="#{c.name}"></h:outputLabel>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.delete}</f:facet>
+                                <h:commandButton value="#{msgs.delete}" action="#{classBean.deleteClass()}">
+                                    <f:param value="#{c.id}" name="cId"/>
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

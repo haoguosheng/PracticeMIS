@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+
+                <div class="companyInfo">
+                    <h:form>
+                        <h:messages style="color: red" id="latestMessage"/>
+                        <h:panelGrid columns="5">
+                            <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                                <f:selectItem itemLabel="请选择城市" itemValue="0"/>
+                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                <f:ajax render="cityEnterprise myresult"/>
+                            </h:selectOneMenu>
+                            <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
+                            <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}"/>
+                            <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
+                            <h:commandButton action="#{enterpriseInfo.toAddEnterprise}" value="#{msgs.add}#{msgs.enter}"/>
+                        </h:panelGrid>
+
+                        <h1> <h:outputLabel value="#{msgs.enter}#{msgs.list}:"/>
+                            <h:outputLabel value="      符合条件的单位个数为：#{enterpriseInfo.entCityList.size()}个"  id="myresult" style="color:red"/>
+                        </h1>
+                        <h:dataTable  id="cityEnterprise"  value="#{enterpriseInfo.paginator.model}" var="ep"  rowClasses="oddRows evenRows"   border="1">
+                            <h:column>
+                                <f:facet name="header">#{msgs.enterName}</f:facet>
+                                <h:inputText value="#{ep.ent.name}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.city}</f:facet>
+                                <h:selectOneMenu value="#{ep.cityId}" >
+                                    <f:selectItem  itemValue="#{ep.cityId}" itemLabel="#{ep.ent.city.name}" />
+                                    <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.alter}</f:facet>
+                                <h:commandButton value="#{msgs.alter}" action="#{enterpriseInfo.savaEnter(ep.ent.id,ep.ent.name,ep.cityId)}"  rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{msgs.delete}</f:facet>
+                                <h:commandButton value="#{msgs.delete}" action="#{enterpriseInfo.deleteRow(ep.ent)}"  rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
+                            </h:column>
+                            <h:column >
+                                <f:facet name="header">#{msgs.inputUserName}</f:facet>
+                                <h:outputLabel value="#{ep.ent.myUser.name}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.add}#{msgs.entNeed}</f:facet>
+                                <h:commandButton action="#{enterpriseInfo.direct2Need}" value="#{msgs.add}#{msgs.entNeed}"   rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
+                            </h:column>
+
+                        </h:dataTable>
+
+                        <h:commandButton value="&lt; 上一页" action="#{enterpriseInfo.paginator.prev}"/>
+                        <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}"/>
+                        <h:commandButton value="下一页 &gt;" action="#{enterpriseInfo.paginator.next}"/>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
