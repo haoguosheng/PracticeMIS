@@ -17,12 +17,12 @@ public class Stuentrel implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
     private String stuno;
-    private int enterid;
+    private Integer entstuid;
     private String schoolId;
-    private Enterprise enterprise;
     private User student;
-    private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
-    private SQLTool<User> userDao = new SQLTool<User>();
+    private Enterstudent enterstu;
+    private SQLTool<User> userDao = new SQLTool<>();
+    private SQLTool<Enterstudent> esDao = new SQLTool<>();
 
     public Stuentrel() {
     }
@@ -47,32 +47,11 @@ public class Stuentrel implements Serializable {
         this.stuno = stuno;
     }
 
-    public int getEnterid() {
-        return enterid;
-    }
-
-    public void setEnterid(int enterid) {
-        this.enterid = enterid;
-    }
-
-    public Enterprise getEnterprise() {
-        if (enterprise == null) {
-            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" +StaticFields.currentGradeNum+"  where id=" + this.enterid, new Enterprise()).get(0);
-        }
-        return enterprise;
-    }
-
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
-    }
-
     /**
      * @return the student
      */
     public User getStudent() {
-        if (student == null) {
-            student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", new User()).get(0);
-        }
+        student = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + schoolId + " where uno='" + stuno + "'", new User()).get(0);
         return student;
     }
 
@@ -95,5 +74,34 @@ public class Stuentrel implements Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    /**
+     * @return the entstuid
+     */
+    public int getEntstuid() {
+        return entstuid;
+    }
+
+    /**
+     * @param entstuid the entstuid to set
+     */
+    public void setEntstuid(int entstuid) {
+        this.entstuid = entstuid;
+    }
+
+    /**
+     * @return the enterstu
+     */
+    public Enterstudent getEnterstu() {
+        enterstu = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where id=" + this.entstuid, new Enterstudent()).get(0);
+        return enterstu;
+    }
+
+    /**
+     * @param enterstu the enterstu to set
+     */
+    public void setEnterstu(Enterstudent enterstu) {
+        this.enterstu = enterstu;
     }
 }

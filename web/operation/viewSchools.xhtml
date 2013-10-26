@@ -36,7 +36,7 @@
                                     </h:selectOneMenu></td>
                                 <td><h:outputLabel value="#{school.parNameofunit.name}"/></td>
                                 <td>
-                                    <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool(school.id,school.name,school.pinyin)}" />
+                                    <h:commandButton value="#{msgs.alter}" action="#{schoolBean.alterSchool(school.id,school.name,school.pinyin,school.mytype)}" />
                                 </td>
                                 <td>
                                     <h:commandButton value="#{msgs.delete}" action="#{schoolBean.deleteSchool()}">

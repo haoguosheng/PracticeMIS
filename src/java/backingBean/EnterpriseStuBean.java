@@ -6,6 +6,8 @@
 package backingBean;
 
 import entities.Enterstudent;
+import entities.Position;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -32,13 +34,14 @@ public class EnterpriseStuBean implements java.io.Serializable {
     private int enterid;
     private List<Enterstudent> enterStudList;
 
+
     @PostConstruct
     public void init() {
         esDao = new SQLTool<>();
     }
 
     public synchronized String addEnterpriseNeed(int enterid) {
-        this.enterid=enterid;
+        this.enterid = enterid;
         esDao.executUpdate("insert into enterstudent (enterid, requirement, payment, other, studnum, positionid) values("
                 + enterid + ", '" + this.requirement + "', '" + this.payment + "', '" + this.other + "', " + this.studnum + ", " + this.positionid + ")");
         return null;

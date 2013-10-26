@@ -16,10 +16,9 @@
                     <section>
                         <h:form>
                             <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter"   styleClass="tableStyle" >
-                                <c:set value="#{selectedEnter.enterprise.id}" var="enterId"/>
                                 <h:column>
                                     <f:facet name="header"></f:facet>
-                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(enterId)}" value="#{msgs.delete}" class="submit"/>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(selectedEnter.id)}" value="#{msgs.delete}" class="submit"/>
                                 </h:column>                        
                                 <h:column>
                                     <f:facet name="header">#{msgs.city}</f:facet>
@@ -30,15 +29,19 @@
                                         #{selectedEnter.enterprise.name}
                                 </h:column>
                                 <h:column>
+                                    <f:facet name="header">#{msgs.position}</f:facet>
+                                        #{selectedEnter.position.name}
+                                </h:column>
+                                <h:column>
                                     <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
-                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(enterId)}" var="user" class="tableTitle">
+                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(selectedEnter.entstuid)}" var="user" class="tableTitle">
                                         <h:column>
                                             <f:facet name="header">#{msgs.name}</f:facet>
                                                 #{user.student.name}
                                         </h:column>
                                         <h:column>
                                             <f:facet name="header">#{msgs.unitNamein}</f:facet>
-                                                #{user.student.nameofunit.parNameofunit.name}
+                                                #{user.student.nameofunit.name}
                                         </h:column>
                                         <h:column>
                                             <f:facet name="header">#{msgs.phone}</f:facet>
@@ -95,8 +98,12 @@
                                 <f:facet name="header">#{msgs.other}</f:facet>
                                 <h:outputLabel value="#{ep.other}" id="other"/>
                             </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.myselect}</f:facet>
+                                <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter(studentSelectEnt.enterprise.id, ep.position.id)}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}" class="submit"/>
+                            </h:column>
                         </h:dataTable> 
-                        <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter()}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}" class="submit"/>
+
                         <h:outputLabel value="#{msgs.already}#{msgs.myselect}#{msgs.enter}！" rendered="#{studentSelectEnt.enter4SameStu.size()>0}"/>
                     </h:form>
                 </div>

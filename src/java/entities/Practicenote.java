@@ -19,16 +19,10 @@ public class Practicenote implements Serializable {
     private Integer id;
     private String detail;
     private Date submitdate;
-    private String stuno;
-    private int positionid;
-    private int enterid;
+    private Integer studententid;
     private String schoolId;
-    private Enterprise enterprise;
-    private Position position;
-    private User student;
-    private SQLTool<Enterprise> epDao = new SQLTool<Enterprise>();
-    private SQLTool<Position> positionDao = new SQLTool<Position>();
-    private SQLTool<User> userDao = new SQLTool<User>();
+    private Stuentrel stuent;
+    private SQLTool<Stuentrel> seDao = new SQLTool<>();
 
     public Practicenote() {
     }
@@ -61,81 +55,6 @@ public class Practicenote implements Serializable {
         this.submitdate = submitdate;
     }
 
-    public String getStuno() {
-        return stuno;
-    }
-
-    public void setStuno(String stuno) {
-        this.stuno = stuno;
-    }
-
-    public int getPositionid() {
-        return positionid;
-    }
-
-    public void setPositionid(int positionid) {
-        this.positionid = positionid;
-    }
-
-    public int getEnterid() {
-        return enterid;
-    }
-
-    public void setEnterid(int enterid) {
-        this.enterid = enterid;
-    }
-
-    /**
-     * @return the enterprise
-     */
-    public Enterprise getEnterprise() {
-        if (enterprise == null) {
-            enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" +StaticFields.currentGradeNum+"  where id=" + enterid, new Enterprise()).get(0);
-        }
-        return enterprise;
-    }
-
-    /**
-     * @param enterprise the enterprise to set
-     */
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
-    }
-
-    /**
-     * @return the position
-     */
-    public Position getPosition() {
-        if (position == null) {
-            position = positionDao.getBeanListHandlerRunner("select * from position" +StaticFields.currentGradeNum+"  where id=" + positionid, new Position()).get(0);
-        }
-        return position;
-    }
-
-    /**
-     * @param position the position to set
-     */
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    /**
-     * @return the student
-     */
-    public User getStudent() {
-        if (student == null) {
-            student = userDao.getBeanListHandlerRunner("select * from student" +StaticFields.currentGradeNum+ schoolId + " where uno='" + stuno + "'", new User()).get(0);
-        }
-        return student;
-    }
-
-    /**
-     * @param student the student to set
-     */
-    public void setStudent(User student) {
-        this.student = student;
-    }
-
     /**
      * @return the schoolId
      */
@@ -148,5 +67,34 @@ public class Practicenote implements Serializable {
      */
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    /**
+     * @return the studententid
+     */
+    public Integer getStudententid() {
+        return studententid;
+    }
+
+    /**
+     * @param studententid the studententid to set
+     */
+    public void setStudententid(Integer studententid) {
+        this.studententid = studententid;
+    }
+
+    /**
+     * @return the stuent
+     */
+    public Stuentrel getStuent() {
+        stuent = seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + schoolId + " where id=" + studententid, new Stuentrel()).get(0);
+        return stuent;
+    }
+
+    /**
+     * @param stuent the stuent to set
+     */
+    public void setStuent(Stuentrel stuent) {
+        this.stuent = stuent;
     }
 }

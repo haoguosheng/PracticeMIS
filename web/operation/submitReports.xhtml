@@ -35,8 +35,8 @@
                             <c:set value="#{checkLogin.user.stuentrelList[0]}" var="ent" />
                             <h:outputLabel value="#{ent.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
-                            <h:selectOneMenu value="#{submitReport.positionId}" >
-                                <f:selectItems value="#{submitReport.positionMap}"/>
+                            <h:selectOneMenu value="#{submitReport}"  disabled="true">
+                                <f:selectItems value="#{submitReport.stuEnRel.enterstu.positionMap}"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="#{msgs.time}:"></h:outputLabel>
                             <h:panelGrid columns="6">
