@@ -10,6 +10,7 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                 <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                 <div class="pageContent">
                     <h1 class ="tableTitle">#{msgs.already}#{msgs.selectEnter}</h1>
                     <section>
@@ -53,7 +54,6 @@
                     </section>   
                     <hr/>
                     <h:form  style="alignment-adjust: middle">
-                        <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
                         <h1 class="tableTitless"><h:outputLabel value="#{msgs.selectEnter}"/></h1>
                         <h:panelGrid columns="2" class="tableStyle">
                             <h:outputText value="#{msgs.selectCity}"/>
@@ -70,7 +70,7 @@
                             </h:selectOneMenu>
                         </h:panelGrid> 
 
-                        <h:dataTable id="enterDetail" value="#{enterpriseInfo.enterprise.enterstudentList}" var="ep"
+                        <h:dataTable id="enterDetail" value="#{enterpriseInfo.enterStuList}" var="ep"
                                      border="1" styleClass="tableStyle" headerClass="tableHeaderClass" 
                                      >
                             <h:column>

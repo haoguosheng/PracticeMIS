@@ -89,7 +89,8 @@ public class PracticeNoteBB implements Serializable {
                 String s = sdf.format(tempc.getTime());
                 //注意：java.sql.Date只能读取日期("yyyy-MM-dd")
                 //java.sql.Date date = Date.Valuseof(s);
-                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate, studentEntId,stuno) values('" + getDetail() + "', '" + s + "'," + this.getStudentUser().getStuentrelList().get(0).getId() + ",'" + this.getStudentUserno() + "')");
+                List<Stuentrel> temList=this.getStudentUser().getStuentrelList();
+                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate, studentEntId,stuno) values('" + getDetail() + "', '" + s + "'," + temList.get(temList.size()-1) + ",'" + this.getStudentUserno() + "')");
                 submittedNoteList = null;//重新生成该列表
             }
         }
@@ -121,6 +122,15 @@ public class PracticeNoteBB implements Serializable {
                     tem += s.getId() + ",";
                 }
                 submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + user.getSchoolId() + " where studentEntId in(" + tem.substring(0, tem.length() - 1) + ")", new Practicenote());
+            } else {//stuEntRelList.size()==0
+                try {
+                    FacesContext context = FacesContext.getCurrentInstance();
+                    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                    response.sendRedirect("selectMyEnterprise.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(UserinfoBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         }
         return submittedNoteList;

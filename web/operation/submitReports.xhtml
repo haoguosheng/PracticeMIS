@@ -34,7 +34,7 @@
                             <h:outputLabel value="#{msgs.name}:" />
                             <h:outputLabel value="#{practiceNoteBB.studentUser.name}"/>                     
                             <h:outputLabel value="#{msgs.enterName}:"/>
-                            <c:set value="#{practiceNoteBB.studentUser.stuentrelList[practiceNoteBB.studentUser.stuentrelList.size-1]}" var="stuEnt" />
+                            <c:set value="#{practiceNoteBB.studentUser.stuentrelList[practiceNoteBB.studentUser.stuentrelList.size()-1]}" var="stuEnt" />
                             <h:outputLabel value="#{stuEnt.enterstu.enterprise.name}"/>
                             <h:panelGrid columns="2"  class="tableStyle">
                                 <h:outputLabel value="#{msgs.position}:"/>

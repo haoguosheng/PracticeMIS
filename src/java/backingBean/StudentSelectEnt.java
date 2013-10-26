@@ -45,7 +45,8 @@ public class StudentSelectEnt implements java.io.Serializable {
 
     public String deleteSelectedEnterprise() {
         User sessionuser = getUser();
-        seDao.executUpdate("delete from stuentrel" + StaticFields.currentGradeNum + sessionuser.getSchoolId() + " where id=" + sessionuser.getStuentrelList().get(0).getId());
+        List<Stuentrel> temList=sessionuser.getStuentrelList();
+        seDao.executUpdate("delete from stuentrel" + StaticFields.currentGradeNum + sessionuser.getSchoolId() + " where id=" + temList.get(temList.size()-1).getId());
         this.enter4SameStu = null;
         return "selectMyEnterprise";
     }

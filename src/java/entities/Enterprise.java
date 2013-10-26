@@ -168,10 +168,10 @@ public class Enterprise implements Serializable {
     }
 
     /**
-     * @return the enterstudentList
+      * @return 
      */
     public List<Enterstudent> getEnterstudentList() {
-        if (null == enterstudentList&&id!=0) {
+        if (null == enterstudentList&&null!=id||id!=0) {
             enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where enterid=" + id, new Enterstudent());
         }
         return enterstudentList;

@@ -13,8 +13,12 @@
 
                 <div class="pageContent">
                     <h:form>
-                        <h:messages style="color: red" id="latestMessage"/>
-                        <h:panelGrid columns="5" class="tableStyle">
+                        <h:messages style="color: red" id="latestMessage"/>                       
+                        <h1 class ="tableTitle"> <h:outputLabel value="#{msgs.enter}#{msgs.list}:"/>
+                            <h:outputLabel value="      符合条件的单位个数为：#{enterpriseInfo.entCityList.size()}个"  id="myresult" style="color:red"/>
+                        </h1>
+                        <div class="tableStyle" align="left">
+                            &nbsp;&nbsp;&nbsp;
                             <h:selectOneMenu value="#{enterpriseInfo.cityId}">
                                 <f:selectItem itemLabel="请选择城市" itemValue="0"/>
                                 <f:selectItems value="#{cityBackingBean.cityMap}"/>
@@ -24,11 +28,9 @@
                             <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}" class="submit"/>
                             <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}" class="submit"/>
                             <h:commandButton action="#{enterpriseInfo.toAddEnterprise}" value="#{msgs.add}#{msgs.enter}" class="submit"/>
-                        </h:panelGrid>
+                        </div>
 
-                        <h1 class ="tableTitle"> <h:outputLabel value="#{msgs.enter}#{msgs.list}:"/>
-                            <h:outputLabel value="      符合条件的单位个数为：#{enterpriseInfo.entCityList.size()}个"  id="myresult" style="color:red"/>
-                        </h1>
+
                         <h:dataTable  id="cityEnterprise"  value="#{enterpriseInfo.paginator.model}" var="ep" styleClass="tableStyle">
                             <h:column>
                                 <f:facet name="header">#{msgs.enterName}</f:facet>

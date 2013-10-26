@@ -5,13 +5,17 @@
 package backingBean;
 
 import entities.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import tools.RepeatPaginator;
 import tools.SQLTool;
 import tools.StaticFields;
@@ -28,10 +32,9 @@ public class EnterpriseInfo implements java.io.Serializable {
     private CheckLogin checkLogin;
     private SQLTool<Enterprise> epDao;
     private SQLTool<City> cDao;
-      private SQLTool<Enterstudent> esDao;
-    private SQLTool<Position> posDao;
     Integer id = 0;
     private List<Enterprise> enterpriseList;
+    private List<Enterstudent> enterStuList;
     private Enterprise enterprise;
     private int cityId, positionId;
     private int enterpriseid;
@@ -50,13 +53,11 @@ public class EnterpriseInfo implements java.io.Serializable {
     public void init() {
         epDao = new SQLTool<>();
         cDao = new SQLTool<>();
-        esDao = new SQLTool<>();
-        posDao = new SQLTool<>();
         enterprise = new Enterprise();
         enterMap = new LinkedHashMap<>();
     }
 
-      public String direct2Need(int ent) {
+    public String direct2Need(int ent) {
         this.setEnterpriseid(ent);
         return "enterpriseNeedInfo";
     }
@@ -76,6 +77,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         }
         return null;
     }
+
     public LinkedHashMap<String, Integer> getEnterMap() {
         this.enterMap.clear();
         if (cityId != 0) {
@@ -194,9 +196,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.checkLogin = checkLogin;
     }
 
-
-    
-
     public void setCityId(int cityId) {
         this.searchType = this.cityEnter;
         this.cityId = cityId;
@@ -247,7 +246,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.enterurl = enterurl;
     }
 
-
     public String getContactname() {
         return contactname;
     }
@@ -271,11 +269,31 @@ public class EnterpriseInfo implements java.io.Serializable {
     public void setContactaddress(String contactaddress) {
         this.contactaddress = contactaddress;
     }
+
     public int getEnterpriseid() {
         return enterpriseid;
     }
 
     public void setEnterpriseid(int enterpriseid) {
         this.enterpriseid = enterpriseid;
+    }
+
+    /**
+     * @return the enterStuList
+     */
+    public List<Enterstudent> getEnterStuList() {
+        if (this.enterpriseid != 0) {
+            enterStuList = this.getEnterprise().getEnterstudentList();
+            if (enterStuList.isEmpty()) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                try {
+                    response.sendRedirect("enterpriseInfo.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(PracticeNoteBB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return enterStuList;
     }
 }

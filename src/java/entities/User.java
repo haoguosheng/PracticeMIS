@@ -4,15 +4,8 @@
  */
 package entities;
 
-import backingBean.UserinfoBean;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import tools.SQLTool;
 import tools.StaticFields;
 import tools.UserAnalysis;
@@ -119,16 +112,6 @@ public class User implements Serializable {
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
             stuentrelList = seDao.getBeanListHandlerRunner("select * from stuentrel" + getSchoolId() + " where stuno='" + uno + "'", new Stuentrel());
-        }
-        if (stuentrelList.isEmpty()) {
-            try {
-                FacesContext context = FacesContext.getCurrentInstance();
-                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-                response.sendRedirect("selectMyEnterprise.xhtml");
-            } catch (IOException ex) {
-                Logger.getLogger(UserinfoBean.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return stuentrelList;
     }
