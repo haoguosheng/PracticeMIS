@@ -7,6 +7,7 @@ package backingBean;
 import entities.Practicenote;
 import entities.Stuentrel;
 import entities.User;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -41,16 +43,15 @@ public class PracticeNoteBB implements Serializable {
     private SQLTool<Stuentrel> seDao;
     private SQLTool<User> userDao;
     private int positionId;
+    private String detail;
     private List<Practicenote> submittedNoteList;
-    private Practicenote practiceNote = new Practicenote();
     private User studentUser;
     private String studentUserno;
     private final Calendar c = Calendar.getInstance();
     private int year = c.get(Calendar.YEAR), month = c.get(Calendar.MONTH), day = c.get(Calendar.DAY_OF_MONTH);
     private final int currentMonth = month;
     private LinkedHashMap<Integer, Integer> dayMap = new LinkedHashMap<>();
-    private Stuentrel stuEnRel;
-    private int stuEnRelId;
+    private List<Stuentrel> stuEnRelList;
     private String deleteRepDate, alterDate;
     private boolean readflag;
 
@@ -59,7 +60,6 @@ public class PracticeNoteBB implements Serializable {
         practDao = new SQLTool<>();
         seDao = new SQLTool<>();
         userDao = new SQLTool<>();
-        setStuEnRel(new Stuentrel());
     }
 
     public void submitPracNote() {
@@ -85,17 +85,12 @@ public class PracticeNoteBB implements Serializable {
             if (hasSubmitted) {
                 FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("请确认您输入了正确的日期，因为当前日期的周记已经提交过了"));
             } else {
-                practiceNote.setSubmitdate(tempc.getTime());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String s = sdf.format(tempc.getTime());
                 //注意：java.sql.Date只能读取日期("yyyy-MM-dd")
                 //java.sql.Date date = Date.Valuseof(s);
-                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate, studentEntId) values('" + practiceNote.getDetail() + "', '" + s + "'," + this.getStuEnRelId() + ")");
+                practDao.executUpdate("insert into practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + "(detail, submitdate, studentEntId,stuno) values('" + getDetail() + "', '" + s + "'," + this.getStudentUser().getStuentrelList().get(0).getId() + ",'" + this.getStudentUserno() + "')");
                 submittedNoteList = null;//重新生成该列表
-                practiceNote = new Practicenote();
-                this.setYear(c.get(Calendar.YEAR));
-                this.setMonth(c.get(Calendar.MONTH));
-                this.setDay(c.get(Calendar.DAY_OF_MONTH));
             }
         }
     }
@@ -110,20 +105,23 @@ public class PracticeNoteBB implements Serializable {
         }
         return dayMap;
     }
+    /*
+     **功能：获得已经提交的实习周记
+     */
 
     public List<Practicenote> getSubmittedNoteList() {
-        User user = this.checkLogin.getUser();
         if (null == submittedNoteList || submittedNoteList.isEmpty()) {
+            User user = this.checkLogin.getUser();
+            this.studentUserno = user.getUno();
             submittedNoteList = new ArrayList<>();
-            List<String> stuEntRelId=seDao.getIdListHandlerRunner("select id from STUENTREL"+ StaticFields.currentGradeNum + user.getSchoolId() +"  where STUNO='"+user.getUno() +"'");
-            String tem="";
-            for(String s:stuEntRelId){
-                tem+=s+",";
+            List<Stuentrel> stuEntRelList = this.getStudentUser().getStuentrelList();
+            if (stuEntRelList.size() > 0) {
+                String tem = "";
+                for (Stuentrel s : stuEntRelList) {
+                    tem += s.getId() + ",";
+                }
+                submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + user.getSchoolId() + " where studentEntId in(" + tem.substring(0, tem.length() - 1) + ")", new Practicenote());
             }
-            submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + user.getSchoolId() + " where studentEntId in(" + tem.substring(0,tem.length()-1)+ ")", practiceNote);
-        }
-        for (Practicenote s : submittedNoteList) {
-            s.setSchoolId(checkLogin.getUser().getSchoolId());
         }
         return submittedNoteList;
     }
@@ -133,9 +131,11 @@ public class PracticeNoteBB implements Serializable {
         readflag = true;
         FacesContext context = FacesContext.getCurrentInstance();
         if (null != (context.getExternalContext().getRequestParameterMap().get("studentNo"))) {
+            User user = checkLogin.getUser();
             //主要用于教师查看学生的周记
-            this.studentUser = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where uno='" + context.getExternalContext().getRequestParameterMap().get("studentNo") + "'", checkLogin.getUser()).get(0);
-            this.submittedNoteList = practDao.getBeanListHandlerRunner("select * from practice" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + this.studentUser.getUno() + "'", practiceNote);
+            studentUserno = context.getExternalContext().getRequestParameterMap().get("studentNo");
+            this.studentUser = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where uno='" + studentUserno + "'", checkLogin.getUser()).get(0);
+            this.submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + user.getSchoolId() + " where studententid=" + this.studentUser.getStuentrelList().get(0).getId(), new Practicenote());
         }
         String strToFormat = context.getExternalContext().getRequestParameterMap().get("submitDate");
         deleteRepDate = strToFormat;
@@ -152,17 +152,17 @@ public class PracticeNoteBB implements Serializable {
             Practicenote tem = it.next();
             if (requestDate.getDate() == tem.getSubmitdate().getDate()) {
                 this.temPraNote = tem;
+                this.temPraNote.setStuUno(studentUserno);
                 break;
             }
         }
         return "showStudentReport.xhtml";
     }
 
-   
     public String deleteSelectReport() {
         String s = deleteRepDate;
         practDao.executUpdate("delete from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "' and submitdate='" + s + "'");
-        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'", practiceNote);
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'", new Practicenote());
         readflag = true;
         return "viewReports.xhtml";
     }
@@ -175,8 +175,28 @@ public class PracticeNoteBB implements Serializable {
     public String alterSelectReport() {
         String s = alterDate;
         practDao.executUpdate("update practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " set detail='" + temPraNote.getDetail() + "' where stuno='" + checkLogin.getUser().getUno() + "' and submitdate='" + s + "'");
-        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'", practiceNote);
-        return "viewReports.xhtml";
+        submittedNoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where stuno='" + checkLogin.getUser().getUno() + "'", new Practicenote());
+        return "submitReports.xhtml";
+    }
+
+    /*
+     *获得学生选择的企业；
+     *如果学生还没有选择企业，则转向选择企业页面
+     */
+    public List<Stuentrel> getStuEnRelList() {
+        if (null == stuEnRelList) {
+            List<Stuentrel> stuEntList = seDao.getBeanListHandlerRunner("select * from Stuentrel" + StaticFields.currentGradeNum + getStudentUser().getSchoolId() + " where id=" + this.getStudentUser().getStuentrelList().get(0).getId(), new Stuentrel());
+            if (stuEntList.isEmpty()) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                try {
+                    response.sendRedirect("selectMyEnterprise.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(PracticeNoteBB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return stuEnRelList;
     }
 
     public Practicenote getTemPraNote() {
@@ -191,135 +211,71 @@ public class PracticeNoteBB implements Serializable {
         return this.positionId;
     }
 
-    public Practicenote getPracticeNote() {
-        return practiceNote;
-    }
-
-    public void setPracticeNote(Practicenote practiceNote) {
-        this.practiceNote = practiceNote;
-    }
-
-    /**
-     * @return the year
-     */
     public int getYear() {
         return year;
     }
 
-    /**
-     * @param year the year to set
-     */
     public void setYear(int year) {
         this.year = year;
     }
 
-    /**
-     * @return the month
-     */
     public int getMonth() {
         return month;
     }
 
-    /**
-     * @param month the month to set
-     */
     public void setMonth(int month) {
         this.month = month;
     }
 
-    /**
-     * @return the day
-     */
     public int getDay() {
         return day;
     }
 
-    /**
-     * @param day the day to set
-     */
     public void setDay(int day) {
         this.day = day;
     }
 
-    /**
-     * @return the studentUser
-     */
     public User getStudentUser() {
-        studentUser = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where uno='" + studentUserno + "'", checkLogin.getUser()).get(0);
-        studentUser.setSchoolId(checkLogin.getUser().getSchoolId());
+        studentUser = checkLogin.getUser();
         return studentUser;
     }
 
-    /**
-     * @return the studentUserno
-     */
     public String getStudentUserno() {
         return studentUserno;
     }
 
-    /**
-     * @param studentUserno the studentUserno to set
-     */
     public void setStudentUserno(String studentUserno) {
         this.studentUserno = studentUserno;
     }
 
-    /**
-     * @return the readflag
-     */
     public boolean isReadflag() {
         return readflag;
     }
 
-    /**
-     * @param readflag the readflag to set
-     */
     public void setReadflag(boolean readflag) {
         this.readflag = readflag;
     }
 
-    /**
-     * @return the checkLogin
-     */
     public CheckLogin getCheckLogin() {
         return checkLogin;
     }
 
-    /**
-     * @param checkLogin the checkLogin to set
-     */
     public void setCheckLogin(CheckLogin checkLogin) {
         this.checkLogin = checkLogin;
     }
 
-    /**
-     * @return the stuEnRel
-     */
-    public Stuentrel getStuEnRel() {
-        if(null==stuEnRel){
-            stuEnRel=seDao.getBeanListHandlerRunner("select * from Stuentrel" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where id=" + this.stuEnRelId , new Stuentrel()).get(0);
-        }
-        return stuEnRel;
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     /**
-     * @param stuEnRel the stuEnRel to set
+     * @param stuEnRelList the stuEnRelList to set
      */
-    public void setStuEnRel(Stuentrel stuEnRel) {
-        this.stuEnRel = stuEnRel;
-    }
-
-    /**
-     * @return the stuEnRelId
-     */
-    public int getStuEnRelId() {
-        return stuEnRelId;
-    }
-
-    /**
-     * @param stuEnRelId the stuEnRelId to set
-     */
-    public void setStuEnRelId(int stuEnRelId) {
-        this.stuEnRelId = stuEnRelId;
+    public void setStuEnRelList(List<Stuentrel> stuEnRelList) {
+        this.stuEnRelList = stuEnRelList;
     }
 }

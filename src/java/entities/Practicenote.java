@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -21,8 +22,9 @@ public class Practicenote implements Serializable {
     private Date submitdate;
     private Integer studententid;
     private String schoolId;
-    private Stuentrel stuent;
-    private SQLTool<Stuentrel> seDao = new SQLTool<>();
+    private Stuentrel stuEntRel;
+    private String stuUno;
+    private final SQLTool<Stuentrel> seDao = new SQLTool<>();
 
     public Practicenote() {
     }
@@ -59,6 +61,9 @@ public class Practicenote implements Serializable {
      * @return the schoolId
      */
     public String getSchoolId() {
+        if(null==schoolId){
+            schoolId=UserAnalysis.getSchoolId(getStuUno());
+        }
         return schoolId;
     }
 
@@ -83,18 +88,28 @@ public class Practicenote implements Serializable {
         this.studententid = studententid;
     }
 
-    /**
-     * @return the stuent
-     */
-    public Stuentrel getStuent() {
-        stuent = seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + schoolId + " where id=" + studententid, new Stuentrel()).get(0);
-        return stuent;
+    public Stuentrel getStuEntRel() {
+        if (null == this.stuEntRel) {
+            stuEntRel=seDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + getSchoolId() + " where id=" + studententid, new Stuentrel()).get(0);
+        }
+        return stuEntRel;
+    }
+
+    public void setStuEntRel(Stuentrel stuEntRel) {
+        this.stuEntRel = stuEntRel;
     }
 
     /**
-     * @param stuent the stuent to set
+     * @param StuUno the StuUno to set
      */
-    public void setStuent(Stuentrel stuent) {
-        this.stuent = stuent;
+    public void setStuUno(String StuUno) {
+        this.stuUno = StuUno;
+    }
+
+    /**
+     * @return the StuUno
+     */
+    public String getStuUno() {
+        return stuUno;
     }
 }

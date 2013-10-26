@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -117,14 +118,12 @@ public class User implements Serializable {
 
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
-            stuentrelList = seDao.getBeanListHandlerRunner("select * from stuentrel" + schoolId + " where stuno='" + uno + "'", new Stuentrel());
+            stuentrelList = seDao.getBeanListHandlerRunner("select * from stuentrel" + getSchoolId() + " where stuno='" + uno + "'", new Stuentrel());
         }
         if (stuentrelList.isEmpty()) {
             try {
                 FacesContext context = FacesContext.getCurrentInstance();
-                HttpSession mySession = (HttpSession) context.getExternalContext().getSession(true);
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-                mySession.invalidate();
                 response.sendRedirect("selectMyEnterprise.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(UserinfoBean.class
@@ -153,6 +152,9 @@ public class User implements Serializable {
      * @return the schoolId
      */
     public String getSchoolId() {
+        if(null==schoolId){
+            schoolId=UserAnalysis.getSchoolId(uno);
+        }
         return schoolId;
     }
 

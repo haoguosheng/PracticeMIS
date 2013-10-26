@@ -4,8 +4,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+>
     <f:loadBundle  basename="messages" var="msgs"/>
     <h:head></h:head>
     <body>
@@ -15,26 +14,26 @@
                     <h1 class ="tableTitle">#{msgs.already}#{msgs.selectEnter}</h1>
                     <section>
                         <h:form>
-                            <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter"   styleClass="tableStyle" >
+                            <h:dataTable value="#{studentSelectEnt.enter4SameStu}" var="selectedEnter"  rendered="#{studentSelectEnt.enter4SameStu.size()>0}" styleClass="tableStyle" >
                                 <h:column>
                                     <f:facet name="header"></f:facet>
-                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(selectedEnter.id)}" value="#{msgs.delete}" class="submit"/>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise}" value="#{msgs.cancel}#{msgs.myselect}" class="submit"/>
                                 </h:column>                        
                                 <h:column>
                                     <f:facet name="header">#{msgs.city}</f:facet>
-                                        #{selectedEnter.enterprise.city.name}
+                                        #{selectedEnter.enterstu.enterprise.city.name}
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msgs.enterName}</f:facet>
-                                        #{selectedEnter.enterprise.name}
+                                        #{selectedEnter.enterstu.enterprise.name}
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msgs.position}</f:facet>
-                                        #{selectedEnter.position.name}
+                                        #{selectedEnter.enterstu.position.name}
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
-                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(selectedEnter.entstuid)}" var="user" class="tableTitle">
+                                    <h:dataTable value="#{studentSelectEnt.stuForSameEnt}" var="user" class="tableTitle" rendered="#{studentSelectEnt.stuForSameEnt.size()>0}">
                                         <h:column>
                                             <f:facet name="header">#{msgs.name}</f:facet>
                                                 #{user.student.name}
@@ -64,19 +63,19 @@
                                 <f:ajax render="enterprise" event="change"/>
                             </h:selectOneMenu>
                             <h:outputLabel value="#{msgs.selectEnt}"/>
-                            <h:selectOneMenu  value="#{studentSelectEnt.enterpriseid}" id="enterprise">
+                            <h:selectOneMenu  value="#{enterpriseInfo.enterpriseid}" id="enterprise">
                                 <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
                                 <f:selectItems value="#{enterpriseInfo.enterMap}"/>
                                 <f:ajax render="enterDetail" event="change"/>
                             </h:selectOneMenu>
                         </h:panelGrid> 
 
-                        <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.enterstudentList}" var="ep"
+                        <h:dataTable id="enterDetail" value="#{enterpriseInfo.enterprise.enterstudentList}" var="ep"
                                      border="1" styleClass="tableStyle" headerClass="tableHeaderClass" 
                                      >
                             <h:column>
                                 <f:facet name="header">#{msgs.enterName}</f:facet>
-                                <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
+                                <h:outputLabel value=" #{ep.enterprise.name}" id="name"/>
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.payment}</f:facet>
@@ -100,7 +99,7 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.myselect}</f:facet>
-                                <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter(studentSelectEnt.enterprise.id, ep.position.id)}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}" class="submit"/>
+                                <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter(ep.id)}" rendered="#{studentSelectEnt.enter4SameStu.size()==0}" class="submit"/>
                             </h:column>
                         </h:dataTable> 
 

@@ -45,7 +45,6 @@ public class EnterpriseInfo implements java.io.Serializable {
     private final int cityEnter = 1, enterAll = 2, searchEnter = 3;
     private boolean added = false;
     private String enterurl, contactname, contacttelephone, contactaddress;
-    private LinkedHashMap<String, Integer> positionMap;
 
     @PostConstruct
     public void init() {
@@ -57,19 +56,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         enterMap = new LinkedHashMap<>();
     }
 
-    public LinkedHashMap<String, Integer> getPositionMap() {
-        if (null == this.positionMap || this.positionMap.isEmpty()) {
-            this.positionMap = new LinkedHashMap();
-            List<Enterstudent> reqStu = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where enterId=" + id, new Enterstudent());
-            for (int j = 0; j < reqStu.size(); j++) {
-                Position tempP = posDao.getBeanListHandlerRunner("select * from position" + StaticFields.currentGradeNum + " where id=" + reqStu.get(j).getPositionid(), new Position()).get(0);
-                this.positionMap.put(tempP.getName(), tempP.getId());
-            }
-        }
-        return positionMap;
-    }
-
-    public String direct2Need(int ent) {
+      public String direct2Need(int ent) {
         this.setEnterpriseid(ent);
         return "enterpriseNeedInfo";
     }
@@ -207,9 +194,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.checkLogin = checkLogin;
     }
 
-    public int getEnterpriseid() {
-        return enterpriseid;
-    }
+
     
 
     public void setCityId(int cityId) {
@@ -226,13 +211,11 @@ public class EnterpriseInfo implements java.io.Serializable {
             this.enterprise = epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
         } else {
             this.enterprise = new Enterprise();
+            this.enterprise.setId(0);
         }
         return enterprise;
     }
 
-    /**
-     * @return the enterpriseList
-     */
     public List<Enterprise> getEnterpriseList() {
         switch (searchType) {
             case enterAll:
@@ -248,79 +231,50 @@ public class EnterpriseInfo implements java.io.Serializable {
         return enterpriseList;
     }
 
-    /**
-     * @param enterpriseList the enterpriseList to set
-     */
     public void setEnterpriseList(List<Enterprise> enterpriseList) {
         this.enterpriseList = enterpriseList;
     }
 
-    /**
-     * @return the added
-     */
     public boolean isAdded() {
         return added;
     }
 
-    /**
-     * @return the enterurl
-     */
     public String getEnterurl() {
         return enterurl;
     }
 
-    /**
-     * @param enterurl the enterurl to set
-     */
     public void setEnterurl(String enterurl) {
         this.enterurl = enterurl;
     }
 
-    /**
-     * @return the contactname
-     */
+
     public String getContactname() {
         return contactname;
     }
 
-    /**
-     * @param contactname the contactname to set
-     */
     public void setContactname(String contactname) {
         this.contactname = contactname;
     }
 
-    /**
-     * @return the contacttelephone
-     */
     public String getContacttelephone() {
         return contacttelephone;
     }
 
-    /**
-     * @param contacttelephone the contacttelephone to set
-     */
     public void setContacttelephone(String contacttelephone) {
         this.contacttelephone = contacttelephone;
     }
 
-    /**
-     * @return the contactaddress
-     */
     public String getContactaddress() {
         return contactaddress;
     }
 
-    /**
-     * @param contactaddress the contactaddress to set
-     */
     public void setContactaddress(String contactaddress) {
         this.contactaddress = contactaddress;
     }
+    public int getEnterpriseid() {
+        return enterpriseid;
+    }
 
-    /**
-     * @param enterpriseid the enterpriseid to set
-     */
     public void setEnterpriseid(int enterpriseid) {
         this.enterpriseid = enterpriseid;
     }

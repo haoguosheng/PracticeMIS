@@ -7,6 +7,7 @@ package entities;
 import java.io.Serializable;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -21,8 +22,8 @@ public class Stuentrel implements Serializable {
     private String schoolId;
     private User student;
     private Enterstudent enterstu;
-    private SQLTool<User> userDao = new SQLTool<>();
-    private SQLTool<Enterstudent> esDao = new SQLTool<>();
+    private final SQLTool<User> userDao = new SQLTool<>();
+    private final SQLTool<Enterstudent> esDao = new SQLTool<>();
 
     public Stuentrel() {
     }
@@ -51,7 +52,9 @@ public class Stuentrel implements Serializable {
      * @return the student
      */
     public User getStudent() {
-        student = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + schoolId + " where uno='" + stuno + "'", new User()).get(0);
+        if (null == this.student) {
+            student = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + getSchoolId() + " where uno='" + stuno + "'", new User()).get(0);
+        }
         return student;
     }
 
@@ -66,6 +69,9 @@ public class Stuentrel implements Serializable {
      * @return the schoolId
      */
     public String getSchoolId() {
+        if (null == schoolId) {
+            schoolId = UserAnalysis.getSchoolId(stuno);
+        }
         return schoolId;
     }
 
@@ -94,7 +100,9 @@ public class Stuentrel implements Serializable {
      * @return the enterstu
      */
     public Enterstudent getEnterstu() {
-        enterstu = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where id=" + this.entstuid, new Enterstudent()).get(0);
+        if (this.entstuid != 0) {
+            enterstu = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where id=" + this.entstuid, new Enterstudent()).get(0);
+        }
         return enterstu;
     }
 
