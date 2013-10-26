@@ -3,7 +3,8 @@
 **/
 
 .allNews {
-    width:930px;
+    width:1100px;
+    background-color: #F0F6FA;
 }
 
 .allNewsTable {
@@ -71,3 +72,70 @@
 /**
 教师信息维护
 **/
+
+
+/**新闻卡片推**/
+
+.tab {
+    height:300px;
+    width:400px;
+    float:left;
+    position:relative;
+    margin-top:8px;
+}
+
+.tabChild {
+    height:270px;
+    position:absolute;
+    left:0px;
+    top:30px;
+    display:none;
+    background-color:#FFF;
+}
+.lastNews{
+  width:280px;
+  background-color: #fff;
+  margin-right:8px;
+}
+
+.specialTab {
+   width:1100px;
+}
+.tab h1 {
+    height:30px;
+    width:65px;
+    text-align:center;
+    line-height:30px;
+    font-weight: normal;
+    font-size:12px;
+    float:left; 
+}
+.bg {
+   width:auto;
+   height:30px;
+   line-height:30px;
+   text-indent:8px;
+   text-align:left;
+   background-color: #F0F6FA;
+}
+.bg label {
+    background-color:#FFF;
+    display:block;
+    height:30px;
+    width:65px;
+}
+
+.allNews_bg {
+    height:131px;
+    background:#F0F6FA url(../../resources/images/news_bg_1.gif) no-repeat left top;
+}
+
+.allNews_bg .login {
+    width:200px;
+    position:absolute;
+    text-align:center;
+    height:40px;
+    top:0px;
+    right:0px;
+    line-height:40px;
+}
