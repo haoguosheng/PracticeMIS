@@ -11,25 +11,27 @@
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
 
-                <div class="companyInfo">
+                <div class="pageContent">
                     <h:form>
-                        <h:messages style="color: red" id="latestMessage"/>
-                        <h:panelGrid columns="5">
+                        <h:messages style="color: red" id="latestMessage"/>                       
+                        <h1 class ="tableTitle"> <h:outputLabel value="#{msgs.enter}#{msgs.list}:"/>
+                            <h:outputLabel value="      符合条件的单位个数为：#{enterpriseInfo.entCityList.size()}个"  id="myresult" style="color:red"/>
+                        </h1>
+                        <div class="tableStyle" align="left">
+                            &nbsp;&nbsp;&nbsp;
                             <h:selectOneMenu value="#{enterpriseInfo.cityId}">
                                 <f:selectItem itemLabel="请选择城市" itemValue="0"/>
                                 <f:selectItems value="#{cityBackingBean.cityMap}"/>
                                 <f:ajax render="cityEnterprise myresult"/>
                             </h:selectOneMenu>
                             <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
-                            <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}"/>
-                            <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}"/>
-                            <h:commandButton action="#{enterpriseInfo.toAddEnterprise}" value="#{msgs.add}#{msgs.enter}"/>
-                        </h:panelGrid>
+                            <h:commandButton value="#{msgs.search}" action="#{enterpriseInfo.search()}" class="submit"/>
+                            <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll()}" class="submit"/>
+                            <h:commandButton action="#{enterpriseInfo.toAddEnterprise}" value="#{msgs.add}#{msgs.enter}" class="submit"/>
+                        </div>
 
-                        <h1> <h:outputLabel value="#{msgs.enter}#{msgs.list}:"/>
-                            <h:outputLabel value="      符合条件的单位个数为：#{enterpriseInfo.entCityList.size()}个"  id="myresult" style="color:red"/>
-                        </h1>
-                        <h:dataTable  id="cityEnterprise"  value="#{enterpriseInfo.paginator.model}" var="ep"  rowClasses="oddRows evenRows"   border="1">
+
+                        <h:dataTable  id="cityEnterprise"  value="#{enterpriseInfo.paginator.model}" var="ep" styleClass="tableStyle">
                             <h:column>
                                 <f:facet name="header">#{msgs.enterName}</f:facet>
                                 <h:inputText value="#{ep.ent.name}" />
@@ -55,14 +57,14 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msgs.add}#{msgs.entNeed}</f:facet>
-                                <h:commandButton action="#{enterpriseInfo.direct2Need}" value="#{msgs.add}#{msgs.entNeed}"   rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}"/>
+                                <h:commandButton action="#{enterpriseInfo.direct2Need(ep.ent.id)}" value="#{msgs.add}#{msgs.entNeed}"   rendered="#{ep.ent.userno==enterpriseInfo.checkLogin.user.uno}" class="submit"/>
                             </h:column>
 
                         </h:dataTable>
 
-                        <h:commandButton value="&lt; 上一页" action="#{enterpriseInfo.paginator.prev}"/>
-                        <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}"/>
-                        <h:commandButton value="下一页 &gt;" action="#{enterpriseInfo.paginator.next}"/>
+                        <h:commandButton value="&lt; 上一页" action="#{enterpriseInfo.paginator.prev}" class ="submit"/>
+                        <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}" />
+                        <h:commandButton value="下一页 &gt;" action="#{enterpriseInfo.paginator.next}" class ="submit"/>
                     </h:form>
                 </div>
             </ui:define>

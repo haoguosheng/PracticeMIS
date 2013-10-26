@@ -11,12 +11,11 @@
             <ui:define name="content">
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form>
-                    <div class="companyInfo">
+                    <div class="pageContent">
                         <section style="border:solid black">
                             <h:outputLabel value="#{msgs.add}#{msgs.enter}" />
                             <hr/>
                             <h:panelGrid columns="6">
-
                                 <h:outputLabel value="#{msgs.enterName}:" for="name" />
                                 <h:inputText id="name" value="#{enterpriseInfo.enterName}" required="true"/>
                                 <h:outputLabel value="#{msgs.myurl}:" for="enterurl"/>

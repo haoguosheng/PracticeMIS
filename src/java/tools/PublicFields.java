@@ -26,10 +26,9 @@ import javax.inject.Named;
 @Named
 @ApplicationScoped
 public class PublicFields implements java.io.Serializable {
-
-    private final String tag = "在这里添加";
+   private final String tag = "在这里添加";
     private final Calendar c = Calendar.getInstance();
-    private final int year = c.get(Calendar.YEAR), currentMonth = c.get(Calendar.MONTH);
+    private final int year = c.get(Calendar.YEAR),currentMonth =c.get(Calendar.MONTH);
     private int month = c.get(Calendar.MONTH);
     private LinkedHashMap<Integer, Integer> yearMap;
     private LinkedHashMap<Integer, Integer> monthMap;
@@ -46,6 +45,7 @@ public class PublicFields implements java.io.Serializable {
     private static LinkedHashMap<String, List<News>> recentLNewsMap = new LinkedHashMap<>();
     private static LinkedHashMap<String, List<News>> recentGNewsMap = new LinkedHashMap<>();
     private LinkedHashMap<String, Integer> roleMap = null;
+   
 
     public static LinkedHashMap<String, List<News>> getRecentNewsMap() {
         List<News> recentNews = getNewsList();
@@ -155,7 +155,7 @@ public class PublicFields implements java.io.Serializable {
     }
 
     public static List<Nameofunit> getSchoolUnitList() {
-        if (myunitList.isEmpty()) {
+        if (null==myunitList||myunitList.isEmpty()) {
             myunitList = nameofUnitDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where parentid='" + StaticFields.universityId + "'order by pri", new Nameofunit());
         }
         return myunitList;

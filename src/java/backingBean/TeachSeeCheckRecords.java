@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,8 +26,8 @@ import tools.UserAnalysis;
 @SessionScoped
 public class TeachSeeCheckRecords implements Serializable {
 
-     @Inject
-   private  CheckLogin checkLogin;
+    @Inject
+    private CheckLogin checkLogin;
     private SQLTool<Checkrecords> checkDao;
     private SQLTool<City> cityDao;
     private SQLTool<User> userDao;
@@ -62,7 +61,7 @@ public class TeachSeeCheckRecords implements Serializable {
         String schoolId = UserAnalysis.getSchoolId(stuno);
         checkrecord = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + schoolId + " where stuno='" + stuno + "' and checkdate='" + checkDate + "'", getCheckrecord()).get(0);
         checkrecord.setSchoolId(schoolId);
-        city = cityDao.getBeanListHandlerRunner("select * from city" + StaticFields.currentGradeNum + " where id in (select cityId from enterprise" + StaticFields.currentGradeNum + " where id in (select enterid from stuentrel" + StaticFields.currentGradeNum + schoolId + " where stuno='" + stuno + "'))", city).get(0);
+        city = cityDao.getBeanListHandlerRunner("select * from city" + StaticFields.currentGradeNum + " where id in (select cityId from enterprise" + StaticFields.currentGradeNum + " where id in (select enterid from enterstudent" + StaticFields.currentGradeNum + " where id in (select entstuid from stuentrel" + StaticFields.currentGradeNum + schoolId + " where stuno='" + stuno + "')))", city).get(0);
         student = userDao.getBeanListHandlerRunner("select * from student" + StaticFields.currentGradeNum + schoolId + " where uno='" + stuno + "'", student).get(0);
         student.setSchoolId(schoolId);
         return "showCheckRecord.xhtml";
@@ -73,7 +72,7 @@ public class TeachSeeCheckRecords implements Serializable {
         checkDao.executUpdate("delete from checkrecords" + StaticFields.currentGradeNum + loginUser.getSchoolId() + " where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
         submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
         readflag = true;
-        return "viewCheckRecords.xhtml";
+        return "teacherCheck.xhtml";
     }
 
     public String editSelectRecord() {
@@ -85,6 +84,7 @@ public class TeachSeeCheckRecords implements Serializable {
         String s = alterDate;
         checkDao.executUpdate("update checkrecords" + StaticFields.currentGradeNum + loginUser.getSchoolId() + " set checkcontent='" + checkrecord.getCheckcontent() + "', recommendation='" + checkrecord.getRecommendation() + "', rank='" + checkrecord.getRank() + "', remark='" + checkrecord.getRemark() + "' where stuno='" + student.getUno() + "' and checkdate='" + s + "' and teachno='" + loginUser.getUno() + "'");
         submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "'", checkrecord);
+        readflag = true;
         return "viewCheckRecords.xhtml";
     }
 
@@ -92,11 +92,11 @@ public class TeachSeeCheckRecords implements Serializable {
      * @return the submittedRecordList
      */
     public List<Checkrecords> getSubmittedRecordList() {
-//        if (submittedRecordList == null) {
         submittedRecordList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + loginUser.getSchoolId() + " where teachno='" + loginUser.getUno() + "' order by stuno", getCheckrecord());
-//        }
-        for (Checkrecords c : submittedRecordList) {
-            c.setSchoolId(loginUser.getSchoolId());
+        if (submittedRecordList != null) {
+            for (Checkrecords c : submittedRecordList) {
+                c.setSchoolId(loginUser.getSchoolId());
+            }
         }
         return submittedRecordList;
     }

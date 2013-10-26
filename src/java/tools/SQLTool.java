@@ -32,7 +32,7 @@ public class SQLTool<T> implements java.io.Serializable {
         try {
             paperClassificationList = run.query(sql, rp);
         } catch (SQLException ex) {
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功或数据库未启动！"));
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找失败！"));
         }
         return paperClassificationList;
     }
@@ -43,23 +43,23 @@ public class SQLTool<T> implements java.io.Serializable {
         try {
             result = run.update(sql);
         } catch (SQLException ex) {
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("更新失败！"));
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("失败！"));
         }
         if (result <= 0) {
-            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("部分或全部操作失败！请查找原因"));
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("失败！"));
         } else {
-            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("被影响的记录数为" + result + "，表明更改部分或全部成功！"));
+            FacesContext.getCurrentInstance().addMessage("globalMessages", new FacesMessage("成功！"));
         }
         return result;
     }
 
     public List<String> getIdListHandlerRunner(String sql) {
-        List<String> ls = new LinkedList<String>();
+        List<String> ls = new LinkedList<>();
         ResultSetHandler<Object[]> h = new ResultSetHandler<Object[]>() {
             @Override
             public Object[] handle(ResultSet rs) throws SQLException {
                 Object[] result;
-                List<String> tem = new ArrayList<String>();
+                List<String> tem = new ArrayList<>();
                 while (rs.next()) {
                     tem.add(rs.getString(1));
                 }
@@ -74,7 +74,7 @@ public class SQLTool<T> implements java.io.Serializable {
                 ls.add(myTem[i].toString());
             }
         } catch (SQLException ex) {
-            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找不成功！"));
+            FacesContext.getCurrentInstance().addMessage("OK", new FacesMessage("查找失败！"));
         }
         return ls;
     }

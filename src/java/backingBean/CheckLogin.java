@@ -36,7 +36,7 @@ public class CheckLogin implements Serializable {
     private String rand;
     private int tryTime = 0;
     private boolean logined = false, rendered = true;
-    private final int tryTimeLimitedNumber = 3;
+    private final int tryTimeLimitedNumber = 200;
     private SQLTool<User> userDao;
 
     @PostConstruct
@@ -92,7 +92,9 @@ public class CheckLogin implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
         String genRand = ((String) session.getAttribute("rand")).trim();
+        System.out.println("tryTime=" + tryTime);
         if (tryTime++ < tryTimeLimitedNumber) {//尝试登录未超过规定次数
+            this.rendered = true;
             if (genRand.equals(this.rand)) {//验证码正确
                 if (isUserlegal(this.username, this.password)) {//用户存在
                     String schoolId = UserAnalysis.getSchoolId(this.username);
@@ -119,10 +121,12 @@ public class CheckLogin implements Serializable {
                 return null;
             }
         } else {
+            System.out.println("tryTime=" + tryTime);
             this.rendered = false;
             context.addMessage("globalMessages", new FacesMessage(this.messagesPro.getProperty("tryFaild")));
             this.rand = null;
             this.password = null;
+
             return null;
         }
     }

@@ -16,46 +16,40 @@
                     <h1><h:outputLabel value="#{msgs.selectEnter}"/></h1>
                     <h:panelGrid columns="2">
                         <h:outputText value="#{msgs.selectCity}"/>
-                        <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                        <h:selectOneMenu value="#{checkRecordBean.cityid}">
                             <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
                             <f:selectItems value="#{cityBackingBean.cityMap}"/>
-                            <f:ajax render="enterprise" event="change"/>
-                        </h:selectOneMenu>
-                        <h:outputLabel value="#{msgs.selectEnt}"/>
-                        <h:selectOneMenu  value="#{studentSelectEnt.enterpriseid}" id="enterprise" required="true">
-                            <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
-                            <f:selectItems value="#{enterpriseInfo.enterMap}"/>
-                            <f:ajax render="enterDetail" event="change"/>
+                            <f:ajax render="detail" event="change"/>
                         </h:selectOneMenu>
                     </h:panelGrid> 
                     
                     
-                    <h:dataTable id="enterDetail" value="#{studentSelectEnt.enterprise.stuentrelList}" var="ep"
+                    <h:dataTable id="detail" value="#{checkRecordBean.stuInSameRel}" var="es"
                                  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
                                  >
                         <h:column>
                             <f:facet name="header">#{msgs.enterName}</f:facet>
-                            <h:outputLabel value=" #{studentSelectEnt.enterprise.name}" id="name"/>
+                            <h:outputLabel value=" #{es.enterstu.enterprise.name}" id="name"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">#{msgs.name}</f:facet>
-                            <h:outputLabel value=" #{ep.student.name}" />
+                            <h:outputLabel value=" #{es.student.name}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">#{msgs.userno}</f:facet>
-                            <h:outputLabel value=" #{ep.student.uno}" />
+                            <h:outputLabel value=" #{es.student.uno}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">#{msgs.unitNamein}</f:facet>
-                            <h:outputLabel value="#{ep.student.nameofunit.name}" />
+                            <h:outputLabel value="#{es.student.nameofunit.name}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">#{msgs.phone}</f:facet>
-                            <h:outputLabel value="#{ep.student.phone}" />
+                            <h:outputLabel value="#{es.student.phone}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">#{msgs.school}</f:facet>
-                            <h:outputLabel value="#{ep.student.nameofunit.parNameofunit.name}" />
+                            <h:outputLabel value="#{es.student.nameofunit.parNameofunit.name}" />
                         </h:column>
                     </h:dataTable> 
                 </h:form>

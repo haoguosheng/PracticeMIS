@@ -27,7 +27,7 @@ public class TeachSeeReport implements Serializable {
 
     @PostConstruct
     public void init(){
-        practDao = new SQLTool<Practicenote>();
+        practDao = new SQLTool<>();
         practiceNote = new Practicenote();
     }
     public String directToNote() {

@@ -28,11 +28,9 @@ public class Enterprise implements Serializable {
     private String schoolId;
     private City city;
     private List<Enterstudent> enterstudentList;
-    private List<Practicenote> practicenoteList;
     private List<Stuentrel> stuentrelList;
     private final SQLTool<City> cityDao = new SQLTool<>();
     private final SQLTool<Enterstudent> esDao = new SQLTool<>();
-    private final SQLTool<Practicenote> practDao = new SQLTool<>();
     private final SQLTool<Stuentrel> selDao = new SQLTool<>();
     private final SQLTool<User> userDao = new SQLTool<>();
     private User myUser;
@@ -170,10 +168,10 @@ public class Enterprise implements Serializable {
     }
 
     /**
-     * @return the enterstudentList
+      * @return 
      */
     public List<Enterstudent> getEnterstudentList() {
-        if (enterstudentList == null) {
+        if (null == enterstudentList&&null!=id||id!=0) {
             enterstudentList = esDao.getBeanListHandlerRunner("select * from enterstudent" + StaticFields.currentGradeNum + " where enterid=" + id, new Enterstudent());
         }
         return enterstudentList;
@@ -184,23 +182,6 @@ public class Enterprise implements Serializable {
      */
     public void setEnterstudentList(List<Enterstudent> enterstudentList) {
         this.enterstudentList = enterstudentList;
-    }
-
-    /**
-     * @return the practicenoteList
-     */
-    public List<Practicenote> getPracticenoteList() {
-        if (practicenoteList == null) {
-            practicenoteList = practDao.getBeanListHandlerRunner("select * from practicenote" + StaticFields.currentGradeNum + schoolId + " where enterid=" + id, new Practicenote());
-        }
-        return practicenoteList;
-    }
-
-    /**
-     * @param practicenoteList the practicenoteList to set
-     */
-    public void setPracticenoteList(List<Practicenote> practicenoteList) {
-        this.practicenoteList = practicenoteList;
     }
 
     /**
@@ -244,10 +225,10 @@ public class Enterprise implements Serializable {
         while (null == myUser) {
             String temTeaOrStu = UserAnalysis.getTableName(this.getUserno());
             if (temTeaOrStu.contains("studen")) {
-                 String temSchoolId=UserAnalysis.getSchoolId(this.getUserno());
-               this.myUser= userDao.getBeanListHandlerRunner("select * from "+ temTeaOrStu + StaticFields.currentGradeNum +temSchoolId+ " where  uno='" + this.getUserno() + "'", new User()).get(0);
+                String temSchoolId = UserAnalysis.getSchoolId(this.getUserno());
+                this.myUser = userDao.getBeanListHandlerRunner("select * from " + temTeaOrStu + StaticFields.currentGradeNum + temSchoolId + " where  uno='" + this.getUserno() + "'", new User()).get(0);
             } else if (temTeaOrStu.contains("tea")) {
-                 this.myUser= userDao.getBeanListHandlerRunner("select * from "+ temTeaOrStu + StaticFields.currentGradeNum+ " where  uno='" + this.getUserno() + "'", new User()).get(0);
+                this.myUser = userDao.getBeanListHandlerRunner("select * from " + temTeaOrStu + StaticFields.currentGradeNum + " where  uno='" + this.getUserno() + "'", new User()).get(0);
             }
         }
         return myUser;

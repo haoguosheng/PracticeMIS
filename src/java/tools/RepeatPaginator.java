@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Idea
  */
-public class RepeatPaginator {
+public class RepeatPaginator implements java.io.Serializable{
   //  private static final int DEFAULT_RECORDS_NUMBER = 2;
     private static final int DEFAULT_PAGE_INDEX = 1;
 

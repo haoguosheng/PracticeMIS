@@ -5,13 +5,17 @@
 package backingBean;
 
 import entities.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import tools.RepeatPaginator;
 import tools.SQLTool;
 import tools.StaticFields;
@@ -30,6 +34,7 @@ public class EnterpriseInfo implements java.io.Serializable {
     private SQLTool<City> cDao;
     Integer id = 0;
     private List<Enterprise> enterpriseList;
+    private List<Enterstudent> enterStuList;
     private Enterprise enterprise;
     private int cityId, positionId;
     private int enterpriseid;
@@ -52,7 +57,8 @@ public class EnterpriseInfo implements java.io.Serializable {
         enterMap = new LinkedHashMap<>();
     }
 
-    public String direct2Need() {
+    public String direct2Need(int ent) {
+        this.setEnterpriseid(ent);
         return "enterpriseNeedInfo";
     }
 
@@ -67,17 +73,11 @@ public class EnterpriseInfo implements java.io.Serializable {
             // FacesContext.getCurrentInstance().addMessage("latestMessage", new FacesMessage(this.enterName + "添加成功，您可以继续添加"));
             this.added = true;
             //获取id，以便添加需求信息
-            this.enterpriseid = Integer.valueOf(epDao.getIdListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'").get(0));
+            this.setEnterpriseid((int) Integer.valueOf(epDao.getIdListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where name='" + this.enterName + "'").get(0)));
         }
         return null;
     }
 
-//    public void setEnterpriseid(int enterpriseid) {
-//        this.enterpriseid = enterpriseid;
-//        if (enterpriseid != 0) {
-//            this.enterprise = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
-//        }
-//    }
     public LinkedHashMap<String, Integer> getEnterMap() {
         this.enterMap.clear();
         if (cityId != 0) {
@@ -92,7 +92,7 @@ public class EnterpriseInfo implements java.io.Serializable {
         return this.enterMap;
     }
 
-    private String[] color = {"A", "B", "C", "D", "E", "F"};
+    private final String[] color = {"A", "B", "C", "D", "E", "F"};
     Random rand = new Random();
 
     public String getBgcolor() {
@@ -118,15 +118,12 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.setEnterpriseList(null);
     }
 
-
-
     public void deleteRow(Enterprise en) throws Exception {
         this.epDao.executUpdate("delete from enterprise" + StaticFields.currentGradeNum + "  where id=" + en.getId());
         this.setEnterpriseList(null);
         this.entCityList = null;
         paginator = null;
     }
-
 
     public List<EnterpriseCity> getEntCityList() {
         if (this.cityId == 0 && (null == this.searchName || this.searchName.trim().equals(""))) {
@@ -199,10 +196,6 @@ public class EnterpriseInfo implements java.io.Serializable {
         this.checkLogin = checkLogin;
     }
 
-    public int getEnterpriseid() {
-        return enterpriseid;
-    }
-
     public void setCityId(int cityId) {
         this.searchType = this.cityEnter;
         this.cityId = cityId;
@@ -217,13 +210,11 @@ public class EnterpriseInfo implements java.io.Serializable {
             this.enterprise = epDao.getBeanListHandlerRunner("select * from Enterprise" + StaticFields.currentGradeNum + " where id=" + this.enterpriseid, enterprise).get(0);
         } else {
             this.enterprise = new Enterprise();
+            this.enterprise.setId(0);
         }
         return enterprise;
     }
 
-    /**
-     * @return the enterpriseList
-     */
     public List<Enterprise> getEnterpriseList() {
         switch (searchType) {
             case enterAll:
@@ -239,73 +230,70 @@ public class EnterpriseInfo implements java.io.Serializable {
         return enterpriseList;
     }
 
-    /**
-     * @param enterpriseList the enterpriseList to set
-     */
     public void setEnterpriseList(List<Enterprise> enterpriseList) {
         this.enterpriseList = enterpriseList;
     }
 
-    /**
-     * @return the added
-     */
     public boolean isAdded() {
         return added;
     }
 
-    /**
-     * @return the enterurl
-     */
     public String getEnterurl() {
         return enterurl;
     }
 
-    /**
-     * @param enterurl the enterurl to set
-     */
     public void setEnterurl(String enterurl) {
         this.enterurl = enterurl;
     }
 
-    /**
-     * @return the contactname
-     */
     public String getContactname() {
         return contactname;
     }
 
-    /**
-     * @param contactname the contactname to set
-     */
     public void setContactname(String contactname) {
         this.contactname = contactname;
     }
 
-    /**
-     * @return the contacttelephone
-     */
     public String getContacttelephone() {
         return contacttelephone;
     }
 
-    /**
-     * @param contacttelephone the contacttelephone to set
-     */
     public void setContacttelephone(String contacttelephone) {
         this.contacttelephone = contacttelephone;
     }
 
-    /**
-     * @return the contactaddress
-     */
     public String getContactaddress() {
         return contactaddress;
     }
 
-    /**
-     * @param contactaddress the contactaddress to set
-     */
     public void setContactaddress(String contactaddress) {
         this.contactaddress = contactaddress;
+    }
+
+    public int getEnterpriseid() {
+        return enterpriseid;
+    }
+
+    public void setEnterpriseid(int enterpriseid) {
+        this.enterpriseid = enterpriseid;
+    }
+
+    /**
+     * @return the enterStuList
+     */
+    public List<Enterstudent> getEnterStuList() {
+        if (this.enterpriseid != 0) {
+            enterStuList = this.getEnterprise().getEnterstudentList();
+            if (enterStuList.isEmpty()) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                try {
+                    response.sendRedirect("enterpriseInfo.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(PracticeNoteBB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return enterStuList;
     }
 }

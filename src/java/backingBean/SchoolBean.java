@@ -94,28 +94,9 @@ public class SchoolBean implements Serializable {
         return "viewSchools.xhtml";
     }
 
-    public String alterSchool(String sId, String sName, String sPinyin, String sType) {
-        if (sId != null && sName != null && sPinyin != null && sType != null) {
-            nameDao.executUpdate("update nameofunit set name='" + sName + "',pinyin='" + sPinyin + "',mytype=" + sType + " where id='" + sId + "'");
-//            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "',pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
-//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-//            } else {
-//                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-//            }
-//        } else if (sId != null && sName != null) {
-//            nameDao.executUpdate("update nameofunit set name='" + sName + "' where id='" + sId + "'");
-////            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set name='" + sName + "' where id='" + sId + "'") > 0) {
-////                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-////            } else {
-////                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-////            }
-//        } else if (sId != null && sPinyin != null) {
-//            nameDao.executUpdate("update nameofunit set pinyin='" + sPinyin + "'" + " where id='" + sId + "'");
-////            if (nameDao.executUpdate("update nameofunit" + StaticFields.currentGradeNum + "  set pinyin='" + sPinyin + "'" + " where id='" + sId + "'") > 0) {
-////                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院成功！"));
-////            } else {
-////                FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
-////            }
+    public String alterSchool(String sId, String sName, String sPinyin, String stype) {
+        if (sId != null) {
+            nameDao.executUpdate("update nameofunit set name='" + sName + "',pinyin='" + sPinyin + "',mytype=" + stype + " where id='" + sId + "'");
         } else {
             FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("修改学院失败！"));
         }
@@ -135,27 +116,27 @@ public class SchoolBean implements Serializable {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("数据库连接出错！"));
                 }
                 try {
-                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo(id) default 2)");
+                    stat.executeUpdate("Create Table Student" + schoolId + "(UNO varchar(10) not null primary key,Password varchar(20),NameofUnitId varchar(10) references nameofunit"+StaticFields.currentGradeNum+"(id),Name varchar(50),Email varchar(50),Phone varchar(20),RoleId Integer references roleinfo"+StaticFields.currentGradeNum+"(id) default 2)");
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
-                    stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo (uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
+                    stat.executeUpdate("create table CheckRecords" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,stuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),teachNo varchar(10) references TeacherInfo"+StaticFields.currentGradeNum+"(uno),checkDate date,checkContent varchar(1000),recommendation varchar(500),rank varchar(10), remark varchar(200))");
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
-                    stat.executeUpdate("Create Table PracticeNote" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise(ID),PositionId Integer references Position(ID))");
+                    stat.executeUpdate("Create Table PracticeNote" + schoolId + "(id integer not null generated always as identity(start with 1, increment by 1) primary key,StuNo varchar(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),Detail varchar(2000),SubmitDate date default date(current_date),EnterId Integer references Enterprise"+StaticFields.currentGradeNum+"(ID),PositionId Integer references Position" + StaticFields.currentGradeNum + "(ID))");
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
-                    stat.executeUpdate("Create Table StuEntRel" + schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),EntstuID Integer references enterstudent(Id))");
+                    stat.executeUpdate("Create Table StuEntRel" + schoolId + "(Id Integer not null generated always as identity (start with 1, increment by 1) primary key,StuNo VARCHAR(10) references Student" + StaticFields.currentGradeNum + schoolId + "(uno),EntstuID entstuid Integer references enterstudent" + StaticFields.currentGradeNum + "(Id))");
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage("ok", new FacesMessage("新建表时出错，可能该表已经存在！继续执行剩下的操作"));
                 }
                 try {
-                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin, mytype, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + getMytype() + "','" + getLoginUser().getUno() + "')");
+                    nameDao.executUpdate("insert into nameofunit" + " (id, name, parentid, pinyin,mytype, userno) values('" + schoolId + "', '" + schoolName + "', '000', '" + pinyin + "','" + getMytype() + "','" + getLoginUser().getUno() + "')");
                     nameofunitList = nameDao.getBeanListHandlerRunner("select * from nameofunit" + " where parentid='000' order by id", nameofunit);
                     schoolId = "";
                     schoolName = "";

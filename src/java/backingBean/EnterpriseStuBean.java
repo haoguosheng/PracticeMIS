@@ -7,11 +7,18 @@ package backingBean;
 
 import entities.Enterstudent;
 import entities.Position;
+import entities.Stuentrel;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 import tools.SQLTool;
 import tools.StaticFields;
 
@@ -39,6 +46,8 @@ public class EnterpriseStuBean implements java.io.Serializable {
     public void init() {
         esDao = new SQLTool<>();
     }
+
+
 
     public synchronized String addEnterpriseNeed(int enterid) {
         this.enterid = enterid;

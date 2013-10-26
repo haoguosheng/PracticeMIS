@@ -5,6 +5,7 @@
 package backingBean;
 
 import entities.Checkrecords;
+import entities.Enterstudent;
 import entities.Practicenote;
 import entities.Stuentrel;
 import entities.User;
@@ -51,6 +52,9 @@ public class CheckRecordBean implements Serializable {
     private SQLTool<Checkrecords> checkDao;
     private SQLTool<Practicenote> pDao;
     private SQLTool<Stuentrel> stuentrelDao;
+    private Integer cityid;
+    private Integer enterid;
+    private List<Stuentrel> stuInSameRel = new LinkedList<>();
 
     @PostConstruct
     public void init() {
@@ -98,8 +102,11 @@ public class CheckRecordBean implements Serializable {
         User user = this.checkLogin.getUser();
         checkList = new ArrayList<>();
         if (user.getRoleid() == StaticFields.studentRole) {//学生
-            Stuentrel stutem = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + user.getSchoolId() + " where  stuno ='" + user.getUno() + "'", new Stuentrel()).get(0);
-            checkList = (ArrayList) checkDao.getBeanListHandlerRunner("select * from HGS.CHECKRECORDS" + UserAnalysis.getSchoolId(stutem.getStuno()) + " where stuno='" + stutem.getStuno() + "'", checkrecords);
+            List<Stuentrel> listStuEnt = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + user.getSchoolId() + " where  stuno ='" + user.getUno() + "'", new Stuentrel());
+            if (listStuEnt.size() > 0) {
+                Stuentrel stutem = listStuEnt.get(0);
+                checkList = (ArrayList) checkDao.getBeanListHandlerRunner("select * from HGS.CHECKRECORDS" + UserAnalysis.getSchoolId(stutem.getStuno()) + " where stuno='" + stutem.getStuno() + "'", checkrecords);
+            }
         } else {//非学生
             if (null != getTeacherNo()) {
                 switch (getTeacherNo()) {
@@ -130,7 +137,6 @@ public class CheckRecordBean implements Serializable {
                     }
                     break;
                     case "null": {
-                        
                     }
                     break;
                     default: {//某一教师在查询
@@ -315,6 +321,46 @@ public class CheckRecordBean implements Serializable {
         this.detailCheckrecords = detailCheckrecords;
     }
 
-       
-    
+    /**
+     * @return the cityid
+     */
+    public Integer getCityid() {
+        return cityid;
+    }
+
+    /**
+     * @param cityid the cityid to set
+     */
+    public void setCityid(Integer cityid) {
+        this.cityid = cityid;
+    }
+
+    /**
+     * @return the enterid
+     */
+    public Integer getEnterid() {
+        return enterid;
+    }
+
+    /**
+     * @param enterid the enterid to set
+     */
+    public void setEnterid(Integer enterid) {
+        this.enterid = enterid;
+    }
+
+    /**
+     * @param checkList the checkList to set
+     */
+    public void setCheckList(ArrayList<Checkrecords> checkList) {
+        this.checkList = checkList;
+    }
+
+    /**
+     * @return the stuInSameRel
+     */
+    public List<Stuentrel> getStuInSameRel() {
+        stuInSameRel = stuentrelDao.getBeanListHandlerRunner("select * from stuentrel" + StaticFields.currentGradeNum + checkLogin.getUser().getSchoolId() + " where entstuid in (select id from enterstudent" + StaticFields.currentGradeNum + " where enterid in(select id from enterprise where cityid=" + cityid + "))", new Stuentrel());
+        return stuInSameRel;
+    }
 }

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import tools.SQLTool;
 import tools.StaticFields;
+import tools.UserAnalysis;
 
 /**
  *
@@ -110,7 +111,7 @@ public class User implements Serializable {
 
     public List<Stuentrel> getStuentrelList() {
         if (stuentrelList == null) {
-            stuentrelList = seDao.getBeanListHandlerRunner("select * from stuentrel" + schoolId + " where stuno='" + uno + "'", new Stuentrel());
+            stuentrelList = seDao.getBeanListHandlerRunner("select * from stuentrel" + getSchoolId() + " where stuno='" + uno + "'", new Stuentrel());
         }
         return stuentrelList;
     }
@@ -134,6 +135,9 @@ public class User implements Serializable {
      * @return the schoolId
      */
     public String getSchoolId() {
+        if(null==schoolId){
+            schoolId=UserAnalysis.getSchoolId(uno);
+        }
         return schoolId;
     }
 
@@ -150,9 +154,9 @@ public class User implements Serializable {
     public List<Checkrecords> getCheckrecordsList() {
         if (checkrecordsList == null) {
             if (uno.length() == 6) {
-                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where teachno='" + uno + "'", new Checkrecords());
+                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + schoolId + " where teachno='" + uno + "'", new Checkrecords());
             } else {
-                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" +StaticFields.currentGradeNum+ schoolId + " where stuno='" + uno + "'", new Checkrecords());
+                checkrecordsList = checkDao.getBeanListHandlerRunner("select * from checkrecords" + StaticFields.currentGradeNum + schoolId + " where stuno='" + uno + "'", new Checkrecords());
             }
         }
         return checkrecordsList;
@@ -170,7 +174,7 @@ public class User implements Serializable {
      */
     public List<News> getNewsList() {
         if (newsList == null) {
-            newsList = newsDao.getBeanListHandlerRunner("select * from news" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new News());
+            newsList = newsDao.getBeanListHandlerRunner("select * from news" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new News());
         }
         return newsList;
     }
@@ -187,7 +191,7 @@ public class User implements Serializable {
      */
     public List<Enterprise> getAddEnterprises() {
         if (addEnterprises == null) {
-            addEnterprises = epDao.getBeanListHandlerRunner("select * from enterprise" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new Enterprise());
+            addEnterprises = epDao.getBeanListHandlerRunner("select * from enterprise" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new Enterprise());
         }
         return addEnterprises;
     }
@@ -204,7 +208,7 @@ public class User implements Serializable {
      */
     public List<City> getAddCitys() {
         if (addCitys == null) {
-            addCitys = cityDao.getBeanListHandlerRunner("select * from city" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new City());
+            addCitys = cityDao.getBeanListHandlerRunner("select * from city" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new City());
         }
         return addCitys;
     }
@@ -220,8 +224,8 @@ public class User implements Serializable {
      * @return the addNewses
      */
     public List<News> getAddNewses() {
-        if(addNewses == null){
-           addNewses = newsDao.getBeanListHandlerRunner("select * from news" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new News());
+        if (addNewses == null) {
+            addNewses = newsDao.getBeanListHandlerRunner("select * from news" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new News());
         }
         return addNewses;
     }
@@ -237,8 +241,8 @@ public class User implements Serializable {
      * @return the addNameofunits
      */
     public List<Nameofunit> getAddNameofunits() {
-        if(addNameofunits == null){
-            addNameofunits = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new Nameofunit());
+        if (addNameofunits == null) {
+            addNameofunits = nameDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new Nameofunit());
         }
         return addNameofunits;
     }
@@ -254,8 +258,8 @@ public class User implements Serializable {
      * @return the addPositions
      */
     public List<Position> getAddPositions() {
-        if(addPositions == null){
-            addPositions = positionDao.getBeanListHandlerRunner("select * from position" +StaticFields.currentGradeNum+"  where userno='" + uno + "'", new Position());
+        if (addPositions == null) {
+            addPositions = positionDao.getBeanListHandlerRunner("select * from position" + StaticFields.currentGradeNum + "  where userno='" + uno + "'", new Position());
         }
         return addPositions;
     }
@@ -271,8 +275,8 @@ public class User implements Serializable {
      * @return the roleinfo
      */
     public Roleinfo getRoleinfo() {
-        if(roleinfo == null){
-            roleinfo = roleDao.getBeanListHandlerRunner("select * from roleinfo" +StaticFields.currentGradeNum+"  where id=" + roleid, new Roleinfo()).get(0);
+        if (roleinfo == null) {
+            roleinfo = roleDao.getBeanListHandlerRunner("select * from roleinfo" + StaticFields.currentGradeNum + "  where id=" + roleid, new Roleinfo()).get(0);
         }
         return roleinfo;
     }
@@ -288,8 +292,8 @@ public class User implements Serializable {
      * @return the nameofunit
      */
     public Nameofunit getNameofunit() {
-        if(nameofunit == null){
-           nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit" +StaticFields.currentGradeNum+"  where id='" + nameofunitid+"'",new Nameofunit()).get(0);
+        if (nameofunit == null) {
+            nameofunit = nameDao.getBeanListHandlerRunner("select * from nameofunit" + StaticFields.currentGradeNum + "  where id='" + nameofunitid + "'", new Nameofunit()).get(0);
         }
         return nameofunit;
     }

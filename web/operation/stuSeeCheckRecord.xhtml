@@ -9,13 +9,14 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <div class ="pageContent">
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form >
-                    <h:panelGrid columns="2" id="myEntireForm">
+                    <h:panelGrid columns="2" id="myEntireForm" class ="tableStyle">
                         <h:outputLabel value="#{msgs.name}"/>
                         <h:outputLabel value="#{checkRecordBean.detailCheckrecords.student.name}"/>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" class="tableStyle">
                         <h:outputLabel value="#{msgs.time}" />
                         <h:outputLabel value="#{checkRecordBean.detailCheckrecords.checkdate}"/>
                         <h:outputLabel value="#{msgs.content}" />
@@ -29,7 +30,9 @@
                         <h:outputLabel value="#{msgs.remark}" />
                         <h:inputTextarea value="#{checkRecordBean.detailCheckrecords.remark}"  rows="10" cols="60" readonly="true"/>
                     </h:panelGrid>
+                   
                 </h:form>
+                 </div>
             </ui:define>
         </ui:composition>
 

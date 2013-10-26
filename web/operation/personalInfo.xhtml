@@ -8,11 +8,11 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
-                <div class ="personInfo">
-                <h1><h:outputText value="#{msgs.personalInfomation}"/></h1>
+                <div class ="pageContent updatePerInfo">
+                    <h1 class="tableTitle"><h:outputText value="#{msgs.personalInfomation}"/></h1>
                 <h:messages  style="color: red" id="latestMessage"/>
                 <h:form>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" class ="tableStyle">
                         <h:outputLabel value="#{msgs.password}"/>
                         <h:inputText value="#{checkLogin.user.password}" required="true"/>
                         <h:outputLabel value="#{msgs.email}"/>

@@ -11,11 +11,11 @@
                     <h:form>
                         <h:panelGrid columns="2" class="oddRows">
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:outputLabel value="#{teachSeeReport.practiceNote.student.name}"/>                     
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.stuEntRel.student.name}"/>                     
                             <h:outputLabel value="#{msgs.enterName}:"/>
-                            <h:outputLabel value="#{teachSeeReport.practiceNote.enterprise.name}"/>
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.stuEntRel.enterstu.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
-                            <h:outputLabel value="#{teachSeeReport.practiceNote.position.name}"/>
+                            <h:outputLabel value="#{teachSeeReport.practiceNote.stuEntRel.enterstu.position.name}"/>
                             <h:outputLabel value="#{msgs.time}:"/>
                             <h:panelGrid columns="6">
                                 <h:outputLabel value="#{teachSeeReport.practiceNote.submitdate.year+1900}"/>

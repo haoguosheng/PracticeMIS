@@ -7,36 +7,38 @@
     <body>
         <ui:composition template="./../noLogin/myTemplate2.xhtml">
             <ui:define name="content">
+                <div class="pageContent">
                 <h:panelGrid columns="1">
                     <h:form>
-                        <h:panelGrid columns="2" class="oddRows">
+                        <h:panelGrid columns="2" class="tableStyle">
                             <h:outputLabel value="#{msgs.name}:" />
-                            <h:outputLabel value="#{submitReport.temPraNote.stuent.student.name}"/>                     
+                            <h:outputLabel value="#{practiceNoteBB.studentUser.name}"/>                     
                             <h:outputLabel value="#{msgs.enterName}:"/>
-                            <h:outputLabel value="#{submitReport.temPraNote.stuent.enterprise.name}"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuEntRel.enterstu.enterprise.name}"/>
                             <h:outputLabel value="#{msgs.position}:"/>
-                            <h:outputLabel value="#{submitReport.temPraNote.stuent.position.name}"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuEntRel.enterstu.position.name}"/>
                             <h:outputLabel value="#{msgs.time}:"/>
-                            <h:panelGrid columns="6">
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.year+1900}"/>
+                            <h:panelGrid columns="6" class="">
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.year+1900}"/>
                                 <h:outputLabel value="#{msgs.year}"/>
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.month+1}"/>
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.month+1}"/>
                                 <h:outputLabel value="#{msgs.month}"/>
-                                <h:outputLabel value="#{submitReport.temPraNote.submitdate.date}"/>
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.date}"/>
                                 <h:outputLabel value="#{msgs.day}"/>
                             </h:panelGrid>
                         </h:panelGrid>
-                        <h:panelGrid columns="1">
+                        <h:panelGrid columns="1" class="tableStyle">
                             <h:outputLabel value="#{msgs.practiceContent}:" />
-                            <h:inputTextarea value="#{submitReport.temPraNote.detail}" rows="40" cols="60" readonly="#{submitReport.readflag}" >
+                            <h:inputTextarea value="#{practiceNoteBB.temPraNote.detail}" rows="40" cols="60"  readonly="#{practiceNoteBB.readflag}" >
                                 <f:validateLength maximum="2000" minimum="500"/>
                             </h:inputTextarea>
                         </h:panelGrid>
-                        <h:commandButton value="#{msgs.edit}" action="#{submitReport.editSelectReport()}" />
-                        <h:commandButton value="#{msgs.alter}" action="#{submitReport.alterSelectReport()}"/>
-                        <h:commandButton value="#{msgs.delete}" action="#{submitReport.deleteSelectReport()}"/>
+                        <h:commandButton value="#{msgs.edit}" action="#{practiceNoteBB.editSelectReport()}"  class="submit"/>
+                        <h:commandButton value="#{msgs.alter}" action="#{practiceNoteBB.alterSelectReport()}" class="submit"/>
+                        <h:commandButton value="#{msgs.delete}" action="#{practiceNoteBB.deleteSelectReport()}" class="submit"/>
                     </h:form>
-                </h:panelGrid>      
+                </h:panelGrid> 
+                    </div>
             </ui:define>
         </ui:composition>
 
