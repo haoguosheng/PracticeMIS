@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <h:panelGrid columns="1">
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="#{msgs.selectTeacher}" />
+                            <h:selectOneMenu value="#{checkRecordBean.teacherNo}" required="true">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.pleaseSelect}" />
+                                <f:selectItems value="#{userinfoBean.teacherMap}"/>
+                                <f:selectItem itemValue="unRecord" itemLabel="#{msgs.checkNoRecordStudents}" />
+                                <f:selectItem itemValue="all" itemLabel="#{msgs.all}" />
+                                <f:ajax render="student"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                        <h:dataTable value="#{checkRecordBean.checkList}" id="student" var="checkRecord"  style="border-left:1px lightgray solid; border-right:1px lightgray solid; border-top:1px lightgray solid; border-bottom:1px lightgray solid; vertical-align:middle; text-align:center" border="0" width="250">
+                            <f:facet name="caption">#{msgs.scoresQuery}</f:facet>
+                                                       <h:column>
+                                <f:facet name="header">#{msgs.myclassName}</f:facet>
+                                    #{checkRecord.student.nameofunit.name}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.userno}</f:facet>
+                                    #{checkRecord.stuno}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.name}</f:facet>
+                                    #{checkRecord.student.name}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.rank}</f:facet>
+                                    #{checkRecord.rankName}
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

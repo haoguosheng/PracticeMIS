@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head>
+
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:form prependId="false">
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <div class="tableStyle" align="left">
+                            &nbsp;&nbsp;&nbsp; 
+                            <h:outputLabel value="#{msgs.enterName}:#{enterpriseInfo.enterprise.name}"/>
+                            <h:outputLabel value="#{msgs.position}:"/>
+                            <h:selectOneMenu value="#{enterpriseStuBean.positionid}" required="true" id="position">
+                                <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                            </h:selectOneMenu>
+                            <h:inputText value="#{positionBackingBean.newPosition}" id="newposition1"/>
+                            <h:commandButton value="#{msgs.newPosition}" action="#{positionBackingBean.saveNewPosition()}">
+                                <f:ajax execute="newposition1" render="position"/>
+                            </h:commandButton>
+                        </div>
+                        <h:panelGrid  columns="2">
+                            <h:outputLabel value="#{msgs.other}:"/>
+                            <h:inputTextarea value="#{enterpriseStuBean.other}" />
+                            <h:outputLabel value="#{msgs.require}:" for="requirement" />
+                            <h:inputTextarea value="#{enterpriseStuBean.requirement}" required="true" />
+                            <h:outputLabel value="#{msgs.payment}:" for="payement" />
+                            <h:inputTextarea value="#{enterpriseStuBean.payment}" required="true" />
+                            <h:outputLabel value="#{msgs.stuNum}:" for="stunum" />
+                            <h:inputText value="#{enterpriseStuBean.studnum}" required="true" >
+                                <f:validateLongRange minimum="0" maximum="100"/>
+                            </h:inputText>
+                            <c:set value="#{enterpriseInfo.enterprise.id}" var="enterId"/>
+                            <h:commandButton action="#{enterpriseStuBean.addEnterpriseNeed(enterId)}" value="#{msgs.add}"/>
+                        </h:panelGrid>
+                        <h:dataTable value="#{enterpriseStuBean.enterStudList}" var="epStu"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn" 
+                                     rendered="#{enterpriseStuBean.enterStudList.size()>0}">
+                            <h:column>
+                                <f:facet name="header">#{msgs.payment}</f:facet>
+                                <h:inputText value="#{epStu.payment}" id="payment"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.require}</f:facet>
+                                <h:inputText value="#{epStu.requirement}" id="requirement"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.stuNum}</f:facet>
+                                <h:inputText value="#{epStu.studnum}" id="studnum"/>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{msgs.position}</f:facet>
+                                <h:selectOneMenu value="#{epStu.position.id}" required="true" id="position" >
+                                    <f:selectItem  itemValue="#{epStu.position.id}" itemLabel="#{ep.position.name}" />
+                                    <f:selectItems value="#{positionBackingBean.positionMap}"/>
+
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.other}</f:facet>
+                                <h:inputText value="#{epStu.other}" id="other"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.alter}</f:facet>
+                                <h:commandButton  value="#{msgs.alter}"  action ="#{enterpriseStuBean.saveNeed(epStu.id,epStu.payment,epStu.requirement,epStu.studnum,epStu.other,epStu.position.id)}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.delete}</f:facet>
+                                <h:commandButton value="#{msgs.delete}" action="#{enterpriseStuBean.deleteNeed(epStu.id)}"/>
+                            </h:column>
+                        </h:dataTable> 
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

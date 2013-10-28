@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:login="http://java.sun.com/jsf/composite/loginCompostie"
+      xmlns:f="http://java.sun.com/jsf/core"      >
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <head>      
+        <!-- add_s -->
+        
+        <link type="text/css" rel="stylesheet" href="../../resources/css/login.css" />
+        <!-- add_e -->
+    </head>
+    <!-- update  -->
+    <h:body>
+        <div class ="main">
+            <div class ="left">
+                <p></p><p class ="left_2"></p>
+            </div>
+            <div class ="main_body">
+                <div class ="logo"><img src ="../../resources/images/logo.gif"/></div>
+                <div class ="content">
+                    <login:checkLogin useridValidatorMessage="input the name"/>
+                </div>
+            </div>
+            <h:messages  globalOnly="true" id="globalMessages">
+            </h:messages>
+        </div>
+    </h:body>
+</html>
+

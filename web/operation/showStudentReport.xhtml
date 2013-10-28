@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                <h:panelGrid columns="1">
+                    <h:form>
+                        <h:panelGrid columns="2" class="tableStyle">
+                            <h:outputLabel value="#{msgs.name}:" />
+                            <h:outputLabel value="#{practiceNoteBB.studentUser.name}"/>                     
+                            <h:outputLabel value="#{msgs.enterName}:"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuEntRel.enterstu.enterprise.name}"/>
+                            <h:outputLabel value="#{msgs.position}:"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuEntRel.enterstu.position.name}"/>
+                            <h:outputLabel value="#{msgs.time}:"/>
+                            <h:panelGrid columns="6" class="">
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.year+1900}"/>
+                                <h:outputLabel value="#{msgs.year}"/>
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.month+1}"/>
+                                <h:outputLabel value="#{msgs.month}"/>
+                                <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.date}"/>
+                                <h:outputLabel value="#{msgs.day}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" class="tableStyle">
+                            <h:outputLabel value="#{msgs.practiceContent}:" />
+                            <h:inputTextarea value="#{practiceNoteBB.temPraNote.detail}" rows="40" cols="60"  readonly="#{practiceNoteBB.readflag}" >
+                                <f:validateLength maximum="2000" minimum="500"/>
+                            </h:inputTextarea>
+                        </h:panelGrid>
+                        <h:commandButton value="#{msgs.edit}" action="#{practiceNoteBB.editSelectReport()}"  class="submit"/>
+                        <h:commandButton value="#{msgs.alter}" action="#{practiceNoteBB.alterSelectReport()}" class="submit"/>
+                        <h:commandButton value="#{msgs.delete}" action="#{practiceNoteBB.deleteSelectReport()}" class="submit"/>
+                    </h:form>
+                </h:panelGrid> 
+                    </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
