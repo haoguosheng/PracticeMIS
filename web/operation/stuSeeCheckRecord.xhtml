@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class ="pageContent">
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:form >
+                        <h:panelGrid columns="2" id="myEntireForm" class ="tableStyle">
+                            <h:outputLabel value="#{msgs.name}"/>
+                            <h:outputLabel value="#{user.name}"/>
+                        </h:panelGrid>
+                        <h:dataTable value="#{user.checkrecordsList4Student}" var="checkRecord" class ="tableStyle">
+                            <h:column>
+                                <f:facet name="header">#{msgs.userno}</f:facet>
+                                    #{checkRecord.checkdate}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.content}</f:facet>
+                                    #{checkRecord.checkcontent}
+                            </h:column>      
+                            <h:column>
+                                <f:facet name="header">#{msgs.recommendation}</f:facet>
+                                    #{checkRecord.recommendation}
+                            </h:column>    
+                            <h:column>
+                                <f:facet name="header">#{msgs.rank}</f:facet>
+                                <h:selectOneMenu value=" #{checkRecord.rank}" id="rank"   disabled="true">
+                                    <f:selectItems  value="#{checkRecordBean.rankMap}"/>
+                                </h:selectOneMenu>
+                                #{checkRecord.rank}
+                            </h:column>     
+                            <h:column>
+                                <f:facet name="header">#{msgs.remark}</f:facet>
+                                    #{checkRecord.remark}
+                            </h:column>                               
+                        </h:dataTable>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

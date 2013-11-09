@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <section style="border:solid  blue" >
+                    备份毕业生信息是把已经毕业的学生信息从当前数据库中移出，以保持系统运行速度。<br/>
+                    还原毕业生信息则是把备份中的毕业生信息恢复到当到数据库，以便于查询与操作。
+                </section>
+                <h:form enctype="multipart/form-data">
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="#{msgs.selectYear}"/>
+                        <h:selectOneMenu value="#{backupBean.backupYear}" required="true">
+                            <f:selectItem itemLabel="#{msgs.pleaseSelect}"/>
+                            <f:selectItems value="#{backupBean.yearMap}"/>
+                        </h:selectOneMenu>
+                        <h:commandButton value="#{msgs.backup}" action="#{backupBean.backupStu()}"/>
+                    </h:panelGrid>
+                </h:form>
+                <h:form>
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel value="#{msgs.selectYear}"/>
+                        <h:selectOneMenu value="#{backupBean.recoverYear}" required="true">
+                            <f:selectItem itemLabel="#{msgs.pleaseSelect}" />
+                            <f:selectItems value="#{backupBean.yearMap}"/>
+                            <f:selectItem itemLabel="#{msgs.backupCurrent}" itemValue="current"/>
+                        </h:selectOneMenu>
+                        <h:commandButton value="#{msgs.recover}" action="#{backupBean.recoverStu()}"/>
+                    </h:panelGrid>
+                </h:form>
+                 <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

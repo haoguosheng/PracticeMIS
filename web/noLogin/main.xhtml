@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:body>
+
+        <ui:composition template="./myTemplate2.xhtml">
+
+            <ui:define name="top">
+                <div class ="allNews_bg">
+                    <p class ="login"><a href ="./../login/login.xhtml">登录</a></p>
+                </div>
+            </ui:define>
+
+            <ui:define name="left">
+
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageContent allNews">
+                    <!--<h1 class ="tableTitle"><h:outputLabel value="#{msgs.newsInfo}"/></h1> -->
+                    <h:form>
+                        <!-- firstTab start-->
+                        <div class ="tab lastNews">
+                            <p class="bg"><h:outputLabel value="#{msgs.lastnewsInfo}"/></p>
+                            <ul>
+                                <c:forEach items="#{newsBean.recentNewsMap.keySet()}" var="schoolId" >
+                                    <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                        <li>
+                                            <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                <f:param value="#{news.id}" name="nId"/>
+                                            </h:commandLink>
+                                        </li>
+                                    </c:forEach>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <!-- firstTab end! -->
+                        <!-- twoTab start-->
+
+
+                        <div class ="tab"  id ="tab1">
+                            <c:forEach items="#{newsBean.recentLNewsMap.keySet()}" var="schoolId" >
+                                <h1 class ="tabTitle"> <h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></h1>
+                                <div class ="tabChild">
+                                    <ul>
+                                        <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                            <li>
+                                                <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                    <f:param value="#{news.id}" name="nId"/>
+                                                </h:commandLink>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <div class ="tab" id ="tab2">
+                            <c:forEach items="#{newsBean.recentGNewsMap.keySet()}" var="schoolId" >
+                                <h1 class ="tabTitle"><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></h1>
+                                <div class ="tabChild">
+                                    <ul>
+                                        <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                            <li>
+                                                <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                    <f:param value="#{news.id}" name="nId"/>
+                                                </h:commandLink>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <div class ="tab specialTab" id ="tab3">
+                            <c:forEach items="#{newsBean.recentWNewsMap.keySet()}" var="schoolId" >
+
+                                <h1 class ="tabTitle"><h:outputLabel value="#{nameofUnitBean.getSchoolNameById(schoolId)}"/></h1>
+
+                                <div class ="tabChild">
+                                    <ul>
+                                        <c:forEach items="#{newsBean.recentNewsMap.get(schoolId)}" var="news">
+                                            <li>
+                                                <h:commandLink value="#{news.newsTitle}"  action="#{newsBean.directToNews()}">
+                                                    <f:param value="#{news.id}" name="nId"/>
+                                                </h:commandLink>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                    </h:form>
+                    
+                    <p style ="clear:both;"></p>
+                   <script type ="text/javascript" src="../../resources/javaScript/table.js"></script>
+                </div>
+            </ui:define>
+            <ui:define name="bottom">
+
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

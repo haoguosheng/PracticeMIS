@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head>
+
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:form prependId="false">
+                        <div class="tableStyle" align="left">
+                            <h1>&nbsp;&nbsp;&nbsp; 
+                                <h:outputLabel value="#{msgs.enterName}:#{enterpriseStuBean.enterprise.name}"/>
+                            </h1>
+                        </div>
+                        <h:outputLabel value="#{msgs.position}:"/>
+                        <h:selectOneMenu value="#{enterstudent.positionid}" required="true" id="position">
+                            <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                        </h:selectOneMenu>
+                        <h:button value="#{msgs.newPosition}" outcome="#{controlBean.addPosition()}"/>
+                        <h:panelGrid  columns="2">
+                            <h:outputLabel value="#{msgs.require}:" for="requirement" />
+                            <h:inputTextarea value="#{enterstudent.requirement}" required="true" />
+                            <h:outputLabel value="#{msgs.payment}:" for="payement" />
+                            <h:inputTextarea value="#{enterstudent.payment}" required="true" />
+                            <h:outputLabel value="#{msgs.stuNum}:" for="stunum" />
+                            <h:inputText value="#{enterstudent.studnum}" required="true" >
+                                <f:validateLongRange minimum="0" maximum="100"/>
+                            </h:inputText>
+                            <h:outputLabel value="#{msgs.other}:"/>
+                            <h:inputTextarea value="#{enterstudent.other}" />
+                            <h:commandButton action="#{enterpriseStuBean.addEnterpriseNeed()}" value="#{msgs.add}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

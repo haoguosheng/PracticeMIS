@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <f:loadBundle  basename="messages" var="msgs"/>
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+
+                <div class="pageContent">
+
+                    <h1 class ="tableTitle">#{msgs.already}#{msgs.selectEnter}</h1>
+                    <section>
+                        <h:form>
+                            <h:outputLabel value=":无" rendered="#{studentSelectEnt.stuentrel4SameStu.size()==0}" />
+                            <h:dataTable value="#{studentSelectEnt.stuentrel4SameStu}" var="selectedStuEnter"  rendered="#{studentSelectEnt.stuentrel4SameStu.size()>0}" styleClass="tableStyle" >
+                                <h:column>
+                                    <f:facet name="header"></f:facet>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(selectedStuEnter)}" value="#{msgs.cancel}#{msgs.myselect}" class="submit"/>
+                                </h:column>                        
+                                <h:column>
+                                    <f:facet name="header">#{msgs.city}</f:facet>
+                                        #{selectedStuEnter.enterstu.enterprise.city.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.enterName}</f:facet>
+                                        #{selectedStuEnter.enterstu.enterprise.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.position}</f:facet>
+                                        #{selectedStuEnter.enterstu.position.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{msgs.studentsInSameEnterprise}</f:facet>
+                                    <h:dataTable value="#{studentSelectEnt.stuForSameEnt}" var="stuUser4Ent" class="tableTitle" rendered="#{studentSelectEnt.stuForSameEnt.size()>0}">
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.name}</f:facet>
+                                                #{stuUser4Ent.student.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.unitNamein}</f:facet>
+                                                #{stuUser4Ent.student.nameofunit.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{msgs.phone}</f:facet>
+                                                #{stuUser4Ent.student.phone}
+                                        </h:column>
+                                    </h:dataTable>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </section>   
+                    <hr/>
+
+                    <h1 class="tableTitle"><h:outputLabel value="#{msgs.selectEnter}"/></h1><br/>
+                    <h4 class="tableTitless" style="color: red"> 如果单位没有需求信息，则无法选择，需要从左边的“单位实习信息-单位信息”中找到添加该单位的人，请他添加单位信息。</h4>
+                    
+                    <h:form  style="alignment-adjust: middle">
+                        <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                        <h:panelGrid columns="2" class="tableStyle">
+                            <h:outputText value="#{msgs.selectCity}"/>
+                            <h:selectOneMenu value="#{enterpriseInfo.cityId}">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectCity}" />
+                                <f:selectItems value="#{cityBackingBean.cityMap}"/>
+                                <f:ajax render="enterprise"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{msgs.selectEnt}"/>
+                            <h:selectOneMenu  value="#{enterpriseInfo.enterId}" id="enterprise">
+                                <f:selectItem  itemValue="null" itemLabel="#{msgs.selectEnt}"/>
+                                <f:selectItems value="#{enterpriseInfo.enterMap}"/>
+                                <f:ajax render="enterDetail myMessage "/>
+                            </h:selectOneMenu>
+                        </h:panelGrid> 
+
+                        <h:dataTable id="enterDetail" value="#{enterpriseInfo.enterStuList}" var="ep"
+                                     border="1" styleClass="tableStyle" headerClass="tableHeaderClass" 
+                                     >
+                            <h:column>
+                                <f:facet name="header">#{msgs.payment}</f:facet>
+                                <h:outputLabel value=" #{ep.payment}" id="payment"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.require}</f:facet>
+                                <h:outputLabel value="#{ep.requirement}" id="requirement"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.stuNum}</f:facet>
+                                <h:outputLabel value="#{ep.studnum}" id="studnum"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.position}</f:facet>
+                                <h:outputLabel value="#{ep.position.name}" id="position"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.other}</f:facet>
+                                <h:outputLabel value="#{ep.other}" id="other"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{msgs.myselect}</f:facet>
+                                <h:commandButton  value="#{msgs.myselect}" action="#{studentSelectEnt.userAddEnter(ep.id)}" rendered="#{studentSelectEnt.canSelect()}" class="submit"/>
+                            </h:column>
+                        </h:dataTable> 
+                        <h:outputLabel value="#{msgs.already}#{msgs.myselect}#{msgs.enter}！" rendered="#{!studentSelectEnt.canSelect()}"/>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

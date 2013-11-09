@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle basename="messages" var="msgs" />
+    <f:view locale="zh-CN">
+    <!-- INTERFACE><-->
+    <cc:interface>
+        <cc:attribute name="useridValidatorMessage" default="#{msgs.invuserName}"/>
+        <cc:attribute name="passwordValidatorMessage" default="#{msgs.invpassword}"/>
+        <cc:attribute name="validateCodeMessage" default="#{msgs.invValiCode}"/>
+        <cc:attribute name="loginButtonText" default="#{msgs.login}"/>
+        <cc:attribute name="registerButtonText" default="#{msgs.register}"/>
+        <cc:attribute name="action" targets="loginButton"/>
+        <cc:attribute name="action" targets="RegisterButton"/>
+        <cc:editableValueHolder name="userid"/>
+        <cc:editableValueHolder name="password"/>
+        <cc:editableValueHolder name="validatorCode"/>
+        <cc:actionSource name="loginButton"/>
+        <cc:actionSource name="RegisterButton"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION ><-->
+    <cc:implementation>
+        <h:form >
+            <h:panelGrid columns="3" rendered="#{checkLogin.rendered}">
+                <h:outputLabel value="#{msgs.username}"/>
+                <h:inputText value="#{user.uno}" required="true"  id="userid" immediate="true" requiredMessage="#{msgs.inputName}" />
+                <h:outputLabel/>
+                <h:outputLabel  value="#{msgs.password}"/>
+                <h:inputSecret value="#{user.password}" required="true" requiredMessage="#{msgs.inputPassword}" id="password" immediate="true" />
+                <h:outputLabel/>
+                <h:outputLabel value="#{msgs.validateCode}"/>
+                <h:inputText value="#{checkLogin.rand}" required="true"  requiredMessage="#{msgs.inputValCode}" id="validatorCode" immediate="true" />
+                <img src="../../resources/image.jsp" />
+                <h:outputLabel/>
+                <h:commandButton action="#{checkLogin.validateUser}" id="loginButton" value="" class="loginButton"/>
+                <h:outputLabel/>
+            </h:panelGrid>
+        </h:form>
+               
+        <h:outputLabel  rendered="#{!checkLogin.rendered}" >#{msgs.tryFaild}</h:outputLabel>
+        
+    </cc:implementation>
+    </f:view>
+</html>

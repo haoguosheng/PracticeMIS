@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <f:loadBundle var="msgs" basename="messages"/>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <section style="border:solid  blue" >
+                    上传学生的信息前:
+                    <ul>
+                        <li>请确保所选择的Excel文件是Excel97-2003版之间的，而不是更高的版本。如果是高版本，请转换为低版本;</li>
+                        <li>请确保Excel的从第一行到最后一行，所有单元格都是"文本"类型，且满足下面的顺序(共6列):<br/>
+                        学号|登录密码|姓名|邮箱|电话号码|班级编号
+                        </li>
+                        <li>其中，班级编号可以从下面的表中看到。如果下面表中没有，则需要添加该班级。</li>
+                        <li><a href="/PracticeMIS/operation/Book1.xls">这里是一个excel的模板，你可以从这里下载，把信息填进去，再导入</a></li>
+                    </ul><br/>
+                </section>
+                <h:form enctype="multipart/form-data">
+                    <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel value="#{msgs.selectSchool}"/>
+                        <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId">
+                            <f:selectItem itemLabel="#{msgs.selectSchool}" itemValue="null" />
+                            <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                            <f:ajax render="classInclude"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
+                    <h:inputFile value="#{userinfoBean.excelFile}"/>
+                    <h:commandButton action="#{userinfoBean.importStudent(schoolId)}" value="#{msgs.beginImport}" />
+                    <h:dataTable id="classInclude" value="#{nameofUnitBean.classList}" var="classUnit"  border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn" >
+                            <h:column> 
+                                <f:facet name="header">#{msgs.myclassName}</f:facet>
+                                <h:outputLabel value="#{classUnit.name}"/>  
+                            </h:column>    
+                            <h:column>
+                                <f:facet name="header">#{msgs.myclassCode}</f:facet>
+                                <h:outputLabel value="#{classUnit.id}" />
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{msgs.inputUserName}</f:facet>
+                                <h:outputLabel value="#{classUnit.inputor.name}"/>
+                            </h:column>
+                        </h:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
