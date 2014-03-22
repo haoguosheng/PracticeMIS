@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class ="pageContent special">
+                    <h:messages   style="color: red" id="latestMessage"/>
+
+                    <h:form>
+                        <h:panelGrid columns="4">
+                            <c:if test="${practiceNoteBB.temPraNote.state == 0}">
+                                <h:commandButton value="#{bundle.edit}" action="#{practiceNoteBB.editSelectReport()}"/>
+                                <h:commandButton value="#{bundle.alter}" action="#{practiceNoteBB.alterSelectReport()}"/>
+                                <h:commandButton action="#{practiceNoteBB.addPractice(practiceNoteBB.temPraNote)}" value="#{bundle.submit}"/>
+                            </c:if>
+                            <h:commandButton value="#{bundle.return}" action="#{practiceNoteBB.returnSubmitReport()}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" class="tableStyle">
+                            <h:outputLabel value="#{bundle.name}:" />
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuentrel.student.name}"/>                     
+                            <h:outputLabel value="#{bundle.enterName}:"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuentrel.enterstudent.enterprise.name}"/>
+                            <h:outputLabel value="#{bundle.position}:"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.stuentrel.enterstudent.position.name}"/>
+                            <h:outputLabel value="#{bundle.time}:"/>
+                            <h:outputLabel value="#{practiceNoteBB.temPraNote.submitdate.year+1900}#{bundle.year}#{practiceNoteBB.temPraNote.submitdate.month+1}#{bundle.month}#{practiceNoteBB.temPraNote.submitdate.date}#{bundle.day}"/>
+                            <h:outputLabel value="#{bundle.practiceContent}:" />
+                            <h:inputTextarea value="#{practiceNoteBB.temPraNote.detail}" rows="20" cols="60"  readonly="#{practiceNoteBB.readflag}" >
+                                <f:validateLength maximum="2000" minimum="300"/>
+                            </h:inputTextarea>
+                            <c:forEach items="#{practiceNoteBB.getFiles(practiceNoteBB.temPraNote)}" var="file">
+                                <c:if test="${practiceNoteBB.temPraNote == 0}">
+                                <h:commandButton value="#{bundle.delete}" action="#{practiceNoteBB.deleteImg(file)}"/>
+                                </c:if>
+                                <c:if test="${practiceNoteBB.temPraNote == 1}">
+                                    <h:outputLabel value="#{bundle.photo}"/>
+                                </c:if>
+                                <h:graphicImage url="../../uploadedFiles/StuFiles/#{user.schoolId}/#{practiceNoteBB.temPraNote.id}/#{file}" width="500px" height="400px"/>
+                            </c:forEach>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

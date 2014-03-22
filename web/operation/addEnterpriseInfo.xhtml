@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages  style="color: red" id="latestMessage"/>
+                <h:form>
+                    <div class="pageContent">
+                        <section style="border:solid black">
+                            <h:outputLabel value="#{bundle.add}#{bundle.enter},#{bundle.add}#{bundle.entNeed}" />
+                            <hr/>
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="#{bundle.enterName}:" for="name" />
+                                <h:inputText id="name" value="#{enterpriseInfo.myaddEnterprise.name}" required="true"/>
+                                <h:outputLabel value="#{bundle.pinyin}:" for="pinyin" />
+                                <h:inputText id="pinyin" value="#{enterpriseInfo.myaddEnterprise.pinyin}" required="true"/>
+                                <h:outputLabel value="#{bundle.myurl}:" for="enterurl"/>
+                                <h:inputText id="enterurl" value="#{enterpriseInfo.myaddEnterprise.enterurl}" required="true"/>
+                                <h:outputLabel value="#{bundle.contactName}:"/>
+                                <h:inputText id="contactName" value="#{enterpriseInfo.myaddEnterprise.contactname}" required="true"/>
+                                <h:outputLabel value="#{bundle.contactTelephone}:" id="telephone"/>
+                                <h:inputText id="contactTelephone" value="#{enterpriseInfo.myaddEnterprise.contacttelephone}">
+                                    <f:validateRegex for="contactTelephone" pattern="((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)" />
+                                </h:inputText>
+                                <h:outputLabel value="#{bundle.contactAddrss}:"/>
+                                <h:inputText id="contactAddress" value="#{enterpriseInfo.myaddEnterprise.contactaddress}" required="true"/>
+                                <h:outputLabel value="#{inwhich}#{bundle.city}:" for="city" />
+                                <h:panelGrid columns="3">
+                                   <h:selectOneMenu id="city"  value="#{cityBean.province}" converter="cityConverter">
+                                                                          <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{publicFields.provinceList}" var="province" itemLabel="#{province.name}" itemValue="#{province}"/>
+                                        <f:ajax render="cities"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="cities"  value="#{cityBean.city}"  converter="cityConverter">
+                                        <f:selectItem  itemValue="" itemLabel="#{bundle.pleaseSelect}"/>
+                                        <f:selectItems value="#{cityBean.cityList}" var="city" itemLabel="#{city.name}" itemValue="#{city}"/>
+                                        <f:ajax render="districts"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="districts"  value="#{enterpriseInfo.myaddEnterprise.city}"  converter="cityConverter">
+                                        <f:selectItem  itemValue="" itemLabel="#{bundle.pleaseSelect}"/>
+                                        <f:selectItems value="#{cityBean.districtList}" var="distric" itemLabel="#{distric.name}" itemValue="#{distric}"/>
+                                    </h:selectOneMenu>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </section>   
+                        <h:commandButton action="#{enterpriseInfo.addEnterprise}" value="#{bundle.add}#{bundle.enter}"/>
+                        <h:button outcome="#{controlBean.toEnterNeed()}" value="#{bundle.add}#{bundle.entNeed}" rendered="#{enterpriseInfo.added}" style="color: red"/>
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

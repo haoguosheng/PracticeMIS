@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h1><h:outputLabel value="#{bundle.schools}:#{bundle.pinyin}#{bundle.order}"/></h1>
+                <h:messages   style="color: red" id="latestMessage"/>
+                <table rendered="#{schoolBean.nameofunitList.size()>0}" border="1">
+                    <tr>
+                        <th>#{bundle.schoolNum}</th>
+                        <th>#{bundle.schoolName}</th>
+                        <th>#{bundle.school}#{bundle.pinyin}#{bundle.firstChar}</th>
+                        <th>#{bundle.cate}</th>
+                        <th>#{bundle.unit}</th>
+                        <th>#{bundle.alter}</th>
+                        <th>#{bundle.delete}</th>
+                    </tr>
+                    <c:forEach items="#{schoolBean.nameofunitList}" var="school">
+                        <h:form>
+                            <tr>
+                                <td><h:outputLabel value="#{school.id}"/></td>
+                                <td><h:inputText value="#{school.name}"/></td>
+                                <td><h:inputText value="#{school.pinyin}" /></td>
+                                <td><h:selectOneMenu value="#{school.mytype}">
+                                        <f:selectItems  value="#{schoolBean.mytypeMap}"/>
+                                    </h:selectOneMenu></td>
+                                <td><h:outputLabel value="#{school.name}"/></td>
+                                <td>
+                                    <h:commandButton value="#{bundle.alter}" action="#{schoolBean.alterSchool(school)}" />
+                                </td>
+                                <td>
+                                    <h:commandButton value="#{bundle.delete}" action="#{schoolBean.deleteSchool(school)}">
+                                        <f:param value="#{school.id}" name="schoolId"/>
+                                    </h:commandButton>
+                                </td>
+                            </tr>
+                        </h:form>
+                    </c:forEach>
+                </table>
+
+
+                <h:form>
+                    <h:panelGrid>
+                        <h1><h:outputLabel value="#{bundle.addSchool}"/></h1>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="#{bundle.schoolNum}" />
+                            <h:inputText value="#{schoolBean.temSchool.id}" required="true"/>
+                            <h:outputLabel value="#{bundle.schoolName}" />
+                            <h:inputText value="#{schoolBean.temSchool.name}" required="true"/>
+                            <h:outputLabel value="#{bundle.school}#{bundle.pinyin}#{bundle.firstChar}" />
+                            <h:inputText value="#{schoolBean.temSchool.pinyin}" required="true"/>
+                            <h:outputLabel value="#{bundle.cate}" />
+                            <h:selectOneMenu value="#{schoolBean.temSchool.mytype}">
+                                <f:selectItems  value="#{schoolBean.mytypeMap}"/>
+                            </h:selectOneMenu>
+                            <h:commandButton action="#{schoolBean.addSchool()}" value="#{bundle.add}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent special" style="background-color:transparent;">
+                    <h:messages  style="color: red" id="latestMessage"/> 
+                    <h:form>
+                        <h:outputLabel value="#{bundle.searchStuByNo}"/>
+                        <h:inputText value="#{checkRecordBean.studentNo}" id="searchByno"/>
+                        <h:commandButton action="#{checkRecordBean.searchByno}" value="#{bundle.search}" class="submit" />
+                    </h:form>
+                    <hr/><br/><br/>
+                    <h:form id="form2">
+                        <h:panelGrid columns="2" class ="teacherCheck">
+                            <h:outputLabel value="#{bundle.selectCity}" />
+                            <h:panelGrid columns="3">
+                                <h:selectOneMenu id="city"  value="#{cityBean.province}" converter="cityConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{publicFields.provinceList}" var="province" itemLabel="#{province.name}" itemValue="#{province}"/>
+                                    <f:ajax render="cities"/>
+                                </h:selectOneMenu>
+                                <h:selectOneMenu id="cities"  value="#{cityBean.city}"  converter="cityConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{cityBean.cityList}" var="city" itemLabel="#{city.name}" itemValue="#{city}"/>
+                                    <f:ajax render="districts"/>
+                                </h:selectOneMenu>
+                                <h:selectOneMenu id="districts"  value="#{userinfoBean.studentDistrict}"  converter="cityConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{cityBean.districtList}" var="distric" itemLabel="#{distric.name}" itemValue="#{distric}"/>
+                                    <f:ajax render="students"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <h:message id="studentMsg" for="studentShow"/>
+                        <h:panelGrid columns="3" class ="teacherCheck" id="studentShow">
+                            <h:outputLabel value="#{bundle.selectStudents}"/>
+                            <h:panelGrid columns="3">
+                                <h:selectOneMenu  value="#{checkRecordBean4Teacher.student}" id="students" converter="studentConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{userinfoBean.studentListByCity}" var="student" itemLabel="#{student.name}:#{student.nameofunit.name}" itemValue="#{student}"/>
+                                    <f:ajax render="checkRe"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" id="checkRe" class ="teacherCheck">
+                            <h:outputLabel value="#{bundle.submittedNote}:"/>
+                            <h:panelGrid id="stuReport">
+                                <h:outputLabel value=""  rendered="#{checkRecordBean.practiceList.size()==0}" id="tem" />
+                                <h:panelGrid columns="1" rendered="#{checkRecordBean.practiceList.size()>0}" class="noneBorder">
+                                    <c:forEach items="#{checkRecordBean.practiceList}" var="submitted">
+                                        <c:if test="${submitted.state == 1}" >
+                                            <h:commandLink action="#{practiceNoteBB.teachSeePracticeNote(submitted)}" value="#{submitted.student.name} #{submitted.submitdate.year+1900}年#{submitted.submitdate.month+1}月#{submitted.submitdate.date}日" />
+                                        </c:if>
+                                    </c:forEach>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                    <br/>
+                    <h:form enctype="multipart/form-data">
+                        <h:panelGrid columns="2" class ="teacherCheck" columnClasses="firstcolumn,secondcolumn">
+                            <h:outputLabel value="#{bundle.time}"/>
+                            <h:panelGrid columns="6" class ="noneBorder">
+                                <h:selectOneMenu value="#{checkRecordBean.year}" id="year" >
+                                    <f:selectItems  value="#{publicFields.yearMap}"/>
+                                </h:selectOneMenu>
+                                <h:outputLabel value="#{bundle.year}"/>
+                                <h:selectOneMenu value="#{checkRecordBean.month}" id="month" >
+                                    <f:selectItems  value="#{publicFields.monthMap}"/>
+                                    <f:ajax render="day" execute="month"/>
+                                </h:selectOneMenu>
+                                <h:outputLabel value="#{bundle.month}"/>
+                                <h:selectOneMenu value="#{checkRecordBean.day}" id="day" >
+                                    <f:selectItems  value="#{checkRecordBean.dayMap}"/>
+                                </h:selectOneMenu>
+                                <h:outputLabel value="#{bundle.day}"/>
+                            </h:panelGrid>
+
+                            <h:outputLabel value="#{bundle.content}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.checkcontent}"  rows="5" cols="60" required="true"/>
+                            <h:outputLabel value="#{bundle.recommendation}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.recommendation}"  rows="5"  cols="60" required="true"/>
+                            <h:outputLabel value="#{bundle.rank}" />
+                            <h:selectOneMenu value="#{checkRecordBean.checkrecords.rank}" id="rank" required="true">
+                                <f:selectItems  value="#{checkRecordBean.rankMap}"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{bundle.remark}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.remark}"  rows="5" cols="60"/>
+                            <h:outputLabel value="#{bundle.upload}#{bundle.photo}"/>
+                            <h:inputFile value="#{checkRecordBean.parts}" p:multiple="multiple" />
+                            <h:outputLabel value="#{bundle.operate}" />
+                            <h:commandButton action="#{checkRecordBean.addCheckRecord()}" value="#{bundle.submit}" class ="submit"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:messages   style="color: red" id="latestMessage"/>
+                    <h:panelGrid columns="1">
+                        <h:form>
+                            <h:commandButton value="#{bundle.return}" action="#{checkRecordBean.backToCheck}" class="submit"/>
+                            <c:if test="${practiceNoteBB.practiceNote.state == 1}">
+                                <h:panelGrid columns="2" class="tableStyle">
+                                    <h:outputLabel value="#{bundle.name}:" />
+                                    <h:outputLabel value="#{practiceNoteBB.practiceNote.student.name}"/>                     
+                                    <h:outputLabel value="#{bundle.enterName}:"/>
+                                    <h:outputLabel value="#{practiceNoteBB.practiceNote.stuentrel.enterstudent.enterprise.name}"/>
+                                    <h:outputLabel value="#{bundle.position}:"/>
+                                    <h:outputLabel value="#{practiceNoteBB.practiceNote.stuentrel.enterstudent.position.name}"/>
+                                    <h:outputLabel value="#{bundle.time}:"/>
+                                    <h:panelGrid columns="6">
+                                        <h:outputLabel value="#{practiceNoteBB.practiceNote.submitdate.year+1900}"/>
+                                        <h:outputLabel value="#{bundle.year}"/>
+                                        <h:outputLabel value="#{practiceNoteBB.practiceNote.submitdate.month+1}"/>
+                                        <h:outputLabel value="#{bundle.month}"/>
+                                        <h:outputLabel value="#{practiceNoteBB.practiceNote.submitdate.date}"/>
+                                        <h:outputLabel value="#{bundle.day}"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" class="tableStyle">
+                                    <h:outputLabel value="#{bundle.practiceContent}:" />
+                                    <h:inputTextarea value="#{practiceNoteBB.practiceNote.detail}" rows="40" cols="60" readonly="true" />
+                                </h:panelGrid>
+                                <c:forEach items="#{practiceNoteBB.getFiles(practiceNoteBB.practiceNote)}" var="file">
+                                    <h:graphicImage url="../../uploadedFiles/StuFiles/#{user.schoolId}/#{practiceNoteBB.practiceNote.id}/#{file}" width="500px" height="400px"/>
+                                </c:forEach>
+                            </c:if>
+                        </h:form>
+                    </h:panelGrid>  
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

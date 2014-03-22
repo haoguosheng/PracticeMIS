@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class ="pageContent">
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:form >
+                        <h:panelGrid columns="2" class="tableStyle">
+                            <h:outputLabel value="#{bundle.name}"/>
+                            <h:outputLabel value="#{checkRecordBean.checkrecords.student.name}"/>
+                            <h:outputLabel value="#{bundle.time}" />
+                            <h:outputLabel value="#{checkRecordBean.checkrecords.checkdate}"/>
+                            <h:outputLabel value="#{bundle.content}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.checkcontent}"  rows="10" cols="60" readonly="true"/>
+                            <h:outputLabel value="#{bundle.recommendation}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.recommendation}"  rows="10"  cols="60" readonly="true"/>
+                            <h:outputLabel value="#{bundle.rank}" />
+                            <h:selectOneMenu value="#{checkRecordBean.checkrecords.rank}" id="rank"   disabled="true">
+                                <f:selectItems  value="#{checkRecordBean.rankMap}"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{bundle.remark}" />
+                            <h:inputTextarea value="#{checkRecordBean.checkrecords.remark}"  rows="10" cols="60" readonly="true"/>
+
+                            <c:forEach items="#{checkRecordBean.getFiles(checkRecordBean.checkrecords)}" var="file">
+                                <h:outputLabel value="#{bundle.photo}" />
+                                <h:graphicImage url="../../uploadedFiles/TeachFiles/#{user.schoolId}/#{checkRecordBean.checkrecords.id}/#{file}" width="500px" height="400px"/>
+                            </c:forEach>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

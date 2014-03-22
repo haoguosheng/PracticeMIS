@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="companyInfo">
+                    <h:form>
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <h:inputText value="#{newsBean.searchName}"/>
+                        <h:commandButton value="#{bundle.search}" action="#{newsBean.search()}"/>
+                        <h:commandButton value="显示全部" action="#{newsBean.searchAll()}"/>
+                        <h:commandButton action="#{controlBean.addNews()}" value="#{bundle.add}#{bundle.new}#{bundle.newsInfo}"/>
+                        <h1><h:outputText value="#{bundle.newsInfo}#{bundle.list}"></h:outputText></h1>
+                        <h:dataTable value="#{newsBean.paginator.model}" var="mynews"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                     >
+                            <h:column> 
+                                <f:facet name="header">#{bundle.newsInfo}#{bundle.title}</f:facet>
+                                <h:outputLabel  value="#{mynews.newsTitle}"/>
+                            </h:column>    
+                            <h:column> 
+                                <f:facet name="header">#{bundle.content}</f:facet>
+                                 <h:outputLabel  value="#{mynews.content}"/> 
+                            </h:column>    
+                            <h:column>
+                                <f:facet name="header">#{bundle.delete}</f:facet>
+                                <h:commandButton value="#{bundle.delete}" action="#{newsBean.delete(mynews)}"  />
+                            </h:column>
+
+                        </h:dataTable>
+
+                        <h:commandButton value="&lt; #{bundle.preceeding}#{bundle.page}" action="#{newsBean.paginator.prev}"/>
+                        <h:outputText value="#{newsBean.paginator.pageIndex} / #{newsBean.paginator.pages}"/>
+                        <h:commandButton value="#{bundle.next}#{bundle.page} &gt;" action="#{newsBean.paginator.next}"/>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

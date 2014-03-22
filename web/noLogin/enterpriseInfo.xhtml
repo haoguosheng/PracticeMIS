@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:form>
+                    <h:dataTable cellpadding="0" cellspacing="0" width ="100%" style ="text-align:center;" value="#{enterpriseInfo.enterpriseList}" var="ep"
+                                 border="1" styleClass="companyInfo" headerClass="tableHeaderClass" 
+                                 columnClasses="firstColumn,secondColum,thirdColumn,fourthColum,fifthColumn,sixthColumn" 
+                                 >
+                        <f:facet name="caption">#{bundle.entTitile}</f:facet>
+                        <h:column>
+                            <f:facet name="header">#{bundle.unit}#{bundle.NameofThing}</f:facet>
+                                #{ep.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{bundle.city}</f:facet>
+                                #{ep.city.name}
+                        </h:column>
+                        <c:set value="#{ep.enterstudentList}" var="enterRequireStu"/>
+                        <h:column>
+                            <f:facet name="header">#{bundle.payment}</f:facet> 
+                                #{enterRequireStu[0].payment}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{bundle.require}</f:facet>
+                                #{enterRequireStu[0].requirement}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{bundle.stuNum}</f:facet>
+                                #{enterRequireStu[0].studnum}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">#{bundle.other}</f:facet>
+                                #{enterRequireStu[0].other}
+                        </h:column>       
+                    </h:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:login="http://java.sun.com/jsf/composite/loginCompostie"      >
+    <head>      
+        <!-- add_s -->
+        <link type="text/css" rel="stylesheet" href="../../resources/css/login.css" />
+        <!-- add_e -->
+
+    </head>
+    <h:body>
+        <div class ="main">
+            <div class ="left">
+                <p></p><p class ="left_2"></p>
+            </div>
+            <div class ="main_body">
+                <div class ="logo"><img src ="../../resources/images/logo.gif"/></div>
+                <div class ="content">
+                    <h:form id="loginForm">
+                        <h:panelGrid columns="3" rendered="#{checkLogin.rendered}">
+                            <h:outputLabel value="#{bundle.username}"/>
+                            <h:inputText value="#{checkLogin.userNo}" required="true"  id="userid" immediate="true" requiredMessage="#{bundle.inputName}" />
+                            <h:message id="useridMsg" for="userid"/>
+                            <h:outputLabel  value="#{bundle.password}"/>
+                            <h:inputSecret value="#{checkLogin.userPassword}" required="true" requiredMessage="#{bundle.inputPassword}" id="password"/>
+                            <h:message id="passwordMsg" for="password"/>
+                            <h:outputLabel value="#{bundle.validateCode}"/>
+                            <h:inputText value="#{checkLogin.rand}" required="true"  requiredMessage="#{bundle.inputValCode}" id="validatorCode" />
+                            <h:graphicImage value="../../resources/image.jsp" />
+                            <h:message  id="validCode" for="validatorCode"/>
+                            <h:commandButton action="#{checkLogin.validateUser}" id="loginButton" value="" class="loginButton"/>
+                            <h:message  id="loginButtonMsg" for="loginButton"/>
+                        </h:panelGrid>
+                        <h:outputLabel value="如忘记密码，请发邮件至#{bundle.adminEmail}，邮件内容：学号+姓名"/>
+                    </h:form>
+                    <h:outputLabel  rendered="#{!checkLogin.rendered}" >#{bundle.tryFaild}</h:outputLabel>
+
+                </div>
+            </div>
+            <h:messages  globalOnly="true" id="globalMessages">
+            </h:messages>
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <script type="text/javascript"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content"> 
+                <h:messages  style="color: red" id="latestMessage"/>
+                <div class="companyInfo">
+                    <h:form id="myForm">
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <h:panelGrid columns="3" >
+                            <h:outputLabel value="#{bundle.selectSchool}"/>
+                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" >
+                                <f:selectItem itemLabel="#{bundle.selectSchool}" itemValue="0" />
+                                <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                                <f:ajax render="mysclassId"/>
+                            </h:selectOneMenu>
+                            <h:commandButton action="#{controlBean.direct2BackupImport()}" value="#{bundle.batchImport}#{bundle.sutInfoList}"/>
+                            <h:outputLabel value="#{bundle.selectclass}"/>
+                            <h:selectOneMenu value="#{userinfoBean.classId}" id="mysclassId">
+                                <f:selectItem itemLabel="#{bundle.selectclass}" itemValue="0" />
+                                <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
+                                <f:ajax render="stu"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+
+                        <h1><h:outputText value="学生信息列表"></h:outputText></h1><br/>
+                        <h2><font color="red" >不同年级的不能在这里调整</font></h2>
+                        <h:dataTable id ="stu" value="#{userinfoBean.paginator.model}" var="ci"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                     >
+                            <h:column> 
+                                <f:facet name="header">#{bundle.name}</f:facet>
+                                <h:inputText value="#{ci.name}"/>  
+                            </h:column>  
+                            <h:column> 
+                                <f:facet name="header">#{bundle.userno}</f:facet>
+                                <h:outputText value="#{ci.uno}"/>  
+                            </h:column>
+                            <h:column> 
+                                <f:facet name="header">#{bundle.unitNamein}</f:facet>
+                                <h:selectOneMenu value="#{ci.nameofunitid}">
+                                    <f:selectItem itemLabel="#{ci.nameofunit.name}" itemValue="#{ci.nameofunitid}"/>
+                                    <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.alter}</f:facet>
+                                <h:commandButton value="#{bundle.alter}" action="#{userinfoBean.save(ci)}"/>
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{bundle.delete}</f:facet>
+                                <h:commandButton value="#{bundle.delete}" action="#{userinfoBean.deleteRow(ci)}"/>
+                            </h:column>
+
+                        </h:dataTable>
+                        <h:commandButton value="&lt; #{bundle.preceeding}#{bundle.page}" action="#{userinfoBean.paginator.prev}"/>
+                        <h:outputText value="#{userinfoBean.paginator.pageIndex} / #{userinfoBean.paginator.pages}"/>
+                        <h:commandButton value="#{bundle.next}#{bundle.page} &gt;" action="#{userinfoBean.paginator.next}"/>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <h:messages   style="color: red" id="latestMessage"/>
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{bundle.schoolName}"></h:outputLabel>
+                        <h:selectOneMenu value="#{nameofUnitBean.temUnit.parentid}">
+                            <f:selectItem itemLabel="#{bundle.pleaseSelect}" itemValue="0"/>
+                            <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                            <f:ajax render="classes"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:outputLabel value="#{bundle.addClassTip}"/>
+                    <h:panelGrid columns="8">
+                        <h:outputLabel value="#{bundle.addClass}:"/>
+                        <h:outputLabel value="#{bundle.classNum}"/>
+                        <h:inputText value="#{nameofUnitBean.temUnit.id}" required="true"/>
+                        <h:outputLabel value="#{bundle.Class}#{bundle.NameofThing}"/>
+                        <h:inputText value="#{nameofUnitBean.temUnit.name}"  required="true" />
+                        <h:outputLabel value="#{bundle.classPinyin}"/>
+                        <h:inputText value="#{nameofUnitBean.temUnit.pinyin}"  required="true"/>
+                        <h:commandButton value="#{bundle.add}" action="#{nameofUnitBean.addClass()}"/>
+                    </h:panelGrid>
+                    <h:outputLabel value="#{mgsg.addClassTip}"/>
+                    
+                    <h:panelGrid  columns="2" id="classes">
+                        <h:dataTable  value="#{nameofUnitBean.getTempClassList()}" var="myClassName1">
+                            <f:facet name="caption">#{bundle.classesInSchool}</f:facet>
+                            <h:column>
+                                <f:facet name="header">#{bundle.classNum}</f:facet>
+                                <h:outputLabel value="#{myClassName1.id}"></h:outputLabel>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.selectclass}</f:facet>
+                                <h:inputText value="#{myClassName1.name}"></h:inputText>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.save}#{bundle.alter}</f:facet>
+                                <h:commandButton value="#{bundle.alter}" action="#{nameofUnitBean.save(myClassName1)}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.delete}</f:facet>
+                                <h:commandButton value="#{bundle.delete}" action="#{nameofUnitBean.deleteClass(myClassName1)}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

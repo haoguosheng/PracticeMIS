@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:form >
+                        <h:messages style="color: red" id="latestMessage"/>                       
+                        <h1 class ="tableTitle"> <h:outputLabel value="#{bundle.enter}#{bundle.list}:"/></h1>
+                        <div>
+                            &nbsp;&nbsp;&nbsp;
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="#{inwhich}#{bundle.city}"/>
+                                <h:panelGrid columns="3">
+                                   <h:selectOneMenu id="city"  value="#{cityBean.province}" converter="cityConverter">
+                                                                          <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{publicFields.provinceList}" var="province" itemLabel="#{province.name}" itemValue="#{province}"/>
+                                        <f:ajax render="cities"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="cities"  value="#{cityBean.city.id}"  converter="cityConverter">
+                                        <f:selectItem  itemValue="" itemLabel="#{bundle.pleaseSelect}"/>
+                                        <f:selectItems value="#{cityBean.cityList}" var="city" itemLabel="#{city.name}" itemValue="#{city}"/>
+                                        <f:ajax render="districts"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="districts"  value="#{enterpriseInfo.district}"  converter="cityConverter">
+                                        <f:selectItem  itemValue="" itemLabel="#{bundle.pleaseSelect}"/>
+                                        <f:selectItems value="#{cityBean.districtList}" var="distric" itemLabel="#{distric.name}" itemValue="#{distric}"/>
+                                        <f:ajax render="cityEnterprise"/>
+                                    </h:selectOneMenu>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <h:inputText value="#{enterpriseInfo.searchName}" id="searchcity"/>
+                            <h:commandButton value="#{bundle.search}" action="#{enterpriseInfo.search}" class="submit"/>
+                            <h:commandButton value="显示全部" action="#{enterpriseInfo.searchAll}" class="submit"/>
+                            <h:commandButton action="#{controlBean.toAddEnterprise()}" value="#{bundle.add}#{bundle.enter}" class="submit"/>
+                        </div>
+                        
+                        <h:panelGroup id="cityEnterprise"  class="tableStyle" >
+                            <h:dataTable   value="#{enterpriseInfo.paginator.model}" var="ep">
+                                <h:column>
+                                    <f:facet name="header">#{bundle.enterName}</f:facet>
+                                    <h:inputText value="#{ep.name}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.city}</f:facet>
+                                    <h:outputLabel value="#{ep.city.fullname}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.alter}</f:facet>
+                                    <h:commandButton value="#{bundle.alter}" action="#{enterpriseInfo.savaEnter(ep)}"  rendered="#{enterpriseInfo.buttonShowOrNot(ep)}"/>
+                                </h:column> 
+                                <h:column>
+                                    <f:facet name="header">#{bundle.delete}</f:facet>
+                                    <h:commandButton value="#{bundle.delete}" action="#{enterpriseInfo.delete(ep)}"   rendered="#{enterpriseInfo.buttonShowOrNot(ep)}"/>
+                                </h:column>
+                                <h:column >
+                                    <f:facet name="header">#{bundle.inputUserName}</f:facet>
+                                    <h:outputLabel value="#{ep.inputor.name}"/>
+                                </h:column>
+                                <h:column >
+                                    <f:facet name="header">#{bundle.phone}</f:facet>
+                                    <h:outputLabel value="#{ep.inputor.phone}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.add}#{bundle.entNeed}</f:facet>
+                                    <h:commandButton action="#{enterpriseStuBean.directNeed(ep)}" value="#{bundle.check}#{bundle.entNeed}"/>
+                                </h:column>
+
+                            </h:dataTable>
+
+                            <h:commandButton value="&lt; 上一页" action="#{enterpriseInfo.paginator.prev}" class ="submit"/>
+                            <h:outputText value="#{enterpriseInfo.paginator.pageIndex} / #{enterpriseInfo.paginator.pages}" />
+                            <h:commandButton value="下一页 &gt;" action="#{enterpriseInfo.paginator.next}"/>
+                        </h:panelGroup>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

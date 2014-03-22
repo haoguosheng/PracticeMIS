@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head></h:head>
+    <!--面向教师-->
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:form >
+                        <h:panelGrid columns="4" >
+                            <h:outputLabel value="#{bundle.selectSchool}"/>
+                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschoolId" required="true" >
+                                <f:selectItem itemLabel="#{bundle.selectSchool}" itemValue="0" />
+                                <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                                <f:ajax render="mysclassId"/>
+                            </h:selectOneMenu>
+                            <h:outputLabel value="#{bundle.selectclass}"/>
+                            <h:selectOneMenu value="#{statisticalBean.classId}" id="mysclassId">
+                                <f:selectItem itemLabel="#{bundle.selectclass}" itemValue="0" />
+                                <f:selectItems value="#{nameofUnitBean.classNameMap}"/>
+                                <f:ajax render="stu sstu"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel id="sstu" value="#{statisticalBean.staResult}" style="color: red; font-size: 17px"/>
+                        <h:outputLabel value=""/>
+                        <h:dataTable id ="stu" value="#{statisticalBean.studentsList}" var="student"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass">
+                            <h:column> 
+                                <f:facet name="header">#{bundle.unitNamein}</f:facet>
+                                <h:outputLabel value="#{student.nameofunit.name}"/>
+                            </h:column>
+                            <h:column> 
+                                <f:facet name="header">#{bundle.userno}</f:facet>
+                                <h:outputLabel value="#{student.uno}"/>  
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.name}</f:facet>
+                                <h:outputLabel value="#{student.name}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.rank}</f:facet>
+                                <h:outputLabel value="#{statisticalBean.getGradeByStuno(student)}"/>  
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.checkTeacher}</f:facet>
+                                <h:outputLabel value="#{statisticalBean.getTeachByStuno(student)}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <script type="text/javascript"/>
+    <h:head >
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="companyInfo">
+                    <h:form id="myForm">
+                        <h:messages  style="color: red" id="latestMessage"/>
+                        <h:panelGrid columns="2" columnClasses="firstcolumn,secondcolumn">
+                            <h:outputLabel value="#{bundle.selectSchool}"/>
+                            <h:selectOneMenu value="#{nameofUnitBean.schoolId}" id="myschool" required="true"  validator="#{userinfoBean.assingValue2SchoolId}" >
+                                <f:selectItem itemLabel="#{bundle.selectSchool}" itemValue="0" />
+                                <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                                <f:ajax render="myschoolId" execute="myschool" event="change"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                        <hr/>
+                        <c:set value="#{nameofUnitBean.schoolId}" var="schoolId"/>
+
+                        <h:panelGrid   columns="2"  columnClasses="firstcolumn,secondcolumn">
+                            <h:outputLabel value="#{bundle.teacherUno}:"  />
+                            <h:inputText id="tuno" value="#{userinfoBean.teacher.uno}"/>
+                            <h:outputLabel value="#{bundle.name}:" />
+                            <h:inputText id="tname" value="#{userinfoBean.teacher.name}"/> 
+                            <h:commandButton action="#{userinfoBean.addTeacher}" value="#{bundle.add}" />
+                        </h:panelGrid>
+                       
+                        <hr/>
+                        <h1><h:outputText value="教师信息列表"></h:outputText></h1>
+                        <h:dataTable id ="myschoolId" value="#{userinfoBean.teacherList}" var="teacher"
+                                     border="1" styleClass="tableClass" headerClass="tableHeaderClass" 
+                                     columnClasses="firstColumn,secondColum,thirdColumn,fourthColum，fifthColum  " 
+                                     >
+                            <h:column> 
+                                <f:facet name="header">#{bundle.name}</f:facet>
+                                <h:outputText value="#{teacher.name}"/>  
+                            </h:column>  
+                            <h:column> 
+                                <f:facet name="header">#{bundle.teacherUno}</f:facet>
+                                <h:outputText value="#{teacher.uno}"/>  
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{bundle.role}</f:facet>
+                                <h:selectOneMenu value="#{teacher.roleinfo.id}" required="true">
+                                    <f:selectItem itemLabel="#{teacher.roleinfo.name}" itemValue="#{teacher.roleinfo.id}" />
+                                    <f:selectItems value="#{publicFields.roleMap}"/>
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column> 
+                                <f:facet name="header">#{bundle.school}</f:facet>
+                                <h:selectOneMenu value="#{teacher.nameofunit.id}" id="myschool" required="true">
+                                    <f:selectItem itemLabel="#{teacher.nameofunit.name}" itemValue="#{teacher.nameofunit.id}" />
+                                    <f:selectItems value="#{nameofUnitBean.schoolMap}"/>
+                                    <f:ajax render="myschoolId" event="change"/>
+                                </h:selectOneMenu>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.alter}</f:facet>
+                                <h:commandButton value="#{bundle.alter}" action="#{userinfoBean.saveTeacher(teacher)}"/>
+                            </h:column> 
+                            <h:column>
+                                <f:facet name="header">#{bundle.delete}</f:facet>
+                                <h:commandButton value="#{bundle.delete}" action="#{userinfoBean.deleteTeacher(teacher)}"/>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

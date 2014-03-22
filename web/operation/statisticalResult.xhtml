@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head></h:head>
+    <!--面向教师-->
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:form >
+                        <h:panelGrid columns="2" class ="auto">
+                            <h:outputLabel value="#{bundle.selectTeacher}" />
+                            <h:selectOneMenu value="#{checkRecordBean4Teacher.teacher.uno}" required="true">
+                                <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}" />
+                                <f:selectItems value="#{userinfoBean.teacherMap}"/>
+                                <f:ajax render="student count res"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+
+                        <h:outputLabel id="count" value="#{bundle.checkcount} #{checkRecordBean4Teacher.checkList.size()}" style="color: red; font-size: 14px; text-align: left;"/>
+                        <br/>
+                        <h:outputLabel id="res" value="#{checkRecordBean4Teacher.staResult}" style="color: red; font-size: 14px; text-align: left;"/>
+                        <section style ="border:1px solid #ccc;">
+                            <h:outputLabel value="#{bundle.scoresQuery}" style="font-size: 16px"/>
+                            <h:dataTable id ="student" value="#{checkRecordBean4Teacher.checkList}" var="check"
+                                         border="1" styleClass="tableClass" headerClass="tableHeaderClass">
+                                <h:column> 
+                                    <f:facet name="header">#{bundle.unitNamein}</f:facet>
+                                    <h:outputLabel value="#{check.student.nameofunit.name}"/>
+                                </h:column>
+                                <h:column> 
+                                    <f:facet name="header">#{bundle.userno}</f:facet>
+                                    <h:outputLabel value="#{check.student.uno}"/>  
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.name}</f:facet>
+                                    <h:outputLabel value="#{check.student.name}"/>
+                                </h:column> 
+                                <h:column>
+                                    <f:facet name="header">#{bundle.detail}</f:facet>
+                                    <h:commandLink action="#{checkRecordBean4Teacher.directToNoteshowCheckRecord(check)}" value="#{check.checkdate.year+1900}年#{check.checkdate.month+1}月#{check.checkdate.date}日"/>
+                                </h:column>
+                                <h:column> 
+                                    <f:facet name="header">#{bundle.rank}</f:facet>
+                                    <h:outputLabel value="#{statisticalBean.getGradeByStuno(check.student)}"/>  
+                                </h:column>
+                            </h:dataTable>
+                        </section>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

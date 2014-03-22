@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:messages  style="color: red" id="latestMessage"/>
+                    <h:form prependId="false">
+                        <div class="tableStyle" align="left">
+                            <h1>&nbsp;&nbsp;&nbsp; 
+                                <h:outputLabel value="#{bundle.enterName}:#{enterpriseStuBean.enterprise.name}"/>
+                            </h1>
+                        </div>
+                        <h:outputLabel value="#{bundle.position}:"/>
+                        <h:selectOneMenu value="#{enterpriseStuBean.entStu.position.id}" required="true" id="position">
+                            <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                        </h:selectOneMenu>
+                        <h:button value="#{bundle.newPosition}" outcome="#{controlBean.addPosition()}"/>
+                        <h:panelGrid  columns="2">
+                            <h:outputLabel value="#{bundle.require}:" for="requirement" />
+                            <h:inputTextarea value="#{enterpriseStuBean.entStu.requirement}" required="true" />
+                            <h:outputLabel value="#{bundle.payment}:" for="payement" />
+                            <h:inputTextarea value="#{enterpriseStuBean.entStu.payment}" required="true" />
+                            <h:outputLabel value="#{bundle.stuNum}:" for="stunum" />
+                            <h:inputText value="#{enterpriseStuBean.entStu.studnum}" required="true" >
+                                <f:validateLongRange minimum="0" maximum="100"/>
+                            </h:inputText>
+                            <h:outputLabel value="#{bundle.other}:"/>
+                            <h:inputTextarea value="#{enterpriseStuBean.entStu.other}" />
+                            <h:commandButton action="#{enterpriseStuBean.addEnterpriseNeed()}" value="#{bundle.add}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

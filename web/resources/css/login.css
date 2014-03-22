@@ -1,0 +1,74 @@
+* {
+    margin:0px;
+    padding:0px;
+    font-size:12px;
+}
+
+
+body {
+    background:url(../../resources/images/login_bg.jpg) repeat left top;
+}
+
+
+.main {
+    margin-top:117px;
+    height:265px;
+    background:url(../../resources/images/line.gif) repeat-x left top;
+}
+
+
+.left {
+    width:263px;
+    height:265px;
+    float:left;
+}
+
+.left p {
+    height:117px;
+    background:url(../../resources/images/login_left_1.gif) no-repeat left top;
+}
+
+.left .left_2 {
+    height:148px;
+    background:url(.././resources/images/login_left_2.gif) no-repeat left top;
+}
+
+.main_body {
+    float:left;
+}
+
+.logo {
+    height:117px;
+}
+
+.content {
+    height:148px;
+}
+
+.content td {
+    height:30px;
+    width:80px;
+    text-align:center;
+}
+
+.loginButton {
+    display:block;
+    width:78px;
+    height:22px;
+    border:none;
+    cursor:pointer;
+    background:url(../../resources/images/login_button.gif) no-repeat left top;
+}
+
+ul {
+    left:700px;
+    top:234px;
+    position:absolute;
+    height:265px;
+    list-style:none;
+}
+
+ul li {
+    height:22px;
+    border-bottom:1px dashed #ccc;			
+}

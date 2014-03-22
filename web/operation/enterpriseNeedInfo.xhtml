@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+
+    </h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+                <div class="pageContent">
+                    <h:messages  style="color: red" id="latestMessage"/>
+                        <div class="tableStyle">
+                            <h1 class="tableTitle">&nbsp;&nbsp;&nbsp; 
+                                <h:outputLabel value="#{bundle.enterName}:#{enterpriseStuBean.enterprise.name}"/>
+                            </h1>
+                        </div>
+                    <h:button outcome="#{controlBean.toEnterNeed()}" value="#{bundle.add}#{bundle.entNeed}"/>
+                        <h:form>
+                            <h:dataTable value="#{enterpriseStuBean.paginator.model}" var="epStu" id="noteList"
+                                         rendered="#{enterpriseStuBean.enterprise.enterstudentList.size()>0}" class="tableStyle">
+                                <h:column>
+                                    <f:facet name="header">#{bundle.require}</f:facet>
+                                    <h:inputTextarea value="#{epStu.requirement}" id="requirement"  required="true" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.payment}</f:facet>
+                                    <h:inputText value="#{epStu.payment}" id="payment"  required="true" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.stuNum}</f:facet>
+                                    <h:inputText value="#{epStu.studnum}" id="studnum"  required="true" >
+                                        <f:validateLongRange minimum="0" maximum="100"/>  
+                                    </h:inputText>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.position}</f:facet>
+                                    <h:selectOneMenu value="#{epStu.positionid}">
+                                        <f:selectItem  itemValue="#{epStu.positionid}" itemLabel="#{epStu.position.name}" />
+                                        <f:selectItems value="#{positionBackingBean.positionMap}"/>
+                                    </h:selectOneMenu>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.other}</f:facet>
+                                    <h:inputText value="#{epStu.other}" id="other" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.alter}</f:facet>
+                                    <h:commandButton  value="#{bundle.alter}"  action ="#{enterpriseStuBean.saveNeed(epStu)}"  rendered="#{enterpriseStuBean.buttonShowOrNot()}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.delete}</f:facet>
+                                    <h:commandButton value="#{bundle.delete}" action="#{enterpriseStuBean.deleteNeed(epStu)}"    rendered="#{enterpriseStuBean.buttonShowOrNot()}"/>
+                                </h:column>
+                            </h:dataTable> 
+                            <h:commandButton value="&lt; 上一页" action="#{enterpriseStuBean.paginator.prev}"/>
+                            <h:outputText value="#{enterpriseStuBean.paginator.pageIndex} / #{enterpriseStuBean.paginator.pages}" />
+                            <h:commandButton value="下一页 &gt;" action="#{enterpriseStuBean.paginator.next}"/>
+                        </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

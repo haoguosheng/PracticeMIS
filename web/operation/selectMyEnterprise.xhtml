@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <h:head></h:head>
+    <body>
+        <ui:composition template="./../noLogin/myTemplate2.xhtml">
+            <ui:define name="content">
+
+                <div class="pageContent">
+
+                    <h1 class ="tableTitle">#{bundle.already}#{bundle.selectEnter}</h1>
+                    <section>
+                        <h:form>
+                            <h:outputLabel value="无" rendered="#{studentSelectEnt.stuentrel4SameStu.size()==0}" />
+                            <h:dataTable value="#{studentSelectEnt.stuentrel4SameStu}" var="selectedStuEnter"  rendered="#{studentSelectEnt.stuentrel4SameStu.size()>0}" styleClass="tableStyle" >
+                                <h:column>
+                                    <f:facet name="header"></f:facet>
+                                    <h:commandLink action="#{studentSelectEnt.deleteSelectedEnterprise(selectedStuEnter)}" value="#{bundle.cancel}#{bundle.myselect}" class="submit"/>
+                                </h:column>                        
+                                <h:column>
+                                    <f:facet name="header">#{bundle.city}</f:facet>
+                                        #{selectedStuEnter.enterstudent.enterprise.city.city.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.enterName}</f:facet>
+                                        #{selectedStuEnter.enterstudent.enterprise.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.position}</f:facet>
+                                        #{selectedStuEnter.enterstudent.position.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{bundle.studentsInSameEnterprise}</f:facet>
+                                    <h:dataTable value="#{studentSelectEnt.getStuForSameEnt(selectedStuEnter.enterstudent.enterprise)}" var="stuUser4Ent" class="tableTitle" rendered="#{studentSelectEnt.getStuForSameEnt(selectedStuEnter.enterstudent.enterprise).size()>0}">
+                                        <h:column>
+                                            <f:facet name="header">#{bundle.name}</f:facet>
+                                                #{stuUser4Ent.student.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{bundle.unitNamein}</f:facet>
+                                                #{stuUser4Ent.student.nameofunit.name}
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">#{bundle.phone}</f:facet>
+                                                #{stuUser4Ent.student.phone}
+                                        </h:column>
+                                    </h:dataTable>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </section>   
+                    <hr/>
+
+                    <h1 class="tableTitle"><h:outputLabel value="#{bundle.selectEnter}"/></h1><br/>
+                    <h4 class="tableTitless" style="color: red"> 如果单位没有需求信息，则无法选择，需要从左边的“单位实习信息-单位信息”中找到添加该单位的人，请他添加单位信息。</h4>
+
+                    <h:form  style="alignment-adjust: middle">
+                        <h:messages id="myMessage"  style="color: red"  class="mymessages"/>
+                        <h:panelGrid columns="2" class="tableStyle">
+                            <h:outputText value="#{bundle.selectCity}"/>
+                            <h:panelGrid columns="3">
+                               <h:selectOneMenu id="city"  value="#{cityBean.province}" converter="cityConverter">
+                                                                  <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{publicFields.provinceList}" var="province" itemLabel="#{province.name}" itemValue="#{province}"/>
+                                    <f:ajax render="cities"/>
+                                </h:selectOneMenu>
+                                <h:selectOneMenu id="cities"  value="#{cityBean.city.id}"  converter="cityConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{cityBean.cityList}" var="city" itemLabel="#{city.name}" itemValue="#{city}"/>
+                                    <f:ajax render="districts"/>
+                                </h:selectOneMenu>
+                                <h:selectOneMenu id="districts"  value="#{enterpriseInfo.district}"  converter="cityConverter">
+                                    <f:selectItem  itemValue="0" itemLabel="#{bundle.pleaseSelect}"/>
+                                    <f:selectItems value="#{cityBean.districtList}" var="distric" itemLabel="#{distric.name}" itemValue="#{distric}"/>
+                                    <f:ajax render="enterprise"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+
+                            <h:outputLabel value="#{bundle.selectEnt}"/>
+                            <h:selectOneMenu  value="#{enterpriseInfo.enterId}" id="enterprise">
+                                <f:selectItem  itemValue="0" itemLabel="#{bundle.selectEnt}"/>
+                                <f:selectItems value="#{enterpriseInfo.enterMap}"/>
+                                <f:ajax render="enterDetail myMessage"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid> 
+
+                        <h:dataTable id="enterDetail" value="#{enterpriseInfo.enterStuList}" var="ep"
+                                     border="1" styleClass="tableStyle" headerClass="tableHeaderClass" >
+                            <h:column>
+                                <f:facet name="header">#{bundle.payment}</f:facet>
+                                <h:outputLabel value=" #{ep.payment}" id="payment"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.require}</f:facet>
+                                <h:outputLabel value="#{ep.requirement}" id="requirement"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.stuNum}</f:facet>
+                                <h:outputLabel value="#{ep.studnum}" id="studnum"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.position}</f:facet>
+                                <h:outputLabel value="#{ep.position.name}" id="position"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.other}</f:facet>
+                                <h:outputLabel value="#{ep.other}" id="other"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{bundle.myselect}</f:facet>
+                                <h:commandButton  value="#{bundle.myselect}" action="#{studentSelectEnt.userAddEnter(ep.id,ep.enterprise.city.id)}" rendered="#{studentSelectEnt.canSelect()}" class="submit"/>
+                            </h:column>
+                        </h:dataTable> 
+                        <h:outputLabel value="#{bundle.already}#{bundle.myselect}#{bundle.enter}！" rendered="#{!studentSelectEnt.canSelect()}"/>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
